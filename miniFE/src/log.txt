@@ -1,0 +1,2 @@
+compiler_log:./driver.hpp:283:45:   required from ‘int miniFE::driver(const Box&, Box&, miniFE::Parameters&, YAML_Doc&) [with Scalar = double; LocalOrdinal = int; GlobalOrdinal = long long int]’
+compiler_log:./driver.hpp:292:45:   required from ‘int miniFE::driver(const Box&, Box&, miniFE::Parameters&, YAML_Doc&) [with Scalar = double; LocalOrdinal = int; GlobalOrdinal = long long int]’
