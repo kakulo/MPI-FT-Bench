@@ -15,7 +15,7 @@ MINIFE_MATRIX_TYPE = -DMINIFE_CSR_MATRIX
 #-----------------------------------------------------------------------
 
 # DEBUG
-DEBUG = 0
+DEBUG = 1
 
 # GNU 
 CFLAGS = -g -O0 -fopenmp
