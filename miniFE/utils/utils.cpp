@@ -161,10 +161,17 @@ void broadcast_parameters(Parameters& params)
 }
 
 //-------------------------------------------------------------
-void initialize_mpi(int argc, char** argv, int& numprocs, int& myproc)
+void initialize_mpi(int argc, char** argv)
 {
 #ifdef HAVE_MPI
   MPI_Init(&argc, &argv);
+#endif
+}
+
+//--------------------New for C/R implementation---------------
+void get_proc_info(int& numprocs, int& myproc) 
+{
+#ifdef HAVE_MPI
   MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
   MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
 #else

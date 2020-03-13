@@ -49,6 +49,7 @@
 
 #ifdef HAVE_MPI
 #include <mpi.h>
+#include <mpi-ext.h>
 #endif
 
 #include <Box.hpp>
@@ -82,6 +83,7 @@
 void add_params_to_yaml(YAML_Doc& doc, miniFE::Parameters& params);
 void add_configuration_to_yaml(YAML_Doc& doc, int numprocs, int numthreads);
 void add_timestring_to_yaml(YAML_Doc& doc);
+int resilient_main(int argc, char** argv, OMPI_reinit_state_t state); 
 
 //
 //We will create a 'box' of size nx X ny X nz, partition it among processors,
@@ -89,13 +91,20 @@ void add_timestring_to_yaml(YAML_Doc& doc);
 //from which to assemble finite-element matrices into a global matrix and
 //vector, then solve the linear-system using Conjugate Gradients.
 //
-
+//
 int main(int argc, char** argv) {
+  miniFE::initialize_mpi(argc, argv);
+  OMPI_Reinit(argc, argv, resilient_main);
+  miniFE::finalize_mpi();
+  return 0;
+}
+
+int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
   miniFE::Parameters params;
   miniFE::get_parameters(argc, argv, params);
 
   int numprocs = 1, myproc = 0;
-  miniFE::initialize_mpi(argc, argv, numprocs, myproc);
+  miniFE::get_proc_info(numprocs, myproc);
 
   miniFE::timer_type start_time = miniFE::mytimer();
 
@@ -148,7 +157,7 @@ int main(int argc, char** argv) {
   if (min_ids == 0) {
     std::cout<<"One or more processors have 0 equations. Not currently supported. Exiting."<<std::endl;
 
-    miniFE::finalize_mpi();
+    //miniFE::finalize_mpi();
 
     return 1;
   }
@@ -186,7 +195,7 @@ int main(int argc, char** argv) {
 
   printf("Enter into the driver() function ...\n");
   int return_code =
-     miniFE::driver< MINIFE_SCALAR, MINIFE_LOCAL_ORDINAL, MINIFE_GLOBAL_ORDINAL>(global_box, my_box, params, doc);
+     miniFE::driver< MINIFE_SCALAR, MINIFE_LOCAL_ORDINAL, MINIFE_GLOBAL_ORDINAL>(global_box, my_box, params, doc, state);
   printf("Exit the driver() function ...\n");
 
   miniFE::timer_type total_time = miniFE::mytimer() - start_time;
@@ -219,7 +228,7 @@ int main(int argc, char** argv) {
   }
 
 
-  miniFE::finalize_mpi();
+  //miniFE::finalize_mpi();
 
   return return_code;
 }

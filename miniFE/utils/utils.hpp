@@ -46,7 +46,9 @@ void get_parameters(int argc, char** argv, Parameters& params);
 
 void broadcast_parameters(Parameters& params);
 
-void initialize_mpi(int argc, char** argv, int& numprocs, int& myproc);
+void initialize_mpi(int argc, char** argv);
+
+void get_proc_info(int& numprocs, int& myproc);
 
 void finalize_mpi();
 

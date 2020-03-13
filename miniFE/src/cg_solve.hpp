@@ -38,6 +38,12 @@
 
 #include "../../libcheckpoint/checkpoint.h"
 
+#ifdef HAVE_MPI
+#include <mpi.h>
+#include <mpi-ext.h>
+#endif
+
+
 static int survivor;
 
 namespace miniFE {
@@ -441,7 +447,8 @@ cg_solve(OperatorType& A,
          typename OperatorType::LocalOrdinalType& num_iters,
          typename TypeTraits<typename OperatorType::ScalarType>::magnitude_type& normr,
          timer_type* my_cg_times,
-	 Parameters& params)
+	 Parameters& params,
+	 OMPI_reinit_state_t state)
 {
   typedef typename OperatorType::ScalarType ScalarType;
   typedef typename OperatorType::GlobalOrdinalType GlobalOrdinalType;
@@ -520,12 +527,15 @@ cg_solve(OperatorType& A,
 
   // read checkpoints
   // when restart
-  if (params.restart == 1) {
+  if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
     printf("RE-Start execution ... \n");
-    survivor = 1;
+   survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
     ApplicationCheckpointRead(survivor, params.cp2f, params.cp2m, params.cp2a, myproc, A, b, x, &normr,my_cg_times,r,p,&rtrans,&oldrtrans,&num_iters);
     k = num_iters;
-    params.restart == 0;
+    state == OMPI_REINIT_NEW;
+    // XXX: Disable FI, assumes 1 failure
+    params.procfi = 0;
+    params.nodefi = 0;
   }
 
   for(; k <= max_iter && normr > tolerance; ++k) {

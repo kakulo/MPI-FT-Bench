@@ -67,10 +67,6 @@
 #include <mytimer.hpp>
 #include <YAML_Doc.hpp>
 
-#ifdef HAVE_MPI
-#include <mpi.h>
-#endif
-
 #define RUN_TIMED_FUNCTION(msg, fn, time_inc, time_total) \
 {                                   \
   if (myproc==0) {                  \
@@ -122,7 +118,7 @@ template<typename Scalar,
          typename GlobalOrdinal>
 int
 driver(const Box& global_box, Box& my_box,
-       Parameters& params, YAML_Doc& ydoc)
+       Parameters& params, YAML_Doc& ydoc, OMPI_reinit_state_t state)
 {
   int global_nx = global_box[0][1];
   int global_ny = global_box[1][1];
@@ -280,7 +276,7 @@ driver(const Box& global_box, Box& my_box,
     rearrange_matrix_local_external(A);
     printf("Enter into the 1st cg_solve() function ...\n");
     cg_solve(A, b, x, matvec_overlap<MatrixType,VectorType>(), max_iters, tol,
-           num_iters, rnorm, cg_times,params);
+           num_iters, rnorm, cg_times,params, state);
     printf("Exit into the 1st cg_solve() function ...\n");
 #else
     std::cout << "ERROR, matvec with overlapping comm/comp only works with CSR matrix."<<std::endl;
@@ -289,7 +285,7 @@ driver(const Box& global_box, Box& my_box,
   else {
     printf("Enter into the 2nd cg_solve() function ...\n");
     cg_solve(A, b, x, matvec_std<MatrixType,VectorType>(), max_iters, tol,
-           num_iters, rnorm, cg_times,params);
+           num_iters, rnorm, cg_times,params, state);
     printf("Exit the 2nd cg_solve() function ...\n");
     if (myproc == 0) {
       std::cout << "Final Resid Norm: " << rnorm << std::endl;
