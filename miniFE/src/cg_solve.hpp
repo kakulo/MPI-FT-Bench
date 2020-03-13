@@ -548,12 +548,12 @@ cg_solve(OperatorType& A,
 
     normr = sqrt(rtrans);
 
-    if (params.procfi == 1 && myproc == (procsize-1) && k==61){
+    if (params.procfi == 1 && myproc == (procsize-1) && k==21){
       printf("KILL rank %d\n", myproc);
       raise(SIGKILL);
     }
 
-    if (params.nodefi == 1 && myproc == (procsize-1) && k==61){
+    if (params.nodefi == 1 && myproc == (procsize-1) && k==21){
       char hostname[64];
       gethostname(hostname, 64);
       printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), myproc);
