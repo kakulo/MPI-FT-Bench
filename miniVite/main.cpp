@@ -52,6 +52,7 @@
 
 #include <omp.h>
 #include <mpi.h>
+#include <mpi-ext.h>
 
 #include "dspl.hpp"
 
@@ -79,11 +80,11 @@ static void GraphCheckpointWrite(Graph &g, int rank);
 
 // read checkpoints for Graph
 static void GraphCheckpointRead(int survivor, int rank, Graph &g);
+int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) ;
 
 
 int main(int argc, char *argv[])
 {
-  double t0, t1, t2, t3, ti = 0.0;
   int max_threads;
 
   max_threads = omp_get_max_threads();
@@ -99,6 +100,17 @@ int main(int argc, char *argv[])
       MPI_Init(&argc, &argv);
   }
   
+  OMPI_Reinit(argc, argv, resilient_main);
+
+  MPI_Finalize();
+
+  return 0;
+}
+
+int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
+
+  double t0, t1, t2, t3, ti = 0.0;
+
   MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
   MPI_Comm_rank(MPI_COMM_WORLD, &me);
 
@@ -133,9 +145,9 @@ int main(int argc, char *argv[])
   }
 
   // read graph from checkpoints
-  if (restart == 1) {
+  if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
      printf("RE-Start execution ... \n");
-     survivor = 1;
+     survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
      printf("Read checkpoint graph data ... \n");
      GraphCheckpointRead(survivor,me,*g);
   }
@@ -144,7 +156,7 @@ int main(int argc, char *argv[])
 
   // code for C/R (1)
   // write graph to checkpoints
-  if (cp_stride>0 && restart==0) {
+  if (cp_stride>0 && state == OMPI_REINIT_NEW) {
       printf("Write checkpoint graph data ... \n");
       GraphCheckpointWrite(*g,me); 
   }
@@ -191,10 +203,10 @@ int main(int argc, char *argv[])
 
 #if defined(USE_MPI_RMA)
   currMod = distLouvainMethod(me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
-                svdata, rvdata, currMod, threshold, iters, commwin);
+                svdata, rvdata, currMod, threshold, iters, commwin, state);
 #else
   currMod = distLouvainMethod(me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
-                svdata, rvdata, currMod, threshold, iters);
+                svdata, rvdata, currMod, threshold, iters, state);
 #endif
   MPI_Barrier(MPI_COMM_WORLD);
   t0 = MPI_Wtime();
@@ -213,8 +225,6 @@ int main(int argc, char *argv[])
   
   delete g;
   destroyCommunityMPIType();
-
-  MPI_Finalize();
 
   return 0;
 } // main

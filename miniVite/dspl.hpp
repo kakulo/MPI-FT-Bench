@@ -1266,12 +1266,12 @@ void exchangeVertexReqs(const Graph &dg, size_t &ssz, size_t &rsz,
 GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
         size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, 
         vector<GraphElem> &svdata, vector<GraphElem> &rvdata, const GraphWeight lower, 
-        const GraphWeight thresh, int &iters, MPI_Win &commwin)
+        const GraphWeight thresh, int &iters, MPI_Win &commwin, OMPI_reinit_state_t state)
 #else
 GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
         size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, 
         vector<GraphElem> &svdata, vector<GraphElem> &rvdata, const GraphWeight lower, 
-        const GraphWeight thresh, int &iters)
+        const GraphWeight thresh, int &iters, OMPI_reinit_state_t state)
 #endif
 {
   vector<GraphElem> pastComm, currComm, targetComm;
@@ -1331,11 +1331,15 @@ GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
 
   // code for C/R (2.1)
   // read variables from checkpoints
-  if (restart == 1) {
+  if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
      printf("RE-Start execution ... \n");
      printf("Read Louvain Loop checkpoint data ... \n");
-     survivor = 1;
+     survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
      LouvainCheckpointRead(survivor, myrank, me, numIters, ssz, rsz, ssizes, rsizes, svdata, rvdata, pastComm, currComm, targetComm, remoteComm, remoteCinfo, remoteCupdate, localCinfo, localCupdate, vDegree, clusterWeight);
+     state == OMPI_REINIT_NEW;
+     // XXX: Disable FI, assumes 1 failure
+     procfi = 0;
+     nodefi = 0;
   }
   // end of 
   // reading variables from checkpoints
@@ -1357,12 +1361,12 @@ GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
   // writing varialbes to checkpionts
 
   // simulation of proc/node failures
-  if (procfi == 1 && myrank == (procsize-1) && numIters==5){
+  if (procfi == 1 && myrank == (procsize-1) && numIters==4){
      printf("KILL rank %d\n", myrank);
      raise(SIGKILL);
   }
 
-  if (nodefi == 1 && myrank == (procsize-1) && numIters==5){
+  if (nodefi == 1 && myrank == (procsize-1) && numIters==4){
      char hostname[64];
      gethostname(hostname, 64);
      printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), myrank);
