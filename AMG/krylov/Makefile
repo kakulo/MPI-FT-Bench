@@ -48,7 +48,7 @@ FILES =\
  pcg.c
 
 OBJS = ${FILES:.c=.o}
-OBJS += ../../../libcheckpoint/checkpoint.o
+OBJS += ../../libcheckpoint/checkpoint.o
 
 ##################################################################
 # Targets

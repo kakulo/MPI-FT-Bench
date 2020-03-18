@@ -62,12 +62,14 @@ HYPRE_Int
 HYPRE_GMRESSolve( HYPRE_Solver solver,
                         HYPRE_Matrix A,
                         HYPRE_Vector b,
-                        HYPRE_Vector x      )
+                        HYPRE_Vector x,      
+			OMPI_reinit_state_t state)
 {
    return( hypre_GMRESSolve( solver,
                              A,
                              b,
-                             x ) );
+                             x,
+			     state ) );
 }
 
 /*--------------------------------------------------------------------------

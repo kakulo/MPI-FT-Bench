@@ -33,7 +33,7 @@
 #include <fstream>
 #include <signal.h>
 #include <unistd.h>
-#include "../../../libcheckpoint/checkpoint.h"
+#include "../libcheckpoint/checkpoint.h"
 
 using namespace std;
 
@@ -263,7 +263,8 @@ HYPRE_Int
 hypre_GMRESSolve(void  *gmres_vdata,
                  void  *A,
                  void  *b,
-		 void  *x)
+		 void  *x,
+		 OMPI_reinit_state_t state)
 {
    hypre_GMRESData  *gmres_data   = (hypre_GMRESData *)gmres_vdata;
    hypre_GMRESFunctions *gmres_functions = gmres_data->functions;
@@ -518,11 +519,16 @@ hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
 
 /* code for C/R implementation */
 // write and read checkpoints
-	if (restart==1) {
+	if (procfi == 1 || nodefi == 1) {
+	if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
 	   printf("RE-Start execution ... \n");
-	   survivor = 1;
+	   survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
 	   AMGCheckpointRead(iter,rs,c,s,hh,epsilon,max_iter,epsmac,p,precond_data,b_norm,norms,r_norm_0,A,x,w,b,rank,survivor,k_dim);
-	   restart = 0;
+	   state = OMPI_REINIT_NEW;
+	   // Disable FI, assumes 1 failure
+	   procfi = 0;
+	   nodefi = 0; 
+	}
 	}
 
 	if (cp_stride>0) {
@@ -728,12 +734,12 @@ hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
          }
 
 
-    	 if (procfi == 1 && rank == (procsize-1) && iter==10){
+    	 if (procfi == 1 && rank == (procsize-1) && iter==11){
       	   printf("KILL rank %d\n", rank);
       	   raise(SIGKILL);
     	 }
 
-    	 if (nodefi == 1 && rank == (procsize-1) && iter==10){
+    	 if (nodefi == 1 && rank == (procsize-1) && iter==11){
       	   char hostname[64];
       	   gethostname(hostname, 64);
       	   printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), rank);

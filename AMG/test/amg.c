@@ -26,6 +26,9 @@
 #include <stdio.h>
 #include <math.h>
 
+#include <mpi.h>
+#include <mpi-ext.h>
+
 #include "_hypre_utilities.h"
 #include "HYPRE.h"
 #include "HYPRE_parcsr_mv.h"
@@ -54,6 +57,7 @@ HYPRE_Int AddOrRestoreAIJ( HYPRE_IJMatrix  ij_A, HYPRE_Real eps, HYPRE_Int actio
 HYPRE_Int hypre_map27( HYPRE_Int  ix, HYPRE_Int  iy, HYPRE_Int  iz,
       HYPRE_Int  px, HYPRE_Int  py, HYPRE_Int  pz,
       HYPRE_Int  Cx, HYPRE_Int  Cy, HYPRE_Int  Cz, HYPRE_Int nx, HYPRE_Int nxy);
+int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state);
 
 #ifdef __cplusplus
 }
@@ -89,6 +93,16 @@ hypre_int
 main( hypre_int argc,
       char *argv[] )
 {
+   /* Initialize MPI */
+   hypre_MPI_Init(&argc, &argv);
+   OMPI_Reinit(argc, argv, resilient_main);
+   hypre_MPI_Finalize();
+   return (0);
+}
+
+
+int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
+
    HYPRE_Int           arg_index;
    HYPRE_Int           print_usage;
    HYPRE_Int           build_rhs_type;
@@ -173,15 +187,12 @@ main( hypre_int argc,
     * Initialize some stuff
     *-----------------------------------------------------------*/
 
-   /* Initialize MPI */
-   hypre_MPI_Init(&argc, &argv);
-
    hypre_MPI_Comm_rank(hypre_MPI_COMM_WORLD, &myid );
 
    char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myid);
-   sleep(35);
+   sleep(55);
 
    /*-----------------------------------------------------------
     * Set defaults
@@ -356,6 +367,7 @@ main( hypre_int argc,
     * Set up matrix
     *-----------------------------------------------------------*/
 
+   hypre_MPI_Barrier(hypre_MPI_COMM_WORLD);
    time_index = hypre_InitializeTiming("Spatial Operator");
    hypre_BeginTiming(time_index);
 
@@ -365,7 +377,7 @@ main( hypre_int argc,
 
 
    hypre_EndTiming(time_index);
-   hypre_PrintTiming("Generate Matrix", &wall_time, hypre_MPI_COMM_WORLD);
+   //hypre_PrintTiming("Generate Matrix", &wall_time, hypre_MPI_COMM_WORLD);
    hypre_FinalizeTiming(time_index);
    hypre_ClearTiming();
 
@@ -545,8 +557,7 @@ main( hypre_int argc,
       HYPRE_Real eps;
       HYPRE_Real diagonal = 26.5;
       AddOrRestoreAIJ(ij_A, diagonal, 0);
-      time_index = hypre_InitializeTiming("GMRES Solve");
-      hypre_MPI_Barrier(hypre_MPI_COMM_WORLD);
+      //time_index = hypre_InitializeTiming("GMRES Solve");
       hypre_BeginTiming(time_index);
       for (j=0; j < time_steps; j++)
       {
@@ -594,7 +605,7 @@ main( hypre_int argc,
          HYPRE_BoomerAMGGetCumNnzAP(pcg_precond, &nnz_AP);
          cum_nnz_AP += nnz_AP;
  
-         HYPRE_GMRESSolve (pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x);
+         HYPRE_GMRESSolve (pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x, state);
  
          HYPRE_GMRESGetNumIterations(pcg_solver, &num_iterations);
          HYPRE_GMRESGetFinalRelativeResidualNorm(pcg_solver,&final_res_norm);
@@ -615,7 +626,7 @@ main( hypre_int argc,
             HYPRE_ParVectorAxpy(eps,x,b);
             HYPRE_GMRESSetMaxIter(pcg_solver, gmres_iter);
             HYPRE_GMRESSetTol(pcg_solver, 0.0);
-            HYPRE_GMRESSolve(pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x);
+            HYPRE_GMRESSolve(pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x, state);
             HYPRE_GMRESGetNumIterations(pcg_solver, &num_iterations);
             HYPRE_GMRESGetFinalRelativeResidualNorm(pcg_solver,&final_res_norm);
             if (myid == 0 && print_stats)
@@ -682,9 +693,8 @@ main( hypre_int argc,
 /*
   hypre_FinalizeMemoryDebug();
 */
-   hypre_MPI_Finalize();
 
-   return (0);
+  return 0;
 }
 
 /*----------------------------------------------------------------------

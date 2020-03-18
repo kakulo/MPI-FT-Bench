@@ -62,7 +62,7 @@ LFLAGS =\
 all: amg 
                                                                                                                                          
 clean:
-	@rm -f *.o
+	@rm -f *.o check_* tmp_* *core
                                                                                                                                          
 veryclean: clean
 	@rm -f amg

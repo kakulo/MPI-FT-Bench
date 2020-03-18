@@ -19,6 +19,8 @@
 #define HYPRE_KRYLOV_HEADER
 
 #include "HYPRE_utilities.h"
+#include <mpi.h>
+#include <mpi-ext.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -310,7 +312,8 @@ HYPRE_Int HYPRE_GMRESSetup(HYPRE_Solver solver,
 HYPRE_Int HYPRE_GMRESSolve(HYPRE_Solver solver,
                      HYPRE_Matrix A,
                      HYPRE_Vector b,
-                     HYPRE_Vector x);
+                     HYPRE_Vector x,
+		     OMPI_reinit_state_t state);
 
 /**
  * (Optional) Set the relative convergence tolerance.
