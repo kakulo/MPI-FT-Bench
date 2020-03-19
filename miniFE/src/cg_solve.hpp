@@ -38,6 +38,13 @@
 
 #include "../../libcheckpoint/checkpoint.h"
 
+#include "ulfm-util.hpp"
+
+/* world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
 static int survivor;
 
 namespace miniFE {
@@ -215,7 +222,7 @@ ApplicationCheckpointWrite(miniFE::CSRMatrix<double, int, long long int> &A, min
   
   size = oss.str().size();
   
-  write_cp(cp2f, cp2m, cp2a, rank, num_iters, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);  
+  write_cp(cp2f, cp2m, cp2a, rank, num_iters, const_cast<char *>( oss.str().c_str() ), size, world);  
 
 }
 
@@ -235,7 +242,7 @@ ApplicationCheckpointRead(int survivor, int cp2f, int cp2m, int cp2a, int rank, 
   //typedef typename TypeTraits<ScalarType>::magnitude_type magnitude_type;
 
   char* data;
-  size_t sizeofCP=read_cp(survivor, cp2f, cp2m, cp2a, rank, &data, MPI_COMM_WORLD);
+  size_t sizeofCP=read_cp(survivor, cp2f, cp2m, cp2a, rank, &data, world);
 
   std::stringstream iss(std::string( data, data + sizeofCP ), std::stringstream::in | std::stringstream::binary );  
 
@@ -441,7 +448,8 @@ cg_solve(OperatorType& A,
          typename OperatorType::LocalOrdinalType& num_iters,
          typename TypeTraits<typename OperatorType::ScalarType>::magnitude_type& normr,
          timer_type* my_cg_times,
-	 Parameters& params)
+	 Parameters& params,
+	 int do_recover)
 {
   typedef typename OperatorType::ScalarType ScalarType;
   typedef typename OperatorType::GlobalOrdinalType GlobalOrdinalType;
@@ -454,8 +462,8 @@ cg_solve(OperatorType& A,
   int myproc = 0;
   int procsize = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
-  MPI_Comm_size(MPI_COMM_WORLD, &procsize);
+  MPI_Comm_rank(world, &myproc);
+  MPI_Comm_size(world, &procsize);
 #endif
 
   if (!A.has_local_indices) {
@@ -519,13 +527,12 @@ cg_solve(OperatorType& A,
   LocalOrdinalType k=1;
 
   // read checkpoints
-  // when restart
-  if (params.restart == 1) {
+  // Read checkpointing either because of recovery being a survivor
+  survivor = IsSurvivor();
+  if (do_recover || !survivor) {
     printf("RE-Start execution ... \n");
-    survivor = 0;
     ApplicationCheckpointRead(survivor, params.cp2f, params.cp2m, params.cp2a, myproc, A, b, x, &normr,my_cg_times,r,p,&rtrans,&oldrtrans,&num_iters);
     k = num_iters;
-    params.restart == 0;
   }
 
   for(; k <= max_iter && normr > tolerance; ++k) {

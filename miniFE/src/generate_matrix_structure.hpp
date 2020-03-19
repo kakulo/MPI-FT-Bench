@@ -42,6 +42,11 @@
 #include <mpi.h>
 #endif
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */                
+  extern MPI_Comm worldc[2];
+  extern int worldi;
+  #define world (worldc[worldi])
+
 namespace miniFE {
 
 template<typename MatrixType>
@@ -51,7 +56,7 @@ generate_matrix_structure(const simple_mesh_description<typename MatrixType::Glo
 {
   int myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   int threw_exc = 0;
@@ -149,7 +154,7 @@ get_id<GlobalOrdinal>(global_nodes_x, global_nodes_y, global_nodes_z,
   }
 #ifdef HAVE_MPI
   int global_throw = 0;
-  MPI_Allreduce(&threw_exc, &global_throw, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+  MPI_Allreduce(&threw_exc, &global_throw, 1, MPI_INT, MPI_SUM, world);
   threw_exc = global_throw;
 #endif
   if (threw_exc) {

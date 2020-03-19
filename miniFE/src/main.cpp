@@ -42,6 +42,10 @@
 #include <omp.h>
 #endif
 
+/* ULFM */
+#include <setjmp.h>
+#include "ulfm-util.h"
+
 #ifdef MINIFE_REPORT_RUSAGE
 #include <sys/time.h>
 #include <sys/resource.h>
@@ -77,6 +81,14 @@
 #define MINIFE_GLOBAL_ORDINAL int
 #endif
 
+/* ULFM: world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
+/* ULFM */
+extern jmp_buf stack_jmp_buf;
+
 // ************************************************************************
 
 void add_params_to_yaml(YAML_Doc& doc, miniFE::Parameters& params);
@@ -96,6 +108,15 @@ int main(int argc, char** argv) {
 
   int numprocs = 1, myproc = 0;
   miniFE::initialize_mpi(argc, argv, numprocs, myproc);
+
+/* ULFM */
+  InitULFM(argv);
+
+restart:
+  int do_recover = _setjmp(stack_jmp_buf);
+  /* We set an errhandler on world, so that a failure is not fatal anymore. */
+  SetCommErrhandler();
+
 
   miniFE::timer_type start_time = miniFE::mytimer();
 
@@ -117,7 +138,7 @@ int main(int argc, char** argv) {
   double local_threadcount = value;
 
 #ifdef HAVE_MPI
-  MPI_Allreduce(&local_threadcount,&global_threadcount,1,MPI_DOUBLE,MPI_SUM,MPI_COMM_WORLD);
+  MPI_Allreduce(&local_threadcount,&global_threadcount,1,MPI_DOUBLE,MPI_SUM,world);
 #else
   global_threadcount = local_threadcount;
 #endif
@@ -142,7 +163,7 @@ int main(int argc, char** argv) {
 
 #ifdef HAVE_MPI
   MPI_Datatype mpi_dtype = miniFE::TypeTraits<MINIFE_GLOBAL_ORDINAL>::mpi_type();
-  MPI_Allreduce(&num_my_ids, &min_ids, 1, mpi_dtype, MPI_MIN, MPI_COMM_WORLD);
+  MPI_Allreduce(&num_my_ids, &min_ids, 1, mpi_dtype, MPI_MIN, world);
 #endif
 
   if (min_ids == 0) {
@@ -186,7 +207,7 @@ int main(int argc, char** argv) {
 
   printf("Enter into the driver() function ...\n");
   int return_code =
-     miniFE::driver< MINIFE_SCALAR, MINIFE_LOCAL_ORDINAL, MINIFE_GLOBAL_ORDINAL>(global_box, my_box, params, doc);
+     miniFE::driver< MINIFE_SCALAR, MINIFE_LOCAL_ORDINAL, MINIFE_GLOBAL_ORDINAL>(global_box, my_box, params, doc, do_recover);
   printf("Exit the driver() function ...\n");
 
   miniFE::timer_type total_time = miniFE::mytimer() - start_time;
@@ -201,9 +222,9 @@ int main(int argc, char** argv) {
 
 #ifdef HAVE_MPI
    MPI_Reduce(&rank_rss, &global_rss, 1, 
-	MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+	MPI_LONG_LONG, MPI_SUM, 0, world);
    MPI_Reduce(&rank_rss, &max_rss, 1, 
-	MPI_LONG_LONG, MPI_MAX, 0, MPI_COMM_WORLD);
+	MPI_LONG_LONG, MPI_MAX, 0, world);
    if (myproc == 0) {
 	doc.add("Global All-RSS (kB)", global_rss);
 	doc.add("Global Max-RSS (kB)", max_rss);

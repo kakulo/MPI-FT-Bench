@@ -39,6 +39,11 @@
 #include <TypeTraits.hpp>
 #include <Box.hpp>
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
 namespace miniFE {
 
 inline void copy_box(const Box& from_box, Box& to_box)
@@ -126,15 +131,15 @@ void create_map_id_to_row(int global_nx, int global_ny, int global_nz,
 
 #ifdef HAVE_MPI
   int numprocs = 1, myproc = 0;
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 
   typename std::vector<GlobalOrdinal> tmp_buffer(numprocs, 0);
   tmp_buffer[myproc] = num_my_ids;
   typename std::vector<GlobalOrdinal> global_offsets(numprocs);
   MPI_Datatype mpi_dtype = TypeTraits<GlobalOrdinal>::mpi_type();
   MPI_Allreduce(&tmp_buffer[0], &global_offsets[0], numprocs, mpi_dtype,
-                MPI_SUM, MPI_COMM_WORLD);
+                MPI_SUM, world);
   GlobalOrdinal offset = 0;
   for(int i=0; i<numprocs; ++i) {
     GlobalOrdinal tmp = global_offsets[i];
@@ -166,7 +171,7 @@ void create_map_id_to_row(int global_nx, int global_ny, int global_nz,
 #ifdef HAVE_MPI
   int len = ids.size();
   std::vector<int> lengths(numprocs);
-  MPI_Allgather(&len, 1, MPI_INT, &lengths[0], 1, MPI_INT, MPI_COMM_WORLD);
+  MPI_Allgather(&len, 1, MPI_INT, &lengths[0], 1, MPI_INT, world);
 
   std::vector<int> displs(lengths);
   int displ = 0;
@@ -180,9 +185,9 @@ void create_map_id_to_row(int global_nx, int global_ny, int global_nz,
   typename std::vector<GlobalOrdinal> global_rows(displ);
 
   MPI_Allgatherv(&ids[0], len, mpi_dtype, &global_ids[0],
-                 &lengths[0], &displs[0], mpi_dtype, MPI_COMM_WORLD);
+                 &lengths[0], &displs[0], mpi_dtype, world);
   MPI_Allgatherv(&rows[0], len, mpi_dtype, &global_rows[0],
-                 &lengths[0], &displs[0], mpi_dtype, MPI_COMM_WORLD);
+                 &lengths[0], &displs[0], mpi_dtype, world);
 
   ids = global_ids;
   rows = global_rows;

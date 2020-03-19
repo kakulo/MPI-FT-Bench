@@ -51,6 +51,11 @@
 #include <mpi.h>
 #endif
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */                
+  extern MPI_Comm worldc[2];
+  extern int worldi;
+  #define world (worldc[worldi])
+
 namespace miniFE {
 
 template<typename MatrixType>
@@ -105,8 +110,8 @@ void write_matrix(const std::string& filename,
 
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   std::ostringstream osstr;
@@ -134,7 +139,7 @@ void write_matrix(const std::string& filename,
       }
     }
 #ifdef HAVE_MPI
-    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(world);
 #endif
   }
 }
@@ -311,7 +316,7 @@ parallel_memory_overhead_MB(const MatrixType& A)
   mem_MB += invMB*A.send_length.size()*sizeof(LocalOrdinal);
 
   double tmp = mem_MB;
-  MPI_Allreduce(&tmp, &mem_MB, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+  MPI_Allreduce(&tmp, &mem_MB, 1, MPI_DOUBLE, MPI_SUM, world);
 #endif
 
   return mem_MB;

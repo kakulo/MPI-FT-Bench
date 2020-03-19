@@ -37,6 +37,11 @@
 #include <cuda.h>
 #endif
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */                
+  extern MPI_Comm worldc[2];
+  extern int worldi;
+  #define world (worldc[worldi])
+
 namespace miniFE {
 
 template<typename OperatorType,
@@ -59,7 +64,7 @@ time_kernels(OperatorType& A,
 
   int myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (!A.has_local_indices) {

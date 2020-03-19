@@ -35,6 +35,11 @@
 #include <mpi.h>
 #endif
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */                
+  extern MPI_Comm worldc[2];
+  extern int worldi;
+  #define world (worldc[worldi])
+
 #include <outstream.hpp>
 
 #include <TypeTraits.hpp>
@@ -54,7 +59,7 @@ exchange_externals(MatrixType& A,
 #endif
 
   int numprocs = 1;
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
+  MPI_Comm_size(world, &numprocs);
 
   if (numprocs < 2) return;
 
@@ -96,7 +101,7 @@ exchange_externals(MatrixType& A,
   for(int i=0; i<num_neighbors; ++i) {
     int n_recv = recv_length[i];
     MPI_Irecv(x_external, n_recv, mpi_dtype, neighbors[i], MPI_MY_TAG,
-              MPI_COMM_WORLD, &request[i]);
+              world, &request[i]);
     x_external += n_recv;
   }
 
@@ -133,7 +138,7 @@ exchange_externals(MatrixType& A,
   for(int i=0; i<num_neighbors; ++i) {
     int n_send = send_length[i];
     MPI_Send(s_buffer, n_send, mpi_dtype, neighbors[i], MPI_MY_TAG,
-             MPI_COMM_WORLD);
+             world);
     s_buffer += n_send;
   }
 
@@ -149,7 +154,7 @@ exchange_externals(MatrixType& A,
   for(int i=0; i<num_neighbors; ++i) {
     if (MPI_Wait(&request[i], &status) != MPI_SUCCESS) {
       std::cerr << "MPI_Wait error\n"<<std::endl;
-      MPI_Abort(MPI_COMM_WORLD, -1);
+      MPI_Abort(world, -1);
     }
   }
 
@@ -174,8 +179,8 @@ begin_exchange_externals(MatrixType& A,
 #ifdef HAVE_MPI
 
   int numprocs = 1, myproc = 0;
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 
   if (numprocs < 2) return;
 
@@ -217,7 +222,7 @@ begin_exchange_externals(MatrixType& A,
   for(int i=0; i<num_neighbors; ++i) {
     int n_recv = recv_length[i];
     MPI_Irecv(x_external, n_recv, mpi_dtype, neighbors[i], MPI_MY_TAG,
-              MPI_COMM_WORLD, &exch_ext_requests[i]);
+              world, &exch_ext_requests[i]);
     x_external += n_recv;
   }
 
@@ -237,7 +242,7 @@ begin_exchange_externals(MatrixType& A,
   for(int i=0; i<num_neighbors; ++i) {
     int n_send = send_length[i];
     MPI_Send(s_buffer, n_send, mpi_dtype, neighbors[i], MPI_MY_TAG,
-             MPI_COMM_WORLD);
+             world);
     s_buffer += n_send;
   }
 #endif
@@ -256,7 +261,7 @@ finish_exchange_externals(int num_neighbors)
   for(int i=0; i<num_neighbors; ++i) {
     if (MPI_Wait(&exch_ext_requests[i], &status) != MPI_SUCCESS) {
       std::cerr << "MPI_Wait error\n"<<std::endl;
-      MPI_Abort(MPI_COMM_WORLD, -1);
+      MPI_Abort(world, -1);
     }
   }
 

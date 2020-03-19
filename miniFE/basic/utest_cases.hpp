@@ -64,6 +64,11 @@
 
 #include <utest_case.hpp>
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */                
+  extern MPI_Comm worldc[2];
+  extern int worldi;
+  #define world (worldc[worldi])
+
 typedef MINIFE_SCALAR Scalar;
 typedef MINIFE_LOCAL_ORDINAL LocalOrdinal;
 typedef MINIFE_GLOBAL_ORDINAL GlobalOrdinal;
@@ -519,8 +524,8 @@ UTEST_CASE(pll_matvec2)
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (numprocs != 2) {
@@ -620,8 +625,8 @@ UTEST_CASE(pll_matvec3)
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (numprocs != 3) {
@@ -739,8 +744,8 @@ UTEST_CASE(ComputeNode_waxpy1)
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (numprocs != 1) {
@@ -795,8 +800,8 @@ UTEST_CASE(ComputeNode_dot1)
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (numprocs != 1) {
@@ -842,8 +847,8 @@ UTEST_CASE(ComputeNode_TBB_dot1)
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (numprocs != 1) {
@@ -882,8 +887,8 @@ UTEST_CASE(ComputeNode_dot2)
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (numprocs != 1) {
@@ -928,8 +933,8 @@ UTEST_CASE(ser_matvec1)
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (numprocs != 1) {
@@ -1038,8 +1043,8 @@ UTEST_CASE(waxpby_perf)
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (numprocs != 1) {

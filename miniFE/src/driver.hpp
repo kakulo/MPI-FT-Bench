@@ -87,6 +87,11 @@
   }                                 \
 }
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */                
+  extern MPI_Comm worldc[2];
+  extern int worldi;
+  #define world (worldc[worldi])
+
 //This program assembles finite-element matrices into a global matrix and
 //vector, then solves the linear-system using Conjugate Gradients.
 //Each finite-element is a hexahedron with 8 vertex-nodes.
@@ -122,7 +127,7 @@ template<typename Scalar,
          typename GlobalOrdinal>
 int
 driver(const Box& global_box, Box& my_box,
-       Parameters& params, YAML_Doc& ydoc)
+       Parameters& params, YAML_Doc& ydoc, int do_recover)
 {
   int global_nx = global_box[0][1];
   int global_ny = global_box[1][1];
@@ -130,8 +135,8 @@ driver(const Box& global_box, Box& my_box,
 
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (params.load_imbalance > 0) {
@@ -280,7 +285,7 @@ driver(const Box& global_box, Box& my_box,
     rearrange_matrix_local_external(A);
     printf("Enter into the 1st cg_solve() function ...\n");
     cg_solve(A, b, x, matvec_overlap<MatrixType,VectorType>(), max_iters, tol,
-           num_iters, rnorm, cg_times,params);
+           num_iters, rnorm, cg_times,params, do_recover);
     printf("Exit into the 1st cg_solve() function ...\n");
 #else
     std::cout << "ERROR, matvec with overlapping comm/comp only works with CSR matrix."<<std::endl;
@@ -289,7 +294,7 @@ driver(const Box& global_box, Box& my_box,
   else {
     printf("Enter into the 2nd cg_solve() function ...\n");
     cg_solve(A, b, x, matvec_std<MatrixType,VectorType>(), max_iters, tol,
-           num_iters, rnorm, cg_times,params);
+           num_iters, rnorm, cg_times,params, do_recover);
     printf("Exit the 2nd cg_solve() function ...\n");
     if (myproc == 0) {
       std::cout << "Final Resid Norm: " << rnorm << std::endl;

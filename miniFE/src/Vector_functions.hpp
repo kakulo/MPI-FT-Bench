@@ -45,6 +45,11 @@
 
 #define MINIFE_MIN(X, Y)  ((X) < (Y) ? (X) : (Y))
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */                
+  extern MPI_Comm worldc[2];
+  extern int worldi;
+  #define world (worldc[worldi])
+
 namespace miniFE {
 
 
@@ -54,8 +59,8 @@ void write_vector(const std::string& filename,
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   std::ostringstream osstr;
@@ -78,7 +83,7 @@ void write_vector(const std::string& filename,
       }
     }
 #ifdef HAVE_MPI
-    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(world);
 #endif
   }
 }
@@ -253,7 +258,7 @@ typename TypeTraits<typename Vector::ScalarType>::magnitude_type
 #ifdef HAVE_MPI
   magnitude local_dot = result, global_dot = 0;
   MPI_Datatype mpi_dtype = TypeTraits<magnitude>::mpi_type();  
-  MPI_Allreduce(&local_dot, &global_dot, 1, mpi_dtype, MPI_SUM, MPI_COMM_WORLD);
+  MPI_Allreduce(&local_dot, &global_dot, 1, mpi_dtype, MPI_SUM, world);
   return global_dot;
 #else
   return result;
@@ -266,7 +271,7 @@ typename TypeTraits<typename Vector::ScalarType>::magnitude_type
 {
 #ifdef MINIFE_DEBUG_OPENMP
  	int myrank;
-	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+	MPI_Comm_rank(world, &myrank);
 	std::cout << "[" << myrank << "] Starting dot..." << std::endl;
 #endif
 
@@ -293,7 +298,7 @@ typename TypeTraits<typename Vector::ScalarType>::magnitude_type
 #ifdef HAVE_MPI
   magnitude local_dot = result, global_dot = 0;
   MPI_Datatype mpi_dtype = TypeTraits<magnitude>::mpi_type();  
-  MPI_Allreduce(&local_dot, &global_dot, 1, mpi_dtype, MPI_SUM, MPI_COMM_WORLD);
+  MPI_Allreduce(&local_dot, &global_dot, 1, mpi_dtype, MPI_SUM, world);
 
 #ifdef MINIFE_DEBUG_OPENMP
  	std::cout << "[" << myrank << "] Completed dot." << std::endl;
