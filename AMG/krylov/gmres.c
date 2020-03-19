@@ -520,7 +520,7 @@ hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
 // write and read checkpoints
 	if (restart==1) {
 	   printf("RE-Start execution ... \n");
-	   survivor = 1;
+	   survivor = 0;
 	   AMGCheckpointRead(iter,rs,c,s,hh,epsilon,max_iter,epsmac,p,precond_data,b_norm,norms,r_norm_0,A,x,w,b,rank,survivor,k_dim);
 	   restart = 0;
 	}

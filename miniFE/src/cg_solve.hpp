@@ -522,7 +522,7 @@ cg_solve(OperatorType& A,
   // when restart
   if (params.restart == 1) {
     printf("RE-Start execution ... \n");
-    survivor = 1;
+    survivor = 0;
     ApplicationCheckpointRead(survivor, params.cp2f, params.cp2m, params.cp2a, myproc, A, b, x, &normr,my_cg_times,r,p,&rtrans,&oldrtrans,&num_iters);
     k = num_iters;
     params.restart == 0;

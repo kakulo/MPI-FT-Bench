@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
   // read graph from checkpoints
   if (restart == 1) {
      printf("RE-Start execution ... \n");
-     survivor = 1;
+     survivor = 0;
      printf("Read checkpoint graph data ... \n");
      GraphCheckpointRead(survivor,me,*g);
   }

@@ -1334,7 +1334,7 @@ GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
   if (restart == 1) {
      printf("RE-Start execution ... \n");
      printf("Read Louvain Loop checkpoint data ... \n");
-     survivor = 1;
+     survivor = 0;
      LouvainCheckpointRead(survivor, myrank, me, numIters, ssz, rsz, ssizes, rsizes, svdata, rvdata, pastComm, currComm, targetComm, remoteComm, remoteCinfo, remoteCupdate, localCinfo, localCupdate, vDegree, clusterWeight);
   }
   // end of 
