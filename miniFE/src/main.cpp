@@ -44,7 +44,7 @@
 
 /* ULFM */
 #include <setjmp.h>
-#include "ulfm-util.h"
+#include "ulfm-util.hpp"
 
 #ifdef MINIFE_REPORT_RUSAGE
 #include <sys/time.h>

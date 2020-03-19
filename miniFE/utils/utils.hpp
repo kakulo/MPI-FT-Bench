@@ -40,6 +40,11 @@
 #include <TypeTraits.hpp>
 #include <Parameters.hpp>
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
 namespace miniFE {
 
 void get_parameters(int argc, char** argv, Parameters& params);
@@ -84,8 +89,8 @@ void get_global_min_max(GlobalOrdinal local_n,
 //
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   std::vector<GlobalOrdinal> all_n(numprocs, 0);
@@ -93,7 +98,7 @@ void get_global_min_max(GlobalOrdinal local_n,
 #ifdef HAVE_MPI
   std::vector<GlobalOrdinal> tmp(all_n);
   MPI_Datatype mpi_dtype = TypeTraits<GlobalOrdinal>::mpi_type();
-  MPI_Allreduce(&tmp[0], &all_n[0], numprocs, mpi_dtype, MPI_MAX, MPI_COMM_WORLD);
+  MPI_Allreduce(&tmp[0], &all_n[0], numprocs, mpi_dtype, MPI_MAX, world);
 #endif
 
   global_n = 0;
@@ -129,8 +134,8 @@ Scalar compute_std_dev_as_percentage(Scalar local_nrows,
 //
 #ifdef HAVE_MPI
   int numprocs = 1, myproc = 0;
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
   MPI_Datatype mpi_dtype = TypeTraits<Scalar>::mpi_type();
 
 //If it's significantly more efficient, we may consider using MPI_Gather below instead of
@@ -139,7 +144,7 @@ Scalar compute_std_dev_as_percentage(Scalar local_nrows,
 //(But for now, use MPI_Allgather and compute on all procs.)
 
   std::vector<Scalar> all_nrows(numprocs, 0);
-  MPI_Allgather(&local_nrows, 1, mpi_dtype, &all_nrows[0], 1, mpi_dtype, MPI_COMM_WORLD);
+  MPI_Allgather(&local_nrows, 1, mpi_dtype, &all_nrows[0], 1, mpi_dtype, world);
 
   //turn all_nrows contents into deviations, add to sum-of-squares-of-deviations:
   Scalar sum_sqr_dev = 0;

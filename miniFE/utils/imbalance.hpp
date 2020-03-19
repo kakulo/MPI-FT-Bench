@@ -38,6 +38,11 @@
 #include <utils.hpp>
 #include <YAML_Doc.hpp>
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
 namespace miniFE {
 
 const int X = 0;
@@ -59,8 +64,8 @@ compute_imbalance(const Box& global_box,
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   GlobalOrdinal local_nrows = get_num_ids<GlobalOrdinal>(local_box);
@@ -173,8 +178,8 @@ add_imbalance(const Box& global_box,
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 #endif
 
   if (numprocs == 1) {
@@ -220,8 +225,8 @@ add_imbalance(const Box& global_box,
                         local_box[Y][0], local_box[Y][1],
                         local_box[Z][0], local_box[Z][1]};
 #ifdef HAVE_MPI
-    MPI_Bcast(&grow_info[0], 8, MPI_INT, max_proc, MPI_COMM_WORLD);
-    MPI_Bcast(&shrink_info[0], 8, MPI_INT, min_proc, MPI_COMM_WORLD);
+    MPI_Bcast(&grow_info[0], 8, MPI_INT, max_proc, world);
+    MPI_Bcast(&shrink_info[0], 8, MPI_INT, min_proc, world);
 #endif
 
     int grow_axis = grow_info[0];
@@ -260,7 +265,7 @@ add_imbalance(const Box& global_box,
 #ifdef HAVE_MPI
     int statusints[2] = { grow_status ? 0 : 1, shrink_status ? 0 : 1 };
     int globalstatus[2] = { 0, 0 };
-    MPI_Allreduce(&statusints, &globalstatus, 2, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&statusints, &globalstatus, 2, MPI_INT, MPI_SUM, world);
     grow_status = globalstatus[0]>0 ? false : true;
     shrink_status = globalstatus[1]>0 ? false : true;
 #endif

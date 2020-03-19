@@ -36,7 +36,7 @@
 
 #include <outstream.hpp>
 
-#include "../../libcheckpoint/checkpoint.h"
+#include "../libcheckpoint/checkpoint.h"
 
 #include "ulfm-util.hpp"
 

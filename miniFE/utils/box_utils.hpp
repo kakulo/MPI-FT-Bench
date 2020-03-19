@@ -39,6 +39,11 @@
 #include <TypeTraits.hpp>
 #include <Box.hpp>
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
 namespace miniFE {
 
 inline void copy_box(const Box& from_box, Box& to_box)
@@ -245,13 +250,13 @@ void create_map_id_to_row(int global_nx, int global_ny, int global_nz,
   std::vector<int> all_boxes;
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
-  MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &myproc);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 
   GlobalOrdinal local_num_ids = num_my_ids;
   global_offsets.resize(numprocs);
   MPI_Datatype mpi_dtype = TypeTraits<GlobalOrdinal>::mpi_type();
-  MPI_Allgather(&local_num_ids, 1, mpi_dtype, &global_offsets[0], 1, mpi_dtype, MPI_COMM_WORLD);
+  MPI_Allgather(&local_num_ids, 1, mpi_dtype, &global_offsets[0], 1, mpi_dtype, world);
   GlobalOrdinal offset = 0;
   for(int i=0; i<numprocs; ++i) {
     GlobalOrdinal tmp = global_offsets[i];
@@ -263,7 +268,7 @@ void create_map_id_to_row(int global_nx, int global_ny, int global_nz,
 
   all_boxes.resize(6*numprocs);
   int* local_box_ranges = const_cast<int*>(&box.ranges[0]);
-  MPI_Allgather(local_box_ranges, 6, MPI_INT, &all_boxes[0], 6, MPI_INT, MPI_COMM_WORLD);
+  MPI_Allgather(local_box_ranges, 6, MPI_INT, &all_boxes[0], 6, MPI_INT, world);
 #endif
 
   if (all_ids.size() > 0) {
