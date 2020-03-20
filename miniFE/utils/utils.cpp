@@ -170,8 +170,6 @@ void initialize_mpi(int argc, char** argv, int& numprocs, int& myproc)
 {
 #ifdef HAVE_MPI
   MPI_Init(&argc, &argv);
-  MPI_Comm_size(world, &numprocs);
-  MPI_Comm_rank(world, &myproc);
 #else
   numprocs = 1;
   myproc = 0;

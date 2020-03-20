@@ -135,6 +135,7 @@ driver(const Box& global_box, Box& my_box,
 
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
+  printf("MPI_Comm_size in driver.hpp \n");
   MPI_Comm_size(world, &numprocs);
   MPI_Comm_rank(world, &myproc);
 #endif

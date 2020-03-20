@@ -59,6 +59,7 @@ void write_vector(const std::string& filename,
 {
   int numprocs = 1, myproc = 0;
 #ifdef HAVE_MPI
+  printf("MPI_Comm_size in Vector_functions.hpp \n");
   MPI_Comm_size(world, &numprocs);
   MPI_Comm_rank(world, &myproc);
 #endif

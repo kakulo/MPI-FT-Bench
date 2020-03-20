@@ -2,7 +2,7 @@
 #include <mpi-ext.h>
 #include <stdio.h>
 #include "ulfm-util.hpp"
-#include "../libcheckpoint/checkpoint.h"
+#include "../../libcheckpoint/checkpoint.h"
 #include <sys/time.h>
 
 static char **gargv;

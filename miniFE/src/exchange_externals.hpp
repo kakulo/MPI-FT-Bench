@@ -59,6 +59,7 @@ exchange_externals(MatrixType& A,
 #endif
 
   int numprocs = 1;
+  printf("MPI_Comm_size in exchange_externals.hpp \n");
   MPI_Comm_size(world, &numprocs);
 
   if (numprocs < 2) return;
@@ -179,6 +180,7 @@ begin_exchange_externals(MatrixType& A,
 #ifdef HAVE_MPI
 
   int numprocs = 1, myproc = 0;
+  printf("MPI_Comm_size in exchange_externals.hpp \n");
   MPI_Comm_size(world, &numprocs);
   MPI_Comm_rank(world, &myproc);
 

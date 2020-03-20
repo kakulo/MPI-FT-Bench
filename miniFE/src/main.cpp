@@ -107,10 +107,15 @@ int main(int argc, char** argv) {
   miniFE::get_parameters(argc, argv, params);
 
   int numprocs = 1, myproc = 0;
+  printf("start execution ... \n");
+
   miniFE::initialize_mpi(argc, argv, numprocs, myproc);
+  printf("mpi initi done ... \n");
 
 /* ULFM */
   InitULFM(argv);
+  MPI_Comm_size(world, &numprocs);
+  MPI_Comm_rank(world, &myproc);
 
 restart:
   int do_recover = _setjmp(stack_jmp_buf);

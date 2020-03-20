@@ -36,7 +36,7 @@
 
 #include <outstream.hpp>
 
-#include "../libcheckpoint/checkpoint.h"
+#include "../../libcheckpoint/checkpoint.h"
 
 #include "ulfm-util.hpp"
 
@@ -462,6 +462,7 @@ cg_solve(OperatorType& A,
   int myproc = 0;
   int procsize = 0;
 #ifdef HAVE_MPI
+  printf("MPI_Comm_size in cg_solve.hpp \n");
   MPI_Comm_rank(world, &myproc);
   MPI_Comm_size(world, &procsize);
 #endif
@@ -533,6 +534,8 @@ cg_solve(OperatorType& A,
     printf("RE-Start execution ... \n");
     ApplicationCheckpointRead(survivor, params.cp2f, params.cp2m, params.cp2a, myproc, A, b, x, &normr,my_cg_times,r,p,&rtrans,&oldrtrans,&num_iters);
     k = num_iters;
+    params.procfi = 0; 
+    params.nodefi = 0; 
   }
 
   for(; k <= max_iter && normr > tolerance; ++k) {
@@ -555,12 +558,14 @@ cg_solve(OperatorType& A,
 
     normr = sqrt(rtrans);
 
-    if (params.procfi == 1 && myproc == (procsize-1) && k==61){
+    if (params.procfi == 1 && myproc == (procsize-1) && k==21){
+      params.procfi = 0;
       printf("KILL rank %d\n", myproc);
       raise(SIGKILL);
     }
 
-    if (params.nodefi == 1 && myproc == (procsize-1) && k==61){
+    if (params.nodefi == 1 && myproc == (procsize-1) && k==21){
+      params.nodefi = 0;
       char hostname[64];
       gethostname(hostname, 64);
       printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), myproc);

@@ -50,6 +50,7 @@ make_local_matrix(MatrixType& A)
 {
 #ifdef HAVE_MPI
   int numprocs = 1, myproc = 0;
+  printf("MPI_Comm_size in make_local_matrix.hpp \n");
   MPI_Comm_size(world, &numprocs);
   MPI_Comm_rank(world, &myproc);
 
