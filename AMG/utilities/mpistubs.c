@@ -678,6 +678,7 @@ HYPRE_Int
 hypre_MPI_Abort( hypre_MPI_Comm comm,
                  HYPRE_Int      errorcode )
 {
+   printf("test0 \n");
    return (HYPRE_Int) MPI_Abort(comm, (hypre_int)errorcode);
 }
 

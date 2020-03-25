@@ -66,6 +66,11 @@
 #include <utility>
 #include <cstring>
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
 #ifdef USE_32_BIT_GRAPH
 using GraphElem = int32_t;
 using GraphWeight = float;
@@ -116,7 +121,7 @@ class LCG
 {
     public:
         LCG(unsigned seed, GraphWeight* drand, 
-            GraphElem n, MPI_Comm comm = MPI_COMM_WORLD): 
+            GraphElem n, MPI_Comm comm = world): 
         seed_(seed), drand_(drand), n_(n)
         {
             comm_ = comm;

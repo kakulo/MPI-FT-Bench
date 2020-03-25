@@ -60,6 +60,10 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+/* ULFM */
+#include <setjmp.h>
+#include "ulfm-util.hpp"
+
 static std::string inputFileName;
 static int me, nprocs;
 static int ranksPerNode = 1;
@@ -80,6 +84,14 @@ static void GraphCheckpointWrite(Graph &g, int rank);
 // read checkpoints for Graph
 static void GraphCheckpointRead(int survivor, int rank, Graph &g);
 
+/* ULFM: world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
+/* ULFM */
+extern jmp_buf stack_jmp_buf;
+
 
 int main(int argc, char *argv[])
 {
@@ -93,16 +105,25 @@ int main(int argc, char *argv[])
       MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &provided);
       if (provided < MPI_THREAD_FUNNELED) {
           std::cerr << "MPI library does not support MPI_THREAD_FUNNELED." << std::endl;
-          MPI_Abort(MPI_COMM_WORLD, -99);
+          MPI_Abort(world, -99);
       }
   } else {
       MPI_Init(&argc, &argv);
   }
+
+/* ULFM */
+  InitULFM(argv);
   
-  MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &me);
+  MPI_Comm_size(world, &nprocs);
+  MPI_Comm_rank(world, &me);
 
   parseCommandLine(argc, argv);
+
+restart:
+  int do_recover = _setjmp(stack_jmp_buf);
+  /* We set an errhandler on world, so that a failure is not fatal anymore. */
+  SetCommErrhandler();
+
 
    char hostname[65];
    gethostname(hostname, 65);
@@ -112,7 +133,7 @@ int main(int argc, char *argv[])
   createCommunityMPIType();
   double td0, td1, td, tdt;
 
-  MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Barrier(world);
   td0 = MPI_Wtime();
 
   Graph* g = nullptr;
@@ -133,9 +154,10 @@ int main(int argc, char *argv[])
   }
 
   // read graph from checkpoints
-  if (restart == 1) {
+  // Read checkpointing either because of recovery being a survivor
+  int survivor = IsSurvivor();
+  if (do_recover || !survivor) {
      printf("RE-Start execution ... \n");
-     survivor = 0;
      printf("Read checkpoint graph data ... \n");
      GraphCheckpointRead(survivor,me,*g);
   }
@@ -156,14 +178,14 @@ int main(int argc, char *argv[])
   g->print_dist_stats();
 #endif
 
-  MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Barrier(world);
 #ifdef DEBUG_PRINTF  
   assert(g);
 #endif  
   td1 = MPI_Wtime();
   td = td1 - td0;
 
-  MPI_Reduce(&td, &tdt, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&td, &tdt, 1, MPI_DOUBLE, MPI_SUM, 0, world);
  
   if (me == 0)  {
       if (!generateGraph)
@@ -185,18 +207,18 @@ int main(int argc, char *argv[])
   size_t ssz = 0, rsz = 0;
   int iters = 0;
     
-  MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Barrier(world);
 
   t1 = MPI_Wtime();
 
 #if defined(USE_MPI_RMA)
-  currMod = distLouvainMethod(me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
+  currMod = distLouvainMethod(do_recover, survivor, me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
                 svdata, rvdata, currMod, threshold, iters, commwin);
 #else
-  currMod = distLouvainMethod(me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
+  currMod = distLouvainMethod(do_recover, survivor, me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
                 svdata, rvdata, currMod, threshold, iters);
 #endif
-  MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Barrier(world);
   t0 = MPI_Wtime();
   
   if(me == 0) {
@@ -206,10 +228,10 @@ int main(int argc, char *argv[])
       std::cout << "**********************************************************************" << std::endl;
   }
 
-  MPI_Barrier(MPI_COMM_WORLD);
+  MPI_Barrier(world);
 
   double tot_time = 0.0;
-  MPI_Reduce(&total, &tot_time, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&total, &tot_time, 1, MPI_DOUBLE, MPI_SUM, 0, world);
   
   delete g;
   destroyCommunityMPIType();
@@ -308,32 +330,32 @@ void parseCommandLine(const int argc, char * const argv[])
 
   if (me == 0 && (argc == 1)) {
       std::cerr << "Must specify some options." << std::endl;
-      MPI_Abort(MPI_COMM_WORLD, -99);
+      MPI_Abort(world, -99);
   }
   
   if (me == 0 && !generateGraph && inputFileName.empty()) {
       std::cerr << "Must specify a binary file name with -f or provide parameters for generating a graph." << std::endl;
-      MPI_Abort(MPI_COMM_WORLD, -99);
+      MPI_Abort(world, -99);
   }
    
   if (me == 0 && !generateGraph && randomNumberLCG) {
       std::cerr << "Must specify -g for graph generation using LCG." << std::endl;
-      MPI_Abort(MPI_COMM_WORLD, -99);
+      MPI_Abort(world, -99);
   } 
    
   if (me == 0 && !generateGraph && randomEdgePercent) {
       std::cerr << "Must specify -g for graph generation first to add random edges to it." << std::endl;
-      MPI_Abort(MPI_COMM_WORLD, -99);
+      MPI_Abort(world, -99);
   } 
   
   if (me == 0 && !generateGraph && !isUnitEdgeWeight) {
       std::cerr << "Must specify -g for graph generation first before setting edge weights." << std::endl;
-      MPI_Abort(MPI_COMM_WORLD, -99);
+      MPI_Abort(world, -99);
   }
   
   if (me == 0 && generateGraph && ((randomEdgePercent < 0) || (randomEdgePercent >= 100))) {
       std::cerr << "Invalid random edge percentage for generated graph!" << std::endl;
-      MPI_Abort(MPI_COMM_WORLD, -99);
+      MPI_Abort(world, -99);
   }
 } // parseCommandLine
 
@@ -382,14 +404,14 @@ void GraphCheckpointWrite(Graph &g, int rank) {
 
   size = oss.str().size();
 
-  write_cp_0(cp2f, cp2m, cp2a, rank, -1, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);
+  write_cp_0(cp2f, cp2m, cp2a, rank, -1, const_cast<char *>( oss.str().c_str() ), size, world);
 } // GraphCheckpointWrite
 
 static void GraphCheckpointRead(int survivor, int rank, Graph &g) {
 
   char* data;
   // -1 means the first position to C/R outside the iteration
-  size_t sizeofCP=read_cp_0(survivor, cp2f, cp2m, cp2a, rank, &data, MPI_COMM_WORLD, -1);
+  size_t sizeofCP=read_cp_0(survivor, cp2f, cp2m, cp2a, rank, &data, world, -1);
   std::stringstream iss(std::string( data, data + sizeofCP ), std::stringstream::in | std::stringstream::binary );
 
   // checkpoint edge_list_

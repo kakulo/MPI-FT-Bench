@@ -21,7 +21,7 @@
 
 
 .SUFFIXES:
-.SUFFIXES: .c .f .o
+.SUFFIXES: .cpp .c .f .o
 
 include ../Makefile.include
 
@@ -39,16 +39,20 @@ HEADERS =\
  krylov.h\
  gmres.h\
  pcg.h\
- HYPRE_MatvecFunctions.h
+ HYPRE_MatvecFunctions.h \
+ ulfm-util.hpp
+
 
 FILES =\
  gmres.c\
  HYPRE_gmres.c\
  HYPRE_pcg.c\
- pcg.c
+ pcg.c\
+ ulfm-util.cpp
 
 OBJS = ${FILES:.c=.o}
-OBJS += ../../../libcheckpoint/checkpoint.o
+OBJS += ../../libcheckpoint/checkpoint.o
+OBJS += ulfm-util.o
 
 ##################################################################
 # Targets

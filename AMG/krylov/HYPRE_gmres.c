@@ -62,12 +62,16 @@ HYPRE_Int
 HYPRE_GMRESSolve( HYPRE_Solver solver,
                         HYPRE_Matrix A,
                         HYPRE_Vector b,
-                        HYPRE_Vector x      )
+                        HYPRE_Vector x,
+			int do_recover,
+			int survivor      )
 {
    return( hypre_GMRESSolve( solver,
                              A,
                              b,
-                             x ) );
+                             x,
+			     do_recover,
+			     survivor ) );
 }
 
 /*--------------------------------------------------------------------------

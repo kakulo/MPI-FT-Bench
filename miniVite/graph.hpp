@@ -55,6 +55,11 @@
 
 #include "utils.hpp"
 
+/* world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
 unsigned seed;
 
 struct Edge
@@ -87,7 +92,7 @@ class Graph
     public:
         Graph(): 
             lnv_(-1), lne_(-1), nv_(-1), 
-            ne_(-1), comm_(MPI_COMM_WORLD) 
+            ne_(-1), comm_(world) 
         {
             MPI_Comm_size(comm_, &size_);
             MPI_Comm_rank(comm_, &rank_);
@@ -95,7 +100,7 @@ class Graph
         
         Graph(GraphElem lnv, GraphElem lne, 
                 GraphElem nv, GraphElem ne, 
-                MPI_Comm comm=MPI_COMM_WORLD): 
+                MPI_Comm comm=world): 
             lnv_(lnv), lne_(lne), 
             nv_(nv), ne_(ne), 
             comm_(comm) 
@@ -310,7 +315,7 @@ class BinaryEdgeList
         BinaryEdgeList() : 
             M_(-1), N_(-1), 
             M_local_(-1), N_local_(-1), 
-            comm_(MPI_COMM_WORLD) 
+            comm_(world) 
         {}
         BinaryEdgeList(MPI_Comm comm) : 
             M_(-1), N_(-1), 
@@ -591,7 +596,7 @@ class BinaryEdgeList
 class GenerateRGG
 {
     public:
-        GenerateRGG(GraphElem nv, MPI_Comm comm = MPI_COMM_WORLD)
+        GenerateRGG(GraphElem nv, MPI_Comm comm = world)
         {
             nv_ = nv;
             comm_ = comm;
@@ -682,7 +687,7 @@ class GenerateRGG
             assert(hi > lo);
 
             // measure the time to generate random numbers
-            MPI_Barrier(MPI_COMM_WORLD);
+            MPI_Barrier(world);
             double st = MPI_Wtime();
 
             if (!isLCG) {

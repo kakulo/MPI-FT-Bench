@@ -542,8 +542,10 @@ cg_solve(OperatorType& A,
 
     // write checkpoints
     //printf("cp stride: %d \n", params.cp_stride);
-    if ((num_iters%params.cp_stride)==0) {
-      ApplicationCheckpointWrite(A, b, x, normr,my_cg_times,r,p,rtrans,oldrtrans, k,myproc,params.cp2f,params.cp2m,params.cp2a);
+    if (params.cp_stride>0) {
+      if ((num_iters%params.cp_stride)==0) {
+        ApplicationCheckpointWrite(A, b, x, normr,my_cg_times,r,p,rtrans,oldrtrans, k,myproc,params.cp2f,params.cp2m,params.cp2a);
+      }
     }
 
     if (k == 1) {

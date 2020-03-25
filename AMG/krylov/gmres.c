@@ -33,7 +33,14 @@
 #include <fstream>
 #include <signal.h>
 #include <unistd.h>
-#include "../../../libcheckpoint/checkpoint.h"
+#include "../../libcheckpoint/checkpoint.h"
+
+#include "ulfm-util.hpp"
+
+/* world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
 
 using namespace std;
 
@@ -263,7 +270,9 @@ HYPRE_Int
 hypre_GMRESSolve(void  *gmres_vdata,
                  void  *A,
                  void  *b,
-		 void  *x)
+		 void  *x,
+		 int do_recover,
+		 int survivor)
 {
    hypre_GMRESData  *gmres_data   = (hypre_GMRESData *)gmres_vdata;
    hypre_GMRESFunctions *gmres_functions = gmres_data->functions;
@@ -513,16 +522,20 @@ hypre_GMRESSolve(void  *gmres_vdata,
 	{
 HYPRE_Int rank;
 HYPRE_Int procsize;
-hypre_MPI_Comm_rank(hypre_MPI_COMM_WORLD,&rank);
-hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
+hypre_MPI_Comm_rank(world,&rank);
+hypre_MPI_Comm_size(world,&procsize);
 
 /* code for C/R implementation */
 // write and read checkpoints
-	if (restart==1) {
+        if (procfi == 1 || nodefi == 1) {
+	if (do_recover || !survivor) {
 	   printf("RE-Start execution ... \n");
-	   survivor = 0;
 	   AMGCheckpointRead(iter,rs,c,s,hh,epsilon,max_iter,epsmac,p,precond_data,b_norm,norms,r_norm_0,A,x,w,b,rank,survivor,k_dim);
-	   restart = 0;
+	   procfi = 0;
+	   nodefi = 0;
+	   do_recover = 0;
+	   survivor = 1;
+	}
 	}
 
 	if (cp_stride>0) {
@@ -1424,7 +1437,7 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   
   size = oss.str().size();
 
-  write_cp(cp2f, cp2m, cp2a, rank, iter, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);
+  write_cp(cp2f, cp2m, cp2a, rank, iter, const_cast<char *>( oss.str().c_str() ), size, world);
 
 } // AMGCheckpointWrite
 
@@ -1434,7 +1447,7 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
 static void AMGCheckpointRead(HYPRE_Int &iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE_Real *s,HYPRE_Real **hh,HYPRE_Real &epsilon,HYPRE_Int &max_iter,HYPRE_Real &epsmac,void *p,HYPRE_Int *precond_data,HYPRE_Real &b_norm,HYPRE_Real *norms, HYPRE_Real &r_norm_0, void *A, void *x, void *w, void *b, HYPRE_Int rank, HYPRE_Int survivor, HYPRE_Int &k_dim) {
 
   char *data;
-  size_t sizeofCP=read_cp(survivor, cp2f, cp2m, cp2a, rank, &data, MPI_COMM_WORLD);
+  size_t sizeofCP=read_cp(survivor, cp2f, cp2m, cp2a, rank, &data, world);
   stringstream iss(string( data, data + sizeofCP ), stringstream::in | stringstream::binary );
 
   // checkpoint iter

@@ -45,6 +45,10 @@
 
 #include <time.h>
 
+/* ULFM */
+#include <setjmp.h>
+#include "ulfm-util.hpp"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -60,6 +64,15 @@ HYPRE_Int hypre_map27( HYPRE_Int  ix, HYPRE_Int  iy, HYPRE_Int  iz,
 #endif
 #define SECOND_TIME 0
  
+
+/* ULFM: world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
+/* ULFM */
+extern jmp_buf stack_jmp_buf;
+
 /* new variables for C/R */
 int cp_stride=0;
 int procfi=0;
@@ -131,7 +144,7 @@ main( hypre_int argc,
    HYPRE_Int	       ns_coarse = 1;
 
    HYPRE_Int	       time_index;
-   MPI_Comm            comm = hypre_MPI_COMM_WORLD;
+   MPI_Comm            comm = world;
    HYPRE_Int first_local_row, last_local_row, local_num_rows;
    HYPRE_Int first_local_col, last_local_col, local_num_cols;
 
@@ -176,12 +189,15 @@ main( hypre_int argc,
    /* Initialize MPI */
    hypre_MPI_Init(&argc, &argv);
 
-   hypre_MPI_Comm_rank(hypre_MPI_COMM_WORLD, &myid );
+/* ULFM */
+  InitULFM(argv);
+  
+   hypre_MPI_Comm_rank(world, &myid );
 
    char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myid);
-   sleep(35);
+   //sleep(35);
 
    /*-----------------------------------------------------------
     * Set defaults
@@ -352,11 +368,18 @@ main( hypre_int argc,
       hypre_printf("  solver ID    = %d\n\n", solver_id);
    }
 
+restart:
+  int do_recover = _setjmp(stack_jmp_buf);
+  /* We set an errhandler on world, so that a failure is not fatal anymore. */
+  SetCommErrhandler();
+  // Read checkpointing either because of recovery being a survivor
+  int survivor = IsSurvivor();
+
    /*-----------------------------------------------------------
     * Set up matrix
     *-----------------------------------------------------------*/
 
-   time_index = hypre_InitializeTiming("Spatial Operator");
+   //time_index = hypre_InitializeTiming("Spatial Operator");
    hypre_BeginTiming(time_index);
 
    BuildIJLaplacian27pt(argc, argv, &system_size, &ij_A);
@@ -365,7 +388,7 @@ main( hypre_int argc,
 
 
    hypre_EndTiming(time_index);
-   hypre_PrintTiming("Generate Matrix", &wall_time, hypre_MPI_COMM_WORLD);
+   //hypre_PrintTiming("Generate Matrix", &wall_time, world);
    hypre_FinalizeTiming(time_index);
    hypre_ClearTiming();
 
@@ -373,7 +396,7 @@ main( hypre_int argc,
     * Set up the RHS and initial guess
     *-----------------------------------------------------------*/
 
-   time_index = hypre_InitializeTiming("RHS and Initial Guess");
+   //time_index = hypre_InitializeTiming("RHS and Initial Guess");
    hypre_BeginTiming(time_index);
 
    ierr = HYPRE_ParCSRMatrixGetLocalRange( parcsr_A,
@@ -390,12 +413,12 @@ main( hypre_int argc,
    }
 
    /* RHS */
-   HYPRE_IJVectorCreate(hypre_MPI_COMM_WORLD, first_local_row, last_local_row, &ij_b);
+   HYPRE_IJVectorCreate(world, first_local_row, last_local_row, &ij_b);
    HYPRE_IJVectorSetObjectType(ij_b, HYPRE_PARCSR);
    HYPRE_IJVectorInitialize(ij_b);
 
    /* Initial guess */
-   HYPRE_IJVectorCreate(hypre_MPI_COMM_WORLD, first_local_col, last_local_col, &ij_x);
+   HYPRE_IJVectorCreate(world, first_local_col, last_local_col, &ij_x);
    HYPRE_IJVectorSetObjectType(ij_x, HYPRE_PARCSR);
    HYPRE_IJVectorInitialize(ij_x);
 
@@ -416,7 +439,7 @@ main( hypre_int argc,
    x = (HYPRE_ParVector) object;
 
    hypre_EndTiming(time_index);
-   hypre_PrintTiming("IJ Vector Setup", &wall_time, hypre_MPI_COMM_WORLD);
+   hypre_PrintTiming("IJ Vector Setup", &wall_time, world);
    hypre_FinalizeTiming(time_index);
    hypre_ClearTiming();
    
@@ -440,10 +463,10 @@ main( hypre_int argc,
    if (problem_id == 1 )
    {
       time_index = hypre_InitializeTiming("PCG Setup");
-      hypre_MPI_Barrier(hypre_MPI_COMM_WORLD);
+      hypre_MPI_Barrier(world);
       hypre_BeginTiming(time_index);
  
-      HYPRE_ParCSRPCGCreate(hypre_MPI_COMM_WORLD, &pcg_solver);
+      HYPRE_ParCSRPCGCreate(world, &pcg_solver);
       HYPRE_PCGSetMaxIter(pcg_solver, max_iter);
       HYPRE_PCGSetTol(pcg_solver, tol);
       HYPRE_PCGSetTwoNorm(pcg_solver, 1);
@@ -484,9 +507,9 @@ main( hypre_int argc,
       HYPRE_PCGSetup(pcg_solver, (HYPRE_Matrix)parcsr_A, 
                      (HYPRE_Vector)b, (HYPRE_Vector)x);
 
-      hypre_MPI_Barrier(hypre_MPI_COMM_WORLD);
+      hypre_MPI_Barrier(world);
       hypre_EndTiming(time_index);
-      hypre_PrintTiming("Problem 1: AMG Setup Time", &wall_time, hypre_MPI_COMM_WORLD);
+      hypre_PrintTiming("Problem 1: AMG Setup Time", &wall_time, world);
       hypre_FinalizeTiming(time_index);
       hypre_ClearTiming();
       fflush(NULL);
@@ -499,15 +522,15 @@ main( hypre_int argc,
             printf ("\nFOM_Setup: nnz_AP / Setup Phase Time: %e\n\n", FOM1);
    
       time_index = hypre_InitializeTiming("PCG Solve");
-      hypre_MPI_Barrier(hypre_MPI_COMM_WORLD);
+      hypre_MPI_Barrier(world);
       hypre_BeginTiming(time_index);
  
       HYPRE_PCGSolve(pcg_solver, (HYPRE_Matrix)parcsr_A, 
                      (HYPRE_Vector)b, (HYPRE_Vector)x);
  
-      hypre_MPI_Barrier(hypre_MPI_COMM_WORLD);
+      hypre_MPI_Barrier(world);
       hypre_EndTiming(time_index);
-      hypre_PrintTiming("Problem 1: AMG-PCG Solve Time", &wall_time, hypre_MPI_COMM_WORLD);
+      hypre_PrintTiming("Problem 1: AMG-PCG Solve Time", &wall_time, world);
       hypre_FinalizeTiming(time_index);
       hypre_ClearTiming();
       fflush(NULL);
@@ -545,13 +568,13 @@ main( hypre_int argc,
       HYPRE_Real eps;
       HYPRE_Real diagonal = 26.5;
       AddOrRestoreAIJ(ij_A, diagonal, 0);
-      time_index = hypre_InitializeTiming("GMRES Solve");
-      hypre_MPI_Barrier(hypre_MPI_COMM_WORLD);
+      //time_index = hypre_InitializeTiming("GMRES Solve");
+      hypre_MPI_Barrier(world);
       hypre_BeginTiming(time_index);
       for (j=0; j < time_steps; j++)
       {
  
-         HYPRE_ParCSRGMRESCreate(hypre_MPI_COMM_WORLD, &pcg_solver);
+         HYPRE_ParCSRGMRESCreate(world, &pcg_solver);
          HYPRE_GMRESSetKDim(pcg_solver, k_dim);
          HYPRE_GMRESSetMaxIter(pcg_solver, max_iter);
          HYPRE_GMRESSetTol(pcg_solver, tol);
@@ -594,7 +617,7 @@ main( hypre_int argc,
          HYPRE_BoomerAMGGetCumNnzAP(pcg_precond, &nnz_AP);
          cum_nnz_AP += nnz_AP;
  
-         HYPRE_GMRESSolve (pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x);
+         HYPRE_GMRESSolve (pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x, do_recover, survivor);
  
          HYPRE_GMRESGetNumIterations(pcg_solver, &num_iterations);
          HYPRE_GMRESGetFinalRelativeResidualNorm(pcg_solver,&final_res_norm);
@@ -615,7 +638,7 @@ main( hypre_int argc,
             HYPRE_ParVectorAxpy(eps,x,b);
             HYPRE_GMRESSetMaxIter(pcg_solver, gmres_iter);
             HYPRE_GMRESSetTol(pcg_solver, 0.0);
-            HYPRE_GMRESSolve(pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x);
+            HYPRE_GMRESSolve(pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x, do_recover, survivor);
             HYPRE_GMRESGetNumIterations(pcg_solver, &num_iterations);
             HYPRE_GMRESGetFinalRelativeResidualNorm(pcg_solver,&final_res_norm);
             if (myid == 0 && print_stats)
@@ -640,9 +663,9 @@ main( hypre_int argc,
             HYPRE_ParVectorSetConstantValues(b,1.0);
          }
       }
-      hypre_MPI_Barrier(hypre_MPI_COMM_WORLD);
+      hypre_MPI_Barrier(world);
       hypre_EndTiming(time_index);
-      hypre_PrintTiming("Problem 2: Cumulative AMG-GMRES Solve Time", &wall_time, hypre_MPI_COMM_WORLD);
+      hypre_PrintTiming("Problem 2: Cumulative AMG-GMRES Solve Time", &wall_time, world);
       hypre_FinalizeTiming(time_index);
       hypre_ClearTiming();
       if (myid == 0)
@@ -698,7 +721,7 @@ BuildIJLaplacian27pt( HYPRE_Int         argc,
                        HYPRE_Real      *system_size_ptr,
                        HYPRE_IJMatrix  *ij_A_ptr     )
 {
-   MPI_Comm            comm = hypre_MPI_COMM_WORLD;
+   MPI_Comm            comm = world;
    HYPRE_Int                 nx, ny, nz;
    HYPRE_Int                 P, Q, R;
 
@@ -2355,7 +2378,7 @@ BuildIJLaplacian27pt( HYPRE_Int         argc,
 
    HYPRE_IJMatrixAssemble(ij_A);
 
-   /*A = (HYPRE_ParCSRMatrix) GenerateLaplacian27pt(hypre_MPI_COMM_WORLD,
+   /*A = (HYPRE_ParCSRMatrix) GenerateLaplacian27pt(world,
                                                   nx, ny, nz, P, Q, R, px, py, r, values);*/
 
    hypre_TFree(diag_i);

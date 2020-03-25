@@ -310,7 +310,9 @@ HYPRE_Int HYPRE_GMRESSetup(HYPRE_Solver solver,
 HYPRE_Int HYPRE_GMRESSolve(HYPRE_Solver solver,
                      HYPRE_Matrix A,
                      HYPRE_Vector b,
-                     HYPRE_Vector x);
+                     HYPRE_Vector x,
+		     int do_recover,
+			int survivor);
 
 /**
  * (Optional) Set the relative convergence tolerance.

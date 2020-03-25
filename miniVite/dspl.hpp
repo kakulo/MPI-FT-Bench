@@ -62,6 +62,13 @@
 
 #include "../libcheckpoint/checkpoint.h"
 
+#include "ulfm-util.hpp"
+
+/* world will swap between worldc[0] and worldc[1] after each respawn */
+extern MPI_Comm worldc[2];
+extern int worldi;
+#define world (worldc[worldi])
+
 using namespace std;
 
 // new variables for C/R implementation
@@ -72,7 +79,6 @@ int cp2f = 0;
 int cp2m = 0;
 int cp2a = 0;
 int restart = 0;
-int survivor=0;
 int myrank=0;
 int procsize=0;
 
@@ -1263,12 +1269,12 @@ void exchangeVertexReqs(const Graph &dg, size_t &ssz, size_t &rsz,
 } // exchangeVertexReqs
 
 #if defined(USE_MPI_RMA)
-GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
+GraphWeight distLouvainMethod(int do_recover, int survivor, const int me, const int nprocs, const Graph &dg,
         size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, 
         vector<GraphElem> &svdata, vector<GraphElem> &rvdata, const GraphWeight lower, 
         const GraphWeight thresh, int &iters, MPI_Win &commwin)
 #else
-GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
+GraphWeight distLouvainMethod(int do_recover, int survivor, const int me, const int nprocs, const Graph &dg,
         size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, 
         vector<GraphElem> &svdata, vector<GraphElem> &rvdata, const GraphWeight lower, 
         const GraphWeight thresh, int &iters)
@@ -1325,17 +1331,19 @@ GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
   cout << "[" << me << "]Initial communication setup time before Louvain iteration (in s): " << (t1 - t0) << endl;
 #endif
   
-  MPI_Comm comm=MPI_COMM_WORLD;
+  MPI_Comm comm=world;
   MPI_Comm_rank(comm, &myrank);
   MPI_Comm_size(comm, &procsize);
 
   // code for C/R (2.1)
   // read variables from checkpoints
-  if (restart == 1) {
+  // Read checkpointing either because of recovery being a survivor
+  if (do_recover || !survivor) {
      printf("RE-Start execution ... \n");
      printf("Read Louvain Loop checkpoint data ... \n");
-     survivor = 0;
      LouvainCheckpointRead(survivor, myrank, me, numIters, ssz, rsz, ssizes, rsizes, svdata, rvdata, pastComm, currComm, targetComm, remoteComm, remoteCinfo, remoteCupdate, localCinfo, localCupdate, vDegree, clusterWeight);
+     procfi = 0;
+     nodefi = 0;
   }
   // end of 
   // reading variables from checkpoints
@@ -1357,12 +1365,12 @@ GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
   // writing varialbes to checkpionts
 
   // simulation of proc/node failures
-  if (procfi == 1 && myrank == (procsize-1) && numIters==5){
+  if (procfi == 1 && myrank == (procsize-1) && numIters==4){
      printf("KILL rank %d\n", myrank);
      raise(SIGKILL);
   }
 
-  if (nodefi == 1 && myrank == (procsize-1) && numIters==5){
+  if (nodefi == 1 && myrank == (procsize-1) && numIters==4){
      char hostname[64];
      gethostname(hostname, 64);
      printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), myrank);
@@ -1610,7 +1618,7 @@ static void LouvainCheckpointWrite(int me, int numIters, size_t &ssz, size_t &rs
 
   size = oss.str().size();
 
-  write_cp(cp2f, cp2m, cp2a, rank, numIters, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);
+  write_cp(cp2f, cp2m, cp2a, rank, numIters, const_cast<char *>( oss.str().c_str() ), size, world);
 
   printf("write checkpoints for Iter %d ... \n", numIters);
 } // LouvainCheckpointWrite
@@ -1619,7 +1627,7 @@ static void LouvainCheckpointWrite(int me, int numIters, size_t &ssz, size_t &rs
 static void LouvainCheckpointRead(int survivor, int rank, int me, int &numIters, size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight) {
 
   char *data;
-  size_t sizeofCP=read_cp(survivor, cp2f, cp2m, cp2a, rank, &data, MPI_COMM_WORLD);
+  size_t sizeofCP=read_cp(survivor, cp2f, cp2m, cp2a, rank, &data, world);
   stringstream iss(string( data, data + sizeofCP ), stringstream::in | stringstream::binary );
 
   // checkpoint me
