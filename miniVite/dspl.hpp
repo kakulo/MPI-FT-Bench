@@ -1335,8 +1335,21 @@ GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
      printf("RE-Start execution ... \n");
      printf("Read Louvain Loop checkpoint data ... \n");
      survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
+
+/* timer on */
+    struct timeval start, end;
+    gettimeofday( &start, NULL );
+/* timer on */
+
      LouvainCheckpointRead(survivor, myrank, me, numIters, ssz, rsz, ssizes, rsizes, svdata, rvdata, pastComm, currComm, targetComm, remoteComm, remoteCinfo, remoteCupdate, localCinfo, localCupdate, vDegree, clusterWeight);
      state == OMPI_REINIT_NEW;
+
+/* timer off */
+    gettimeofday( &end, NULL );
+    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
+    printf("Read CPs - %lf s with rank %d ...\n", dtime, myrank);
+/* timer off */
+
      // XXX: Disable FI, assumes 1 failure
      procfi = 0;
      nodefi = 0;
@@ -1354,7 +1367,20 @@ GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
   if (cp_stride>0) {
     if (numIters%cp_stride==0) {
        printf("Write Louvain Loop checkpoint data ... \n");
+
+/* timer on */
+    struct timeval start, end;
+    gettimeofday( &start, NULL );
+/* timer on */
+
        LouvainCheckpointWrite(me, numIters, ssz, rsz, ssizes, rsizes, svdata, rvdata, pastComm, currComm, targetComm, remoteComm, remoteCinfo, remoteCupdate, localCinfo, localCupdate, vDegree, clusterWeight, myrank);
+
+/* timer off */
+    gettimeofday( &end, NULL );
+    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
+    printf("Write CPs - %lf s with rank %d ...\n", dtime, myrank);
+/* timer off */
+
     }
   }
   // end of 
@@ -1616,6 +1642,7 @@ static void LouvainCheckpointWrite(int me, int numIters, size_t &ssz, size_t &rs
 
   write_cp(cp2f, cp2m, cp2a, rank, numIters, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);
 
+  printf("Checkpoint size is %d bytes for rank %d ...\n", size, rank);
   printf("write checkpoints for Iter %d ... \n", numIters);
 } // LouvainCheckpointWrite
 

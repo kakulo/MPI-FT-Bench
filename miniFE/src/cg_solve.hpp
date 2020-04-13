@@ -34,6 +34,8 @@
 #include <Vector_functions.hpp>
 #include <mytimer.hpp>
 
+#include <sys/time.h>
+
 #include <outstream.hpp>
 
 #include "../../libcheckpoint/checkpoint.h"
@@ -221,6 +223,7 @@ ApplicationCheckpointWrite(miniFE::CSRMatrix<double, int, long long int> &A, min
   
   size = oss.str().size();
   
+  printf("Checkpoint size is %d bytes for rank %d ...\n", size, rank);
   write_cp(cp2f, cp2m, cp2a, rank, num_iters, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);  
 
 }
@@ -530,7 +533,20 @@ cg_solve(OperatorType& A,
   if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
     printf("RE-Start execution ... \n");
    survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
+
+/* timer on */
+    struct timeval start, end;
+    gettimeofday( &start, NULL );
+/* timer on */
+
     ApplicationCheckpointRead(survivor, params.cp2f, params.cp2m, params.cp2a, myproc, A, b, x, &normr,my_cg_times,r,p,&rtrans,&oldrtrans,&num_iters);
+
+/* timer off */
+    gettimeofday( &end, NULL );
+    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
+    printf("Read CPs - %lf s with rank %d ...\n", dtime, myproc);
+/* timer off */
+
     k = num_iters;
     state == OMPI_REINIT_NEW;
     // XXX: Disable FI, assumes 1 failure
@@ -543,7 +559,20 @@ cg_solve(OperatorType& A,
     // write checkpoints
     //printf("cp stride: %d \n", params.cp_stride);
     if ((num_iters%params.cp_stride)==0) {
+
+/* timer on */
+    struct timeval start, end;
+    gettimeofday( &start, NULL );
+/* timer on */
+
       ApplicationCheckpointWrite(A, b, x, normr,my_cg_times,r,p,rtrans,oldrtrans, k,myproc,params.cp2f,params.cp2m,params.cp2a);
+
+/* timer off */
+    gettimeofday( &end, NULL );
+    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
+    printf("Write CPs - %lf s with rank %d ...\n", dtime, myproc);
+/* timer off */
+
     }
 
     if (k == 1) {

@@ -23,4 +23,4 @@ $(TARGET):  $(OBJ) $(CPK_OBJ)
 .PHONY: clean
 
 clean:
-	rm -rf *~ $(OBJ) $(TARGET)
+	rm -rf *~ $(OBJ) $(TARGET) check_* tmp_* *core
