@@ -82,13 +82,13 @@ HYPRE_ParCSRGMRESSolve( HYPRE_Solver solver,
                         HYPRE_ParCSRMatrix A,
                         HYPRE_ParVector b,
                         HYPRE_ParVector x,
-			OMPI_reinit_state_t state   )
+			OMPI_reinit_state_t state)
 {
    return( HYPRE_GMRESSolve( solver,
                              (HYPRE_Matrix) A,
                              (HYPRE_Vector) b,
                              (HYPRE_Vector) x,
-			     state ) );
+			     state) );
 }
 
 /*--------------------------------------------------------------------------

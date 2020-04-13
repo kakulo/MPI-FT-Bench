@@ -30,6 +30,7 @@
 
 //#include "par_vector.h"
 #include <sstream>
+#include <sys/time.h>
 #include <fstream>
 #include <signal.h>
 #include <unistd.h>
@@ -523,7 +524,20 @@ hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
 	if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
 	   printf("RE-Start execution ... \n");
 	   survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
+for (int j=0;j<10;j++) {
+/* timer on */
+    struct timeval start, end;
+    gettimeofday( &start, NULL );
+/* timer on */
+
 	   AMGCheckpointRead(iter,rs,c,s,hh,epsilon,max_iter,epsmac,p,precond_data,b_norm,norms,r_norm_0,A,x,w,b,rank,survivor,k_dim);
+
+/* timer off */
+    gettimeofday( &end, NULL );
+    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
+    printf("Read CPs - %lf s with rank %d ...\n", dtime, rank);
+/* timer off */
+}
 	   state = OMPI_REINIT_NEW;
 	   // Disable FI, assumes 1 failure
 	   procfi = 0;
@@ -533,7 +547,20 @@ hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
 
 	if (cp_stride>0) {
            if ((iter%cp_stride)==0) {
+
+/* timer on */
+    struct timeval start, end;
+    gettimeofday( &start, NULL );
+/* timer on */
+
 	      AMGCheckpointWrite(iter,rs,c,s,hh,epsilon,max_iter,epsmac,p,precond_data,b_norm,norms,r_norm_0,A,x,w,b,rank,k_dim);
+
+/* timer off */
+    gettimeofday( &end, NULL );
+    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
+    printf("Write CPs - %lf s with rank %d ...\n", dtime, rank);
+/* timer off */
+
 	   }
 	}
 
@@ -728,10 +755,10 @@ hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
          //(*(gmres_functions->CopyVector))(b,r);
          //(*(gmres_functions->Matvec))(matvec_data,-1.0,A,x,1.0,r);
          //real_r_norm_new = r_norm = sqrt( (*(gmres_functions->InnerProd))(r,r) );
-         if (rank == 0 )
-         {
-            hypre_printf("GMRES Iterations = %d\n", iter);
-         }
+         //if (rank == 0 )
+         //{
+           // hypre_printf("GMRES Iterations = %d\n", iter);
+         //}
 
 
     	 if (procfi == 1 && rank == (procsize-1) && iter==11){
@@ -1321,7 +1348,7 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   // checkpoint iter
   oss.write(reinterpret_cast<char *>(&iter), sizeof(HYPRE_Int));
 //// testing ////
-    printf("** write checkpoint for iteration [%d] \n", iter);
+   //az: printf("** write checkpoint for iteration [%d] \n", iter);
 
   // checkpoint rs
   oss.write(reinterpret_cast<char *>(&rs[0]), sizeof(HYPRE_Real)*(k_dim+1));
@@ -1430,6 +1457,7 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   
   size = oss.str().size();
 
+  printf("Checkpoint size is %d bytes for rank %d ...\n", size, rank);
   write_cp(cp2f, cp2m, cp2a, rank, iter, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);
 
 } // AMGCheckpointWrite
@@ -1446,7 +1474,7 @@ static void AMGCheckpointRead(HYPRE_Int &iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   // checkpoint iter
   iss.read(reinterpret_cast<char *>(&iter), sizeof(HYPRE_Int));
 //// testing ////
-    printf("** read checkpoint from iteration [%d] \n", iter);
+   //az: printf("** read checkpoint from iteration [%d] \n", iter);
 
   // checkpoint rs
   for (int i=0;i<k_dim+1;i++) {

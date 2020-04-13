@@ -1,1 +1,1 @@
-salloc -N 5 --ntasks-per-node=1 --time=00:05:00 -ppdebug mpirun -np 4 --mca orte_enable_recovery 1 --mca pml ^cm --mca plm_slurm_args "--wait=0" ./amg -problem 2 -n 40 40 40 -P 1 2 2 -printstats -cp2f -cp 1 -nodefi
+salloc -N 5 --ntasks-per-node=1 --time=00:05:00 -ppdebug mpirun -np 4 --mca orte_enable_recovery 1 --mca pml ^cm --mca plm_slurm_args "--wait=0" ./amg -problem 2 -n 40 40 40 -P 1 2 2 -cp2f -cp 1 -nodefi

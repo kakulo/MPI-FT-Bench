@@ -178,6 +178,7 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
 
    HYPRE_Int      print_system = 0;
    HYPRE_Int      print_stats = 0;
+   HYPRE_Int	  nprocs = 0;
 
    HYPRE_Int rel_change = 0;
 
@@ -188,11 +189,12 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
     *-----------------------------------------------------------*/
 
    hypre_MPI_Comm_rank(hypre_MPI_COMM_WORLD, &myid );
+   hypre_MPI_Comm_size(comm, &nprocs);
 
-   char hostname[65];
-   gethostname(hostname, 65);
-   printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myid);
-   sleep(55);
+   //char hostname[65];
+   //gethostname(hostname, 65);
+   //printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myid);
+   //sleep(55);
 
    /*-----------------------------------------------------------
     * Set defaults
@@ -319,7 +321,7 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
             i++;
          }
          else {
-            printf("ERROR: Unknown command line argument: %s\n", argv[i]);
+           // printf("ERROR: Unknown command line argument: %s\n", argv[i]);
             i++;
          }
       }
@@ -443,6 +445,12 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
       HYPRE_IJVectorPrint(ij_x, "IJ.out.x0");
 
    }
+
+/* C/R: FILE for saving r/w time for C/R */
+   //FILE *fp;
+   //char filename[100];
+   //sprintf(filename, "AMG_%s_FI_%d#procs_cp2f:%d_cp2m:%d_cp2a:%d", (procfi?"procfi":"nodefi"),nprocs,cp2f,cp2m,cp2a);
+   //fp = fopen(filename, "a");
 
    /*-----------------------------------------------------------
     * Problem 1: Solve one large problem with AMG-PCG
@@ -693,6 +701,8 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
 /*
   hypre_FinalizeMemoryDebug();
 */
+
+  //fclose(fp);
 
   return 0;
 }

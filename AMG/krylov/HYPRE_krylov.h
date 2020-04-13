@@ -19,6 +19,7 @@
 #define HYPRE_KRYLOV_HEADER
 
 #include "HYPRE_utilities.h"
+#include <stdio.h>
 #include <mpi.h>
 #include <mpi-ext.h>
 
