@@ -193,12 +193,17 @@ void ParseCommandLineOptions(int argc, char *argv[],
             opts->cp2a = 1;
             i++;
          }
-         else {
-            char msg[80];
-            PrintCommandLineOptions(argv[0], myRank);
-            sprintf(msg, "ERROR: Unknown command line argument: %s\n", argv[i]);
-            ParseError(msg, myRank);
+         else if(strcmp(argv[i], "-level") == 0) {
+            opts->level = atoi(argv[i+1]);
+	 printf("leve is %d ... \n", opts->level);
+            i+=2;
          }
+         //else {
+            //char msg[80];
+            //PrintCommandLineOptions(argv[0], myRank);
+            //sprintf(msg, "ERROR: Unknown command line argument: %s\n", argv[i]);
+            //ParseError(msg, myRank);
+         //}
       }
    }
 }
@@ -257,13 +262,13 @@ void VerifyAndWriteFinalOutput(Real_t elapsed_time,
 /////////////////////////////////////////////////////////
 // Write application state in checkpoint file
 
-void ApplicationCheckpointWrite(int cp2f, int cp2m, int cp2a, int rank, Domain& locDom, struct cmdLineOpts &opts, double start) {
+std::stringstream& ApplicationCheckpointWrite(Domain& locDom, struct cmdLineOpts &opts, double start) {
    // GG: block signals to avoid interruption by SIGREINIT
    /*sigset_t fullset;
    sigfillset(&fullset);
    sigprocmask(SIG_BLOCK, &fullset, NULL);*/
 
-   std::stringstream oss( std::stringstream::out | std::stringstream::binary );
+   std::stringstream oss;
 
    int size;
    size = locDom.m_x.size();
@@ -606,8 +611,10 @@ void ApplicationCheckpointWrite(int cp2f, int cp2m, int cp2a, int rank, Domain& 
    oss.write(reinterpret_cast<char *>(&start), sizeof(double));
 #endif
 
-   size = oss.str().size();
-   write_cp(cp2f, cp2m, cp2a, rank, locDom.m_cycle, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);
+   return oss;
+
+   //size = oss.str().size();
+   //write_cp(cp2f, cp2m, cp2a, rank, locDom.m_cycle, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);
 
    //sigprocmask(SIG_UNBLOCK, &fullset, NULL);
 }
@@ -615,12 +622,11 @@ void ApplicationCheckpointWrite(int cp2f, int cp2m, int cp2a, int rank, Domain& 
 /////////////////////////////////////////////////////////
 // Read application state from checkpoint file
 
-void ApplicationCheckpointRead(
-      int survivor, int cp2f, int cp2m, int cp2a, int rank, Domain& locDom, struct cmdLineOpts &opts, double &start) {
-   char *data;
-   size_t sizeofCP = read_cp(survivor, cp2f, cp2m, cp2a, rank, &data, MPI_COMM_WORLD);
+void ApplicationCheckpointRead(Domain& locDom, struct cmdLineOpts &opts, double &start, std::stringstream& iss) {
+   //char *data;
+   //size_t sizeofCP = read_cp(survivor, cp2f, cp2m, cp2a, rank, &data, MPI_COMM_WORLD);
 
-   std::stringstream iss( std::string( data, data + sizeofCP ), std::stringstream::in | std::stringstream::binary );
+   //std::stringstream iss( std::string( data, data + sizeofCP ), std::stringstream::in | std::stringstream::binary );
 
    int sz;
    iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
@@ -971,5 +977,5 @@ void ApplicationCheckpointRead(
    iss.read(reinterpret_cast<char *>(&start), sizeof(double));
 #endif
 
-   free( data );
+   //free( data );
 }

@@ -1,0 +1,181 @@
+Building lulesh.cc
+mpicxx -DUSE_MPI=1 -c -g -O3 -I. -I/g/g90/guo7/mylibs/FTI/include/ -Wall -DUSE_CP -o lulesh.o  lulesh.cc
+lulesh.cc:313:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numElem)
+ ^
+lulesh.cc:552:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numElem)
+ ^
+lulesh.cc:596:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numNode)
+ ^
+lulesh.cc:813:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numElem, hourg)
+ ^
+lulesh.cc:1000:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numNode)
+ ^
+lulesh.cc:1040:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numElem)
+ ^
+lulesh.cc:1113:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numElem)
+ ^
+lulesh.cc:1145:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numNode)
+ ^
+lulesh.cc:1174:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numNode)
+ ^
+lulesh.cc:1190:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel
+ ^
+lulesh.cc:1193:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for nowait firstprivate(numNodeBC)
+ ^
+lulesh.cc:1199:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for nowait firstprivate(numNodeBC)
+ ^
+lulesh.cc:1205:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for nowait firstprivate(numNodeBC)
+ ^
+lulesh.cc:1219:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numNode)
+ ^
+lulesh.cc:1243:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numNode)
+ ^
+lulesh.cc:1541:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numElem, deltaTime)
+ ^
+lulesh.cc:1615:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numElem)
+ ^
+lulesh.cc:1649:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numElem)
+ ^
+lulesh.cc:1801:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(qlc_monoq, qqc_monoq, monoq_limiter_mult, monoq_max_slope, ptiny)
+ ^
+lulesh.cc:2054:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(length)
+ ^
+lulesh.cc:2061:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(length, pmin, p_cut, eosvmax)
+ ^
+lulesh.cc:2094:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(length, emin)
+ ^
+lulesh.cc:2107:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(length, rho0)
+ ^
+lulesh.cc:2132:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(length, emin, e_cut)
+ ^
+lulesh.cc:2148:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(length, rho0, emin, e_cut)
+ ^
+lulesh.cc:2185:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(length, rho0, q_cut)
+ ^
+lulesh.cc:2219:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(rho0, ss4o3)
+ ^
+lulesh.cc:2272:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel
+ ^
+lulesh.cc:2274:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for nowait firstprivate(numElemReg)
+ ^
+lulesh.cc:2285:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for firstprivate(numElemReg)
+ ^
+lulesh.cc:2296:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for nowait firstprivate(numElemReg, eosvmin)
+ ^
+lulesh.cc:2305:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for nowait firstprivate(numElemReg, eosvmax)
+ ^
+lulesh.cc:2316:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for nowait firstprivate(numElemReg)
+ ^
+lulesh.cc:2329:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(numElemReg)
+ ^
+lulesh.cc:2370:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel
+ ^
+lulesh.cc:2374:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for firstprivate(numElem)
+ ^
+lulesh.cc:2382:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for nowait firstprivate(numElem)
+ ^
+lulesh.cc:2392:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for nowait firstprivate(numElem)
+ ^
+lulesh.cc:2440:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel for firstprivate(length, v_cut)
+ ^
+lulesh.cc:2503:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel firstprivate(length, qqc)
+ ^
+lulesh.cc:2515:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for 
+ ^
+lulesh.cc:2578:0: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+ #pragma omp parallel firstprivate(length, dvovmax)
+ ^
+lulesh.cc:2589:0: warning: ignoring #pragma omp for [-Wunknown-pragmas]
+ #pragma omp for
+ ^
+lulesh.cc: In function 'void LagrangeElements(Domain&, Index_t)':
+lulesh.cc:2460:12: warning: variable 'start' set but not used [-Wunused-but-set-variable]
+     double start;
+            ^
+In file included from /usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/ios:42:0,
+                 from /usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/istream:38,
+                 from /usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/sstream:38,
+                 from lulesh.h:30,
+                 from lulesh.cc:146:
+/usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/bits/ios_base.h: In copy constructor 'std::basic_ios<char>::basic_ios(const std::basic_ios<char>&)':
+/usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/bits/ios_base.h:786:5: error: 'std::ios_base::ios_base(const std::ios_base&)' is private
+     ios_base(const ios_base&);
+     ^
+In file included from /usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/ios:44:0,
+                 from /usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/istream:38,
+                 from /usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/sstream:38,
+                 from lulesh.h:30,
+                 from lulesh.cc:146:
+/usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/bits/basic_ios.h:66:11: error: within this context
+     class basic_ios : public ios_base
+           ^
+In file included from lulesh.h:30:0,
+                 from lulesh.cc:146:
+/usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/sstream: In copy constructor 'std::basic_stringstream<char>::basic_stringstream(const std::basic_stringstream<char>&)':
+/usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/sstream:502:11: note: synthesized method 'std::basic_ios<char>::basic_ios(const std::basic_ios<char>&)' first required here 
+     class basic_stringstream : public basic_iostream<_CharT, _Traits>
+           ^
+In file included from /usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/ios:43:0,
+                 from /usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/istream:38,
+                 from /usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/sstream:38,
+                 from lulesh.h:30,
+                 from lulesh.cc:146:
+/usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/streambuf: In copy constructor 'std::basic_stringbuf<char>::basic_stringbuf(const std::basic_stringbuf<char>&)':
+/usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/streambuf:802:7: error: 'std::basic_streambuf<_CharT, _Traits>::basic_streambuf(const std::basic_streambuf<_CharT, _Traits>&) [with _CharT = char; _Traits = std::char_traits<char>]' is private
+       basic_streambuf(const basic_streambuf& __sb)
+       ^
+In file included from lulesh.h:30:0,
+                 from lulesh.cc:146:
+/usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/sstream:64:11: error: within this context
+     class basic_stringbuf : public basic_streambuf<_CharT, _Traits>
+           ^
+/usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/sstream: In copy constructor 'std::basic_stringstream<char>::basic_stringstream(const std::basic_stringstream<char>&)':
+/usr/tce/packages/gcc/gcc-4.9.3/include/c++/4.9.3/sstream:502:11: note: synthesized method 'std::basic_stringbuf<char>::basic_stringbuf(const std::basic_stringbuf<char>&)' first required here 
+     class basic_stringstream : public basic_iostream<_CharT, _Traits>
+           ^
+lulesh.cc: In function 'int resilient_main(int, char**, OMPI_reinit_state_t)':
+lulesh.cc:2818:72: note: synthesized method 'std::basic_stringstream<char>::basic_stringstream(const std::basic_stringstream<char>&)' first required here 
+  std::stringstream ss = ApplicationCheckpointWrite(*locDom, opts, start);
+                                                                        ^
+make: *** [lulesh.o] Error 1

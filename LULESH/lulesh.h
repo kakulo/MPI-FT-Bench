@@ -6,10 +6,12 @@
 // OpenMP will be compiled in if this flag is set to 1 AND the compiler beging
 // used supports it (i.e. the _OPENMP symbol is defined)
 #define USE_OMP 0
+#define enable_fti 0
 
 #if USE_MPI
 #include <mpi.h>
 #include <mpi-ext.h>
+#include <fti.h>
 
 /*
    define one of these three symbols:
@@ -25,6 +27,7 @@
 #include <math.h>
 #include <vector>
 #include <sys/time.h>
+#include <sstream>
 
 //**************************************************
 // Allow flexibility for arithmetic representations 
@@ -423,11 +426,11 @@ class Domain {
 
    /* Read the second to last checkpoint file */
    friend void ApplicationCheckpointRead(
-       int survivor, int cp2f, int cp2m, int cp2a, int rank, Domain& domain, struct cmdLineOpts &opts, double &start);
+       Domain& domain, struct cmdLineOpts &opts, double &start, std::stringstream& iss);
 
    /* Take checkpoint after each checkpoint interval defined by -cp in command line */
-   friend void ApplicationCheckpointWrite(
-       int cp2f, int cp2m, int cp2a, int rank, Domain& domain, struct cmdLineOpts &opts, double start);
+   friend std::stringstream& ApplicationCheckpointWrite(
+       Domain& domain, struct cmdLineOpts &opts, double start);
    friend size_t sizeofCheckpoint(int rank, Domain& domain, struct cmdLineOpts &opts, double start);
 #endif
 
@@ -601,6 +604,7 @@ struct cmdLineOpts {
    Int_t cp2f; // -cp2f
    Int_t cp2m; // -cp2m
    Int_t cp2a; // -cp2a
+   Int_t level; // -level
 };
 
 

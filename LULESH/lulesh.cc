@@ -2700,6 +2700,11 @@ int resilient_main(int argc, char *argv[], OMPI_reinit_state_t state)
     Int_t numRanks ;
     Int_t myRank ;
     struct cmdLineOpts opts;
+
+if (enable_fti) {
+    FTI_Init(argv[1], MPI_COMM_WORLD);
+}
+
 #if USE_MPI
     double start;
 #else
@@ -2733,10 +2738,16 @@ int resilient_main(int argc, char *argv[], OMPI_reinit_state_t state)
     opts.cp2f = 0;
     opts.cp2m = 0;
     opts.cp2a = 0;
+    opts.level = 0;
 
     ParseCommandLineOptions(argc, argv, myRank, &opts);
 
-    /* Restart MPI application form a checkpoint */
+    if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) { 
+	opts.procfi = 0;
+        opts.nodefi = 0;	
+    }
+
+    /* Restart MPI application form a checkpoint *-/
     if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
 #if USE_MPI
         struct timeval tv;
@@ -2749,7 +2760,7 @@ int resilient_main(int argc, char *argv[], OMPI_reinit_state_t state)
 
         locDom = new Domain();
         int survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
-        ApplicationCheckpointRead(survivor, opts.cp2f, opts.cp2m, opts.cp2a, myRank, *locDom, opts, start);
+        ApplicationCheckpointRead(*locDom, opts, start, ss);
 
         gettimeofday( &end_ts, NULL );
         double dtime = ( end_ts.tv_sec - start_ts.tv_sec ) + ( end_ts.tv_usec - start_ts.tv_usec ) / 1000000.0;
@@ -2759,6 +2770,7 @@ int resilient_main(int argc, char *argv[], OMPI_reinit_state_t state)
         opts.nodefi = 0;
 #endif
     } else {
+*/
         if ((myRank == 0) && (opts.quiet == 0)) {
             printf("Running problem size %d^3 per domain until completion\n", opts.nx);
             printf("Num processors: %d\n", numRanks);
@@ -2807,12 +2819,30 @@ int resilient_main(int argc, char *argv[], OMPI_reinit_state_t state)
         //timeval start;
         gettimeofday(&start, NULL) ;
 #endif
-    }
 
-    int count = opts.cpInterval + locDom->cycle();
-    //debug to see region sizes
-    //   for(Int_t i = 0; i < locDom->numReg(); i++)
-    //      std::cout << "region" << i + 1<< "size" << locDom->regElemSize(i) <<std::endl;
+	int recovered = 0;
+
+// FTI CPR code
+    if (enable_fti) {
+	recovered = 0;
+	std::stringstream& ss = ApplicationCheckpointWrite(*locDom, opts, start);
+	int sz = ss.str().size();
+	printf("Add FTI protection to packed data ... \n");
+	FTI_Protect(0,&ss,sz,FTI_CHAR);
+
+	if ( FTI_Status() != 0){ 
+	    printf("Recover the packed data from failure ... \n");
+	    FTI_Recover();
+	    recovered = 1;
+	}
+
+	if ( FTI_Status() != 0){
+	    printf("Read data values from the packed data ... \n");
+            ApplicationCheckpointRead(*locDom, opts, start, ss);
+	}
+    }
+// FTI CPR code
+
     while((locDom->time() < locDom->stoptime()) && (locDom->cycle() < opts.its)) {
 
         TimeIncrement(*locDom) ;
@@ -2826,20 +2856,15 @@ int resilient_main(int argc, char *argv[], OMPI_reinit_state_t state)
         MPI_Barrier(MPI_COMM_WORLD);
 #endif
         /* Checkpoint the state of the application */
-        //#ifdef USE_CP
 #if USE_MPI
-        if (locDom->cycle() == count) {
-            struct timeval start_ts, end_ts;
-            gettimeofday( &start_ts, NULL );
-
-            ApplicationCheckpointWrite(opts.cp2f, opts.cp2m, opts.cp2a, myRank, *locDom, opts, start);
-
-            gettimeofday( &end_ts, NULL );
-            double dtime = ( end_ts.tv_sec - start_ts.tv_sec ) + ( end_ts.tv_usec - start_ts.tv_usec ) / 1000000.0;
-            printf("TIME WRITECP app %lf s rank %d\n", dtime, myRank );
-
-            count += opts.cpInterval;
-        }
+	    // do FTI CPR
+	    if (enable_fti){ 
+		if ( (!recovered) && ((locDom->cycle())%opts.cpInterval +1) == opts.cpInterval ){ 
+			FTI_Checkpoint(locDom->cycle(),opts.level);
+		}
+		recovered = 0;
+	    }
+	    // do FTI CPR
 #endif
 
         if (opts.procfi == 1 && myRank == (numRanks-1) && locDom->cycle()==11){
@@ -2888,6 +2913,10 @@ int resilient_main(int argc, char *argv[], OMPI_reinit_state_t state)
     if ((myRank == 0) && (opts.quiet == 0)) {
         VerifyAndWriteFinalOutput(elapsed_timeG, *locDom, opts.nx, numRanks);
     }
+
+if (enable_fti) {
+    FTI_Finalize();
+}
 
     return 0;
 }
