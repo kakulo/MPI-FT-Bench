@@ -2830,17 +2830,33 @@ if (enable_fti) {
 // FTI CPR code
     if (enable_fti) {
 	recovered = 0;
-	printf("Add FTI protection to data objects ... \n");
-	FTI_Protect(*locDom, opts, start);
-	printf("Done: Add FTI protection to data objects ... \n");
+	std::stringstream oss;
+	ApplicationCheckpointWrite(*locDom, opts, start, oss);
+	std::string sos = oss.str();
+	int sz = sos.size();
+	printf("FTI CPR: size of data for CPR is %d \n", sz);
+	//std::string tmp(ss.str());
+	char * css = const_cast<char *>( sos.c_str() );
+	//sz = ss.str().size();
+	printf("Add FTI protection to packed data ... \n");
+	FTI_Protect(0,css,sz,FTI_CHAR);
+	printf("Done: Add FTI protection to packed data ... \n");
 
 	if ( FTI_Status() != 0){ 
-	    printf("Do FTI Recover to data objects from failure ... \n");
+	    printf("Recover the packed data from failure ... \n");
 	    FTI_Recover();
-	    printf("Done: FTI Recover data objects from failure ... \n");
+	    printf("Done: Recover the packed data from failure ... \n");
 	    recovered = 1;
 	}
 
+	if ( FTI_Status() != 0){
+	    printf("Read data values from the packed data ... \n");
+	    std::stringstream iss;
+	    iss << css;
+            ApplicationCheckpointRead(*locDom, opts, start, iss);
+
+	    printf("Done: Read data values from the packed data ... \n");
+	}
     }
 // FTI CPR code
 
@@ -2861,7 +2877,7 @@ if (enable_fti) {
 	    // do FTI CPR
 	    if (enable_fti){ 
 		if ( (!recovered) && ((locDom->cycle())%opts.cpInterval +1) == opts.cpInterval ){ 
-			printf("Do FTI checkpointing ... \n");
+			printf("Do FTI checkpointing to the packed data ... \n");
 			int cyc = locDom->cycle();
 			FTI_Checkpoint(cyc, opts.level);
 		}
@@ -2870,7 +2886,7 @@ if (enable_fti) {
 	    // do FTI CPR
 #endif
 
-        if (opts.procfi == 1 && myRank == (numRanks-1) && locDom->cycle()==51){
+        if (opts.procfi == 1 && myRank == (numRanks-1) && locDom->cycle()==11){
           struct timeval tv;
           gettimeofday( &tv, NULL );
           double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
@@ -2879,7 +2895,7 @@ if (enable_fti) {
           raise(SIGTERM);
         }
 
-        if (opts.nodefi == 1 && myRank == (numRanks-1) && locDom->cycle()==51){
+        if (opts.nodefi == 1 && myRank == (numRanks-1) && locDom->cycle()==11){
           char hostname[64];
           gethostname(hostname, 64);
           struct timeval tv;

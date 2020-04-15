@@ -6,7 +6,7 @@
 // OpenMP will be compiled in if this flag is set to 1 AND the compiler beging
 // used supports it (i.e. the _OPENMP symbol is defined)
 #define USE_OMP 0
-#define enable_fti 0
+#define enable_fti 1
 
 #if USE_MPI
 #include <mpi.h>
@@ -424,17 +424,20 @@ class Domain {
    // Implementation --> lulesh-util.cc
    //
 
+   // Add FTI protection to data objects
+   friend void FTI_Protect(Domain& locDom, struct cmdLineOpts &opts, double start);
+
    /* Read the second to last checkpoint file */
-   friend void ApplicationCheckpointRead(
-       Domain& domain, struct cmdLineOpts &opts, double &start, std::stringstream& iss);
+   //friend void ApplicationCheckpointRead(
+     //  Domain& domain, struct cmdLineOpts &opts, double &start, std::stringstream& iss);
 
    /* Take checkpoint after each checkpoint interval defined by -cp in command line */
-   friend std::stringstream& ApplicationCheckpointWrite(
-       Domain& domain, struct cmdLineOpts &opts, double start);
-   friend size_t sizeofCheckpoint(int rank, Domain& domain, struct cmdLineOpts &opts, double start);
+   //friend void ApplicationCheckpointWrite(
+       //Domain& domain, struct cmdLineOpts &opts, double start, std::stringstream& oss);
+   //friend size_t sizeofCheckpoint(int rank, Domain& domain, struct cmdLineOpts &opts, double start);
 #endif
 
-  private:
+  //private:
 
    void BuildMesh(Int_t nx, Int_t edgeNodes, Int_t edgeElems);
    void SetupThreadSupportStructures();
