@@ -50,7 +50,7 @@
 #include <sstream>
 #include <string>
 
-#include <omp.h>
+//#include <omp.h>
 #include <mpi.h>
 #include <mpi-ext.h>
 
@@ -75,19 +75,17 @@ static GraphWeight threshold = 1.0E-6;
 // parse command line parameters
 static void parseCommandLine(const int argc, char * const argv[]);
 
-// write checkpoints for Graph
-static void GraphCheckpointWrite(Graph &g, int rank);
+// FTI Protect for Graph
+static void FTI_Protect_Graph(Graph &g);
 
-// read checkpoints for Graph
-static void GraphCheckpointRead(int survivor, int rank, Graph &g);
 int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) ;
 
 
 int main(int argc, char *argv[])
 {
-  int max_threads;
+  int max_threads=0;
 
-  max_threads = omp_get_max_threads();
+  //max_threads = omp_get_max_threads();
 
   if (max_threads > 1) {
       int provided;
@@ -111,6 +109,10 @@ int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
 
   double t0, t1, t2, t3, ti = 0.0;
 
+if (enable_fti) {
+    FTI_Init(argv[1], MPI_COMM_WORLD);
+}
+
   MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
   MPI_Comm_rank(MPI_COMM_WORLD, &me);
 
@@ -119,7 +121,7 @@ int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
    char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), me);
-   sleep(45);
+   //sleep(5);
 
   createCommunityMPIType();
   double td0, td1, td, tdt;
@@ -144,24 +146,25 @@ int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
       //g->print();
   }
 
-  // read graph from checkpoints
-  if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
-     printf("RE-Start execution ... \n");
-     survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
-     printf("Read checkpoint graph data ... \n");
-     GraphCheckpointRead(survivor,me,*g);
-  }
-  // end of 
-  // reading graph from checkpoints
+  int recovered = 0;
 
-  // code for C/R (1)
-  // write graph to checkpoints
-  if (cp_stride>0 && state == OMPI_REINIT_NEW) {
-      printf("Write checkpoint graph data ... \n");
-      GraphCheckpointWrite(*g,me); 
+  // code for FTI CPR
+  if (enable_fti) {
+      printf("Add FTI protection to Graph g ... \n");
+      FTI_Protect_Graph(*g); 
+
+      if ( FTI_Status() != 0){
+	  printf("FTI recovery triggered for Graph g ... \n");
+	  FTI_Recover();
+	  recovered = 1;
+      }
   }
-  // end of 
-  // writing graph to checkpoints  
+
+  if (enable_fti) {
+      if (!recovered) {
+	  FTI_Checkpoint(0,level);
+      }
+  }
  
   assert(g != nullptr);
 #ifdef PRINT_DIST_STATS 
@@ -203,10 +206,10 @@ int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
 
 #if defined(USE_MPI_RMA)
   currMod = distLouvainMethod(me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
-                svdata, rvdata, currMod, threshold, iters, commwin, state);
+                svdata, rvdata, currMod, threshold, iters, commwin, state, level);
 #else
   currMod = distLouvainMethod(me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
-                svdata, rvdata, currMod, threshold, iters, state);
+                svdata, rvdata, currMod, threshold, iters, state, level);
 #endif
   MPI_Barrier(MPI_COMM_WORLD);
   t0 = MPI_Wtime();
@@ -226,6 +229,10 @@ int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
   delete g;
   destroyCommunityMPIType();
 
+if (enable_fti) {
+    FTI_Finalize();
+}
+
   return 0;
 } // main
 
@@ -233,6 +240,95 @@ void parseCommandLine(const int argc, char * const argv[])
 {
   int ret;
 
+  // new code for C/R implementation
+  if(argc > 1) {
+      int i = 1; 
+      while (i<argc) {
+	 int ok=0;
+         if(strcmp(argv[i], "-CP") == 0) {
+            if (i+1 >= argc) {
+               printf("Missing integer argument to -cp\n");
+            }
+            ok = atoi(argv[i+1]);
+            if(!ok) {
+               printf("Parse Error on option -cp integer value required after argument - CP: %d \n", ok);
+            }
+            cp_stride=ok;
+            i+=2;
+         }
+         else if(strcmp(argv[i], "-PROCFI") == 0) {
+            procfi = 1;
+            i++;
+         }
+         else if(strcmp(argv[i], "-NODEFI") == 0) {
+            nodefi = 1;
+            i++;
+         }
+         else if(strcmp(argv[i], "-CP2F") == 0) {
+            cp2f = 1;
+            i++;
+         }
+         else if(strcmp(argv[i], "-CP2M") == 0) {
+            cp2m = 1;
+            i++;
+         }
+         else if(strcmp(argv[i], "-CP2A") == 0) {
+            cp2a = 1;
+            i++;
+         }
+         else if(strcmp(argv[i], "-RESTART") == 0) {
+            restart = 1;
+            i++;
+         }
+         else if(strcmp(argv[i], "-LEVEL") == 0) {
+            level = atoi(argv[i+1]);
+            i+=2;
+         }
+	 else if(strcmp(argv[i], "config.L1.fti") == 0) {
+	    i++;
+	 }
+	 else if(strcmp(argv[i], "-f") == 0) {	
+	    inputFileName.assign(argv[i+1]);
+	    i+=2;
+	 }
+         else if(strcmp(argv[i], "-b") == 0) {
+            readBalanced = true;
+            i++;
+         }
+         else if(strcmp(argv[i], "-r") == 0) {
+            ranksPerNode = atoi(argv[i+1]);
+            i+=2;
+         }
+         else if(strcmp(argv[i], "-t") == 0) {
+            threshold = atof(argv[i+1]);
+            i+=2;
+         }
+         else if(strcmp(argv[i], "-n") == 0) {
+            nvRGG = atol(argv[i+1]);
+	    if (nvRGG > 0)
+		generateGraph = true;
+            i+=2;
+         }
+         else if(strcmp(argv[i], "-w") == 0) {
+            isUnitEdgeWeight = false;
+            i++;
+         }
+         else if(strcmp(argv[i], "-l") == 0) {
+            randomNumberLCG = true;
+            i++;
+         }
+         else if(strcmp(argv[i], "-p") == 0) {
+            randomEdgePercent = atoi(argv[i+1]);
+            i+=2;
+         }
+         else {
+	    i++;
+         }
+      }
+  }
+  // end of C/R code
+
+/*
   while ((ret = getopt(argc, argv, "f:br:t:n:wlp:")) != -1) {
     switch (ret) {
     case 'f':
@@ -266,55 +362,7 @@ void parseCommandLine(const int argc, char * const argv[])
       break;
     }
   }
-
-  // new code for C/R implementation
-  if(argc > 1) {
-      int i = 1; 
-      while (i<argc) {
-	 int ok;
-         if(strcmp(argv[i], "-CP") == 0) {
-            if (i+1 >= argc) {
-               printf("Missing integer argument to -cp\n");
-            }
-            ok = atoi(argv[i+1]);
-            if(!ok) {
-               printf("Parse Error on option -cp integer value required after argument\n");
-            }
-            cp_stride=ok;
-            i+=2;
-         }
-         else if(strcmp(argv[i], "-PROCFI") == 0) {
-            procfi = 1;
-            i++;
-         }
-         else if(strcmp(argv[i], "-NODEFI") == 0) {
-            nodefi = 1;
-            i++;
-         }
-         else if(strcmp(argv[i], "-CP2F") == 0) {
-            cp2f = 1;
-            i++;
-         }
-         else if(strcmp(argv[i], "-CP2M") == 0) {
-            cp2m = 1;
-            i++;
-         }
-         else if(strcmp(argv[i], "-CP2A") == 0) {
-            cp2a = 1;
-            i++;
-         }
-         else if(strcmp(argv[i], "-RESTART") == 0) {
-            restart = 1;
-            i++;
-         }
-         else {
-            //printf("ERROR: Unknown command line argument: %s\n", argv[i]);
-            i++;
-         }
-      }
-  }
-  // end of C/R code
-
+*/
 
   if (me == 0 && (argc == 1)) {
       std::cerr << "Must specify some options." << std::endl;
@@ -347,103 +395,34 @@ void parseCommandLine(const int argc, char * const argv[])
   }
 } // parseCommandLine
 
-void GraphCheckpointWrite(Graph &g, int rank) {
+// FTI protect for Graph
+void FTI_Protect_Graph(Graph &g) {
 
-  std::stringstream oss( std::stringstream::out | std::stringstream::binary); 
+  // Create a new FTI data type - FTI_EDGE
+  FTIT_type FTI_EDGE;
+  FTI_InitType(&FTI_EDGE, sizeof(GraphElem)+sizeof(GraphWeight)); 
 
-  // checkpoint edge_list_
-  int size;
-  size=g.edge_list_.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&g.edge_list_[i].tail_),sizeof(GraphElem));
-     oss.write(reinterpret_cast<char *>(&g.edge_list_[i].weight_),sizeof(GraphWeight));
-  }
-  
-  // checkpoint edge_indices_ 
+  // protect edge_list_
+  int size=g.edge_list_.size();
+  FTI_Protect(0,&g.edge_list_[0],size,FTI_EDGE);
+
+  // Create a new FTI data type - FTI_GraphElem
+  FTIT_type FTI_GraphElem;
+  FTI_InitType(&FTI_GraphElem, sizeof(GraphElem)); 
+
+  // protect edge_indices_ 
   size=g.edge_indices_.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&g.edge_indices_[i]),sizeof(GraphElem));
-  }
+  FTI_Protect(1,&g.edge_indices_[0],size,FTI_GraphElem);
 
-  // checkpoint lnv_
-  GraphElem lnvv=g.get_lnv();
-  oss.write(reinterpret_cast<char *>(&lnvv),sizeof(GraphElem));
+  // protect lnv_,lne_,nv_,ne_
+  FTI_Protect(2,&g.lnv_,1,FTI_GraphElem);
+  FTI_Protect(3,&g.lne_,1,FTI_GraphElem);
+  FTI_Protect(4,&g.nv_,1,FTI_GraphElem);
+  FTI_Protect(5,&g.ne_,1,FTI_GraphElem);
 
-  // checkpoint lne_
-  GraphElem lnee=g.get_lne();
-  oss.write(reinterpret_cast<char *>(&lnee),sizeof(GraphElem));
-
-  // checkpoint nv_
-  GraphElem nvv=g.get_nv();
-  oss.write(reinterpret_cast<char *>(&nvv),sizeof(GraphElem));
-
-  // checkpoint ne_
-  GraphElem nee=g.get_ne();
-  oss.write(reinterpret_cast<char *>(&nee),sizeof(GraphElem));
-
-  // checkpoint parts_
+  // protect parts_
   size=g.parts_.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&g.parts_[i]),sizeof(GraphElem));
-  }
+  FTI_Protect(6,&g.parts_[0],size,FTI_GraphElem);
 
-  size = oss.str().size();
-
-  write_cp_0(cp2f, cp2m, cp2a, rank, -1, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);
-} // GraphCheckpointWrite
-
-static void GraphCheckpointRead(int survivor, int rank, Graph &g) {
-
-  char* data;
-  // -1 means the first position to C/R outside the iteration
-  size_t sizeofCP=read_cp_0(survivor, cp2f, cp2m, cp2a, rank, &data, MPI_COMM_WORLD, -1);
-  std::stringstream iss(std::string( data, data + sizeofCP ), std::stringstream::in | std::stringstream::binary );
-
-  // checkpoint edge_list_
-  int size;
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  g.edge_list_.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&g.edge_list_[i].tail_),sizeof(GraphElem));
-     iss.read(reinterpret_cast<char *>(&g.edge_list_[i].weight_),sizeof(GraphWeight));
-  }
-  
-  // checkpoint edge_indices_ 
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  g.edge_indices_.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&g.edge_indices_[i]),sizeof(GraphElem));
-  }
-
-  // checkpoint lnv_
-  GraphElem lnv_new;
-  iss.read(reinterpret_cast<char *>(&lnv_new),sizeof(GraphElem));
-  g.set_lnv(lnv_new);
-
-  // checkpoint lne_
-  GraphElem lne_new;
-  iss.read(reinterpret_cast<char *>(&lne_new),sizeof(GraphElem));
-  g.set_lne(lne_new);
-
-  // checkpoint nv_
-  GraphElem nv_new;
-  iss.read(reinterpret_cast<char *>(&nv_new),sizeof(GraphElem));
-  g.set_nv(nv_new);
-
-  // checkpoint ne_
-  GraphElem ne_new;
-  iss.read(reinterpret_cast<char *>(&ne_new),sizeof(GraphElem));
-  g.set_ne(ne_new);
-
-  // checkpoint parts_
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  g.parts_.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&g.parts_[i]),sizeof(GraphElem));
-  }
-} // GraphCheckpointRead
-
+} // FTI_Protect_Graph
 

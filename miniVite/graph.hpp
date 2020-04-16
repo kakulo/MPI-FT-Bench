@@ -294,7 +294,7 @@ class Graph
         std::vector<GraphElem> edge_indices_;
         std::vector<Edge> edge_list_;
         std::vector<GraphElem> parts_;       
-    private:
+    //private:
         GraphElem lnv_, lne_, nv_, ne_;
 	// removed for C/R
         //std::vector<GraphElem> parts_;       
