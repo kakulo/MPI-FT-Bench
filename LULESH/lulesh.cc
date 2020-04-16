@@ -2831,7 +2831,7 @@ if (enable_fti) {
     if (enable_fti) {
 	recovered = 0;
 	printf("Add FTI protection to data objects ... \n");
-	FTI_Protect(*locDom, opts, start);
+	FTI_Protect_LULESH(*locDom, opts, start);
 	printf("Done: Add FTI protection to data objects ... \n");
 
 	if ( FTI_Status() != 0){ 

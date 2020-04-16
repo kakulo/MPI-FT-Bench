@@ -425,7 +425,7 @@ class Domain {
    //
 
    // Add FTI protection to data objects
-   friend void FTI_Protect(Domain& locDom, struct cmdLineOpts &opts, double start);
+   friend void FTI_Protect_LULESH(Domain& locDom, struct cmdLineOpts &opts, double start);
 
    /* Read the second to last checkpoint file */
    //friend void ApplicationCheckpointRead(

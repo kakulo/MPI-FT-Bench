@@ -264,7 +264,7 @@ void VerifyAndWriteFinalOutput(Real_t elapsed_time,
 /////////////////////////////////////////////////////////
 // FTI Protect application states for checkpointing 
 
-void FTI_Protect(Domain& locDom, struct cmdLineOpts &opts, double start) {
+void FTI_Protect_LULESH(Domain& locDom, struct cmdLineOpts &opts, double start) {
    // GG: block signals to avoid interruption by SIGREINIT
    /*sigset_t fullset;
    sigfillset(&fullset);
