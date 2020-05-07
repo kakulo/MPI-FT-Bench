@@ -25,25 +25,11 @@
 /// \see getTick
 ///
 
-
-#include "performanceTimers.h"
-
-#include <stdio.h>
-#include <sys/time.h>
-#include <string.h>
-#include <stdint.h>
-#include <inttypes.h>
-#include <math.h>
-
 #include "performanceTimers.h"
 #include "mytype.h"
 #include "parallel.h"
 #include "yamlOutput.h"
 #include "memUtils.h"
-
-static uint64_t getTime(void);
-static double getTick(void);
-static void timerStats(void);
 
 /// You must add timer name in same order as enum in .h file.
 /// Leading spaces can be specified to show a hierarchy of timers.
@@ -60,35 +46,6 @@ char* timerName[numberOfTimers] = {
    "commHalo",
    "commReduce"
 };
-
-/// Timer data collected.  Also facilitates computing averages and
-/// statistics.
-typedef struct TimersSt
-{
-   uint64_t start;     //!< call start time
-   uint64_t total;     //!< current total time
-   uint64_t count;     //!< current call count
-   uint64_t elapsed;   //!< lap time
- 
-   int minRank;        //!< rank with min value
-   int maxRank;        //!< rank with max value
-
-   double minValue;    //!< min over ranks
-   double maxValue;    //!< max over ranks
-   double average;     //!< average over ranks
-   double stdev;       //!< stdev across ranks
-} Timers;
-
-/// Global timing data collected.
-typedef struct TimerGlobalSt
-{
-   double atomRate;       //!< average time (us) per atom per rank 
-   double atomAllRate;    //!< average time (us) per atom
-   double atomsPerUSec;   //!< average atoms per time (us)
-} TimerGlobal;
-
-static Timers perfTimer[numberOfTimers];
-static TimerGlobal perfGlobal;
 
 void profileStart(const enum TimerHandle handle)
 {
@@ -241,7 +198,7 @@ void printPerformanceResultsYaml(FILE* file)
 /// appropriate.
 /// \see getTick for the conversion factor between the integer time
 /// units of this function and seconds.
-static uint64_t getTime(void)
+ uint64_t getTime(void)
 {
    struct timeval ptime;
    uint64_t t = 0;
@@ -255,7 +212,7 @@ static uint64_t getTime(void)
 /// getTime into seconds.  The portable getTime returns values in units
 /// of microseconds so the conversion is simply 1e-6.
 /// \see getTime
-static double getTick(void)
+ double getTick(void)
 {
    double seconds_per_cycle = 1.0e-6;
    return seconds_per_cycle; 
@@ -315,7 +272,6 @@ size_t sizeofTimers() {
 }
 
 void writeTimers(char **data) {
-	mwrite(perfTimer, sizeof(Timers), numberOfTimers, data);
 }
 
 void readTimers(char **data) {

@@ -995,7 +995,8 @@ class GenerateRGG
                 // make sure each process has a 
                 // different seed this time since
                 // we want random edges
-                unsigned rande_seed = (unsigned)(time(0)^getpid());
+                unsigned rande_seed = (unsigned)(rank_);
+                //unsigned rande_seed = (unsigned)(time(0)^getpid());
                 GraphWeight weight = 1.0;
                 std::hash<GraphElem> reh;
                

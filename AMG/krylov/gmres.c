@@ -34,7 +34,7 @@
 #include <fstream>
 #include <signal.h>
 #include <unistd.h>
-#include "../libcheckpoint/checkpoint.h"
+#include "../../libcheckpoint/checkpoint.h"
 
 using namespace std;
 
@@ -267,6 +267,7 @@ hypre_GMRESSolve(void  *gmres_vdata,
 		 void  *x,
 		 OMPI_reinit_state_t state)
 {
+  printf("Enter the hypre_GMRESSolve function ... \n");
    hypre_GMRESData  *gmres_data   = (hypre_GMRESData *)gmres_vdata;
    hypre_GMRESFunctions *gmres_functions = gmres_data->functions;
    HYPRE_Int 		     k_dim        = (gmres_data -> k_dim);
@@ -340,7 +341,7 @@ hypre_GMRESSolve(void  *gmres_vdata,
    s = hypre_CTAllocF(HYPRE_Real,k_dim,gmres_functions); 
    if (rel_change) rs_2 = hypre_CTAllocF(HYPRE_Real,k_dim+1,gmres_functions); 
    
-
+  int recovered = 0;
 
    hh = hypre_CTAllocF(HYPRE_Real*,k_dim+1,gmres_functions); 
    for (i=0; i < k_dim+1; i++)
@@ -354,6 +355,7 @@ hypre_GMRESSolve(void  *gmres_vdata,
    (*(gmres_functions->Matvec))(matvec_data,-1.0, A, x, 1.0, p[0]);
 
    b_norm = sqrt((*(gmres_functions->InnerProd))(b,b));
+	printf("b_norm is %f \n", b_norm);
    real_r_norm_old = b_norm;
 
    /* Since it is does not diminish performance, attempt to return an error flag
@@ -366,6 +368,7 @@ hypre_GMRESSolve(void  *gmres_vdata,
          machines, c.f. page 8 of "Lecture Notes on the Status of IEEE 754"
          by W. Kahan, May 31, 1996.  Currently (July 2002) this paper may be
          found at http://HTTP.CS.Berkeley.EDU/~wkahan/ieee754status/IEEE754.PDF */
+	printf("b_norm is %f \n", b_norm);
       if (logging > 0 || print_level > 0)
       {
         hypre_printf("\n\nERROR detected by Hypre ... BEGIN\n");
@@ -391,6 +394,7 @@ hypre_GMRESSolve(void  *gmres_vdata,
          machines, c.f. page 8 of "Lecture Notes on the Status of IEEE 754"
          by W. Kahan, May 31, 1996.  Currently (July 2002) this paper may be
          found at http://HTTP.CS.Berkeley.EDU/~wkahan/ieee754status/IEEE754.PDF */
+	printf("r_norm is %f \n", r_norm);
       if (logging > 0 || print_level > 0)
       {
         hypre_printf("\n\nERROR detected by Hypre ... BEGIN\n");
@@ -460,6 +464,142 @@ hypre_GMRESSolve(void  *gmres_vdata,
    /* once the rel. change check has passed, we do not want to check it again */
    rel_change_passed = 0;
 
+// FTI CPR code
+    if (enable_fti) {
+	recovered = 0;
+	printf("Add FTI protection to data objects ... \n");
+	FTI_Protect(0,&i,1,FTI_INTG);
+  	FTI_Protect(1, &iter, 1, FTI_INTG);
+  	FTIT_type FTI_REAL;
+  	FTI_InitType(&FTI_REAL, sizeof(HYPRE_Real));
+  	FTI_Protect(2, &rs[0], k_dim+1, FTI_REAL);
+  	FTI_Protect(3, &c[0], k_dim, FTI_REAL);
+  	FTI_Protect(4, &s[0], k_dim, FTI_REAL);
+/*
+  	FTIT_type FTI_REALX;
+  	FTI_InitType(&FTI_REALX, sizeof(HYPRE_Real)*k_dim);
+  	//FTI_Protect(5, &hh[0], k_dim+1, FTI_REALX);
+  	FTI_Protect(5, &hh[0], 1, FTI_REALX);
+  	FTI_Protect(6, &hh[1], 1, FTI_REALX);
+  	FTI_Protect(7, &hh[2], 1, FTI_REALX);
+  	FTI_Protect(8, &hh[3], 1, FTI_REALX);
+  	FTI_Protect(9, &hh[4], 1, FTI_REALX);
+  	FTI_Protect(10, &hh[5], 1, FTI_REALX);
+  	FTI_Protect(11, &hh[6], 1, FTI_REALX);
+  	FTI_Protect(12, &hh[7], 1, FTI_REALX);
+  	FTI_Protect(13, &hh[8], 1, FTI_REALX);
+  	FTI_Protect(14, &hh[9], 1, FTI_REALX);
+  	FTI_Protect(15, &hh[10], 1, FTI_REALX);
+  	FTI_Protect(16, &hh[11], 1, FTI_REALX);
+  	FTI_Protect(17, &hh[12], 1, FTI_REALX);
+  	FTI_Protect(18, &hh[13], 1, FTI_REALX);
+  	FTI_Protect(19, &hh[14], 1, FTI_REALX);
+  	FTI_Protect(20, &hh[15], 1, FTI_REALX);
+  	FTI_Protect(21, &hh[16], 1, FTI_REALX);
+  	FTI_Protect(22, &hh[17], 1, FTI_REALX);
+  	FTI_Protect(23, &hh[18], 1, FTI_REALX);
+  	FTI_Protect(24, &hh[19], 1, FTI_REALX);
+  	FTI_Protect(25, &hh[20], 1, FTI_REALX);
+*/
+  	FTI_Protect(26, &epsilon, 1, FTI_REAL);
+  	FTI_Protect(27, &max_iter, 1, FTI_INTG);
+  	FTI_Protect(28, &epsmac, 1, FTI_REAL);
+  	FTI_Protect(29, &b_norm, 1, FTI_REAL);
+  	FTI_Protect(30, &norms[0], max_iter+1, FTI_REAL);
+  	FTI_Protect(31, &r_norm_0, 1, FTI_REAL);
+
+  	int size;
+  	size = (*(hypre_Vector *)(*(hypre_ParVector *)b).local_vector).size;
+  	FTI_Protect(32, &(*(hypre_Vector *)(*(hypre_ParVector *)b).local_vector).data[0], size, FTI_INTG);
+  	size = (*(hypre_Vector *)(*(hypre_ParVector *)x).local_vector).size;
+  	FTI_Protect(33, &(*(hypre_Vector *)(*(hypre_ParVector *)x).local_vector).data[0], size, FTI_INTG);
+  	size = (*(hypre_Vector *)(*(hypre_ParVector *)w).local_vector).size;
+  	FTI_Protect(34, &(*(hypre_Vector *)(*(hypre_ParVector *)w).local_vector).data[0], size, FTI_INTG);
+/*
+        FTI_Protect(35, &((*(hypre_ParVector *)b).global_size),1,FTI_INTG);
+        FTI_Protect(36, &((*(hypre_ParVector *)x).global_size),1,FTI_INTG);
+        FTI_Protect(37, &((*(hypre_ParVector *)w).global_size),1,FTI_INTG);
+
+        FTI_Protect(38, &((*(hypre_ParVector *)b).first_index),1,FTI_INTG);
+        FTI_Protect(39, &((*(hypre_ParVector *)x).first_index),1,FTI_INTG);
+        FTI_Protect(40, &((*(hypre_ParVector *)w).first_index),1,FTI_INTG);
+	
+        FTI_Protect(41, &((*(hypre_ParVector *)b).last_index),1,FTI_INTG);
+        FTI_Protect(42, &((*(hypre_ParVector *)x).last_index),1,FTI_INTG);
+        FTI_Protect(43, &((*(hypre_ParVector *)w).last_index),1,FTI_INTG);
+	
+        FTI_Protect(38, (*(hypre_ParVector *)b).partitioning,num_procs+1,FTI_INTG);
+        FTI_Protect(39, (*(hypre_ParVector *)x).partitioning,num_procs+1,FTI_INTG);
+        FTI_Protect(40, (*(hypre_ParVector *)w).partitioning,num_procs+1,FTI_INTG);
+	
+        FTI_Protect(41, &((*(hypre_ParVector *)b).actual_local_size),1,FTI_INTG);
+        FTI_Protect(42, &((*(hypre_ParVector *)x).actual_local_size),1,FTI_INTG);
+        FTI_Protect(43, &((*(hypre_ParVector *)w).actual_local_size),1,FTI_INTG);
+	
+        FTI_Protect(44, &((*(hypre_ParVector *)b).owns_data),1,FTI_INTG);
+        FTI_Protect(45, &((*(hypre_ParVector *)x).owns_data),1,FTI_INTG);
+        FTI_Protect(46, &((*(hypre_ParVector *)w).owns_data),1,FTI_INTG);
+/-*	
+        FTI_Protect(47, &((*(hypre_ParVector *)b).owns_partitioning),1,FTI_INTG);
+        FTI_Protect(48, &((*(hypre_ParVector *)x).owns_partitioning),1,FTI_INTG);
+        FTI_Protect(49, &((*(hypre_ParVector *)w).owns_partitioning),1,FTI_INTG);
+	
+        FTI_Protect(50, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)b).assumed_partition).length,1,FTI_INTG);
+        FTI_Protect(51, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)x).assumed_partition).length,1,FTI_INTG);
+        FTI_Protect(52, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)w).assumed_partition).length,1,FTI_INTG);
+	
+        FTI_Protect(53, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)b).assumed_partition).row_start,1,FTI_INTG);
+        FTI_Protect(54, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)x).assumed_partition).row_start,1,FTI_INTG);
+        FTI_Protect(55, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)w).assumed_partition).row_start,1,FTI_INTG);
+	
+        FTI_Protect(56, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)b).assumed_partition).row_end,1,FTI_INTG);
+        FTI_Protect(57, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)x).assumed_partition).row_end,1,FTI_INTG);
+        FTI_Protect(58, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)w).assumed_partition).row_end,1,FTI_INTG);
+	
+        FTI_Protect(59, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)b).assumed_partition).storage_length,1,FTI_INTG);
+        FTI_Protect(60, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)x).assumed_partition).storage_length,1,FTI_INTG);
+        FTI_Protect(61, &(*(hypre_IJAssumedPart *)(*(hypre_ParVector *)w).assumed_partition).storage_length,1,FTI_INTG);
+/-*	
+	int b_sl = (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)b).assumed_partition).storage_length;
+	int x_sl = (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)x).assumed_partition).storage_length;
+	int w_sl = (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)w).assumed_partition).storage_length;
+        FTI_Protect(62, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)b).assumed_partition).proc_list,b_sl,FTI_INTG);
+        FTI_Protect(63, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)x).assumed_partition).proc_list,x_sl,FTI_INTG);
+        FTI_Protect(64, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)w).assumed_partition).proc_list,w_sl,FTI_INTG);
+	
+        FTI_Protect(65, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)b).assumed_partition).row_start_list,b_sl,FTI_INTG);
+        FTI_Protect(66, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)x).assumed_partition).row_start_list,x_sl,FTI_INTG);
+        FTI_Protect(67, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)w).assumed_partition).row_start_list,w_sl,FTI_INTG);
+	
+        FTI_Protect(68, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)b).assumed_partition).row_end_list,b_sl,FTI_INTG);
+        FTI_Protect(69, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)x).assumed_partition).row_end_list,x_sl,FTI_INTG);
+        FTI_Protect(70, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)w).assumed_partition).row_end_list,w_sl,FTI_INTG);
+	
+	int b_l = (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)b).assumed_partition).length;
+	int x_l = (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)x).assumed_partition).length;
+	int w_l = (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)w).assumed_partition).length;
+        FTI_Protect(71, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)b).assumed_partition).sort_index,b_l,FTI_INTG);
+        FTI_Protect(72, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)x).assumed_partition).sort_index,x_l,FTI_INTG);
+        FTI_Protect(73, (*(hypre_IJAssumedPart *)(*(hypre_ParVector *)w).assumed_partition).sort_index,w_l,FTI_INTG);
+*/	
+int n = 0;
+for (int i=1;i<k_dim;i++) {
+   for (int j=0;j<i;j++) {
+      FTI_Protect(74+n, &hh[j][i-1], 1, FTI_REAL);
+      n=n+1;
+   }
+
+}
+ 
+printf("n: %d... \n", n);
+
+	printf("Done: Add FTI protection to data objects ... \n");
+
+    }
+// FTI CPR code
+
+
+	printf("b_norm is %f \n", b_norm);
 
    /* outer iteration cycle */
    while (iter < max_iter)
@@ -510,6 +650,7 @@ hypre_GMRESSolve(void  *gmres_vdata,
 	(*(gmres_functions->ScaleVector))(t,p[0]);
 	i = 0;
 
+	printf("b_norm is %f \n", b_norm);
         /***RESTART CYCLE (right-preconditioning) ***/
         while (i < k_dim && iter < max_iter)
 	{
@@ -520,49 +661,67 @@ hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
 
 /* code for C/R implementation */
 // write and read checkpoints
-	if (procfi == 1 || nodefi == 1) {
+	//if (procfi == 1 || nodefi == 1) {
 	if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
-	   printf("RE-Start execution ... \n");
-	   survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
-for (int j=0;j<10;j++) {
-/* timer on */
-    struct timeval start, end;
-    gettimeofday( &start, NULL );
-/* timer on */
-
-	   AMGCheckpointRead(iter,rs,c,s,hh,epsilon,max_iter,epsmac,p,precond_data,b_norm,norms,r_norm_0,A,x,w,b,rank,survivor,k_dim);
-
-/* timer off */
-    gettimeofday( &end, NULL );
-    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
-    printf("Read CPs - %lf s with rank %d ...\n", dtime, rank);
-/* timer off */
-}
-	   state = OMPI_REINIT_NEW;
-	   // Disable FI, assumes 1 failure
 	   procfi = 0;
 	   nodefi = 0; 
 	}
-	}
+	//}
 
-	if (cp_stride>0) {
-           if ((iter%cp_stride)==0) {
+	//if (cp_stride>0) {
+          // if ((iter%cp_stride)==0) {
 
 /* timer on */
-    struct timeval start, end;
-    gettimeofday( &start, NULL );
+    //struct timeval start, end;
+    //gettimeofday( &start, NULL );
 /* timer on */
 
-	      AMGCheckpointWrite(iter,rs,c,s,hh,epsilon,max_iter,epsmac,p,precond_data,b_norm,norms,r_norm_0,A,x,w,b,rank,k_dim);
+	AMGCheckpointWrite(iter,rs,c,s,hh,epsilon,max_iter,epsmac,p,precond_data,b_norm,norms,r_norm_0,A,x,w,b,rank,k_dim);
+    //char filename[64];
+
+    //sprintf( filename, "check_%d_%d", rank, iter);
+    //FILE *fp = fopen( filename, "wb" );
+    //fwrite( &size, sizeof(int), 1, fp );
+    //fwrite( data, size, 1, fp );
+    //fclose( fp );
+
+    //sprintf( filename, "tmp_%d", rank );
+    //FILE *fp = fopen( filename, "wb" );
+    //fwrite( (char *)&iter, sizeof(int), 1, fp);
+    //printf("Write tmp_%d: the iter value is: %d \n", rank, iter);
+    //fclose( fp );
 
 /* timer off */
-    gettimeofday( &end, NULL );
-    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
-    printf("Write CPs - %lf s with rank %d ...\n", dtime, rank);
+    //gettimeofday( &end, NULL );
+    //double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
+    //printf("Write CPs - %lf s with rank %d ...\n", dtime, rank);
 /* timer off */
+	      
+	   //}
+	//}
 
-	   }
+	printf("b_norm is %f \n", b_norm);
+	    if (enable_fti) {
+	      if ( FTI_Status() != 0){ 
+	    	printf("Do FTI Recover to data objects from failure ... \n");
+	    	FTI_Recover();
+	    	printf("Done: FTI Recover data objects from failure ... \n");
+	    	recovered = 1;
+        	procfi = 0;
+        	nodefi = 0;
+	      }
+	    }
+	printf("after recovery b_norm is %f \n", b_norm);
+
+	// do FTI CPR
+	if (enable_fti){
+	    if ( (!recovered) && cp_stride > 0 && (iter%cp_stride +1) == cp_stride ){ 
+		FTI_Checkpoint(iter, level);
+	    }
+	    recovered = 0;
 	}
+	// do FTI CPR
+
 
 /* code for C/R implementation */
            i++;
@@ -761,12 +920,12 @@ for (int j=0;j<10;j++) {
          //}
 
 
-    	 if (procfi == 1 && rank == (procsize-1) && iter==11){
+    	 if (procfi == 1 && rank == (procsize-1) && iter==12){
       	   printf("KILL rank %d\n", rank);
       	   raise(SIGKILL);
     	 }
 
-    	 if (nodefi == 1 && rank == (procsize-1) && iter==11){
+    	 if (nodefi == 1 && rank == (procsize-1) && iter==12){
       	   char hostname[64];
       	   gethostname(hostname, 64);
       	   printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), rank);
@@ -1344,7 +1503,7 @@ hypre_GMRESGetFinalRelativeResidualNorm( void   *gmres_vdata,
 // A, x, w, b
 static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE_Real *s,HYPRE_Real **hh,HYPRE_Real epsilon,HYPRE_Int max_iter,HYPRE_Real epsmac,void *p,HYPRE_Int *precond_data,HYPRE_Real b_norm,HYPRE_Real *norms, HYPRE_Real r_norm_0, void *A, void *x, void *w, void *b, HYPRE_Int rank, HYPRE_Int k_dim) {
   stringstream oss( stringstream::out | stringstream::binary);
-
+/*
   // checkpoint iter
   oss.write(reinterpret_cast<char *>(&iter), sizeof(HYPRE_Int));
 //// testing ////
@@ -1363,6 +1522,9 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   for (int i=0;i<k_dim+1;i++) {
      oss.write(reinterpret_cast<char *>(&hh[i]), sizeof(HYPRE_Real)*(k_dim));
   }
+
+*/
+/*
   // checkpoint epsilon
   oss.write(reinterpret_cast<char *>(&epsilon), sizeof(HYPRE_Real));
 
@@ -1397,6 +1559,7 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   // checkpoint b_norm
   oss.write(reinterpret_cast<char *>(&b_norm), sizeof(HYPRE_Real));
   
+
   // checkpoint norms
   oss.write(reinterpret_cast<char *>(&norms[0]), sizeof(HYPRE_Real)*(max_iter+1));
   
@@ -1404,10 +1567,12 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   // checkpoint r_norm_0
   oss.write(reinterpret_cast<char *>(&r_norm_0), sizeof(HYPRE_Real));
 
+*/
   // checkpoint A
   // too complicated, not checkpoint for now
   //
 
+/*
   // checkpoint b
   // only checkpoint partial data because of the complexity
   /// global_size
@@ -1428,8 +1593,8 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   /// owns_partitioning
   /// assumed_partition
   
-
-
+*/
+  
   // checkpoint w
   // only checkpoint partial data because of the complexity
   /// global_size
@@ -1439,7 +1604,7 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   /// actual_local_size
   /// data size
   //size = (*(*(hypre_ParVector *) w).local_vector).size;
-  size = (*(hypre_Vector *)(*(hypre_ParVector *)w).local_vector).size;
+  int size = (*(hypre_Vector *)(*(hypre_ParVector *)w).local_vector).size;
   oss.write(reinterpret_cast<char *>(&size), sizeof(HYPRE_Int));
   /// data/local_vector
   for (int i=0;i<size;i++) {
@@ -1448,16 +1613,25 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   /// owns_data
   /// owns_partitioning
   /// assumed_partition
-  
-
+ 
 
   // checkpoint x
   // too complicated, not checkpoint for now
   //
   
-  size = oss.str().size();
-
-  printf("Checkpoint size is %d bytes for rank %d ...\n", size, rank);
+  //size = oss.str().size();
+/*
+    char filename[64];
+    sprintf( filename, "check_%d_%d", rank, iter);
+//// testing ////
+    printf("write check_%d_%d \n", rank, iter);
+    FILE *fp = fopen( filename, "wb" );
+    fwrite( &size, sizeof(int), 1, fp );
+    //fwrite( data, size, 1, fp );
+    fwrite( const_cast<char *>( oss.str().c_str() ), size, 1, fp );
+    fclose( fp );
+*/
+  //printf("Checkpoint size is %d bytes for rank %d ...\n", size, rank);
   write_cp(cp2f, cp2m, cp2a, rank, iter, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);
 
 } // AMGCheckpointWrite

@@ -59,18 +59,19 @@ void write_cp(int cp2f, int cp2m, int cp2a, int rank, int iter, char *data, int 
 
   if( cp2f ) {
     // XXX: cp.iter, c_prev are NOT updated when reading TODO
-    int del_iter = cp_prev.iter;
-    cp_prev.iter = cp.iter;
-    cp.iter = iter;
+ //   int del_iter = cp_prev.iter;
+ //   cp_prev.iter = cp.iter;
+ //   cp.iter = iter;
     char filename[64];
     //printf("del_iter %d prev_iter %d iter %d\n", del_iter, cp_prev.iter , iter); //ggout
-    if( 0 <= del_iter ) {
+ //   if( 0 <= del_iter ) {
       //printf("Remove %d\n", del_iter ); //ggout
-      sprintf( filename, "check_%d_%d", rank, del_iter );
+ //     sprintf( filename, "check_%d_%d", rank, del_iter );
 //// testing ////
-    printf("remove check_%d_%d \n", rank, del_iter);
-      remove( filename );
-    }
+ //   printf("remove check_%d_%d \n", rank, del_iter);
+ //     remove( filename );
+ //   }
+
     sprintf( filename, "check_%d_%d", rank, iter);
 //// testing ////
     printf("write check_%d_%d \n", rank, iter);

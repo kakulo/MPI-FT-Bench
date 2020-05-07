@@ -43,6 +43,8 @@
 #ifdef HAVE_MPI
 #include <mpi.h>
 #include <mpi-ext.h>
+#include <fti.h>
+#define enable_fti 1
 #endif
 
 
@@ -57,143 +59,118 @@ template<typename OperatorType=miniFE::CSRMatrix<double, int, long long int>,
   	 typename LocalOrdinal=int,
  	 typename GlobalOrdinal=long long int>
 void 
-ApplicationCheckpointWrite(miniFE::CSRMatrix<double, int, long long int> &A, miniFE::Vector<double, int, long long int> &b, miniFE::Vector<double, int, long long int> &x,miniFE::TypeTraits<double>::magnitude_type& normr, miniFE::timer_type*&  my_cg_times, miniFE::Vector<double, int, long long int> &r, miniFE::Vector<double, int, long long int> &p, typename TypeTraits<double>::magnitude_type & rtrans,typename TypeTraits<double>::magnitude_type &oldrtrans,miniFE::CSRMatrix<double, int, long long int>::LocalOrdinalType &num_iters,int rank, int cp2f, int cp2m, int cp2a) {
+FTI_ProtectFE(miniFE::CSRMatrix<double, int, long long int> &A, miniFE::Vector<double, int, long long int> &b, miniFE::Vector<double, int, long long int> &x,miniFE::TypeTraits<double>::magnitude_type& normr, miniFE::timer_type*&  my_cg_times, miniFE::Vector<double, int, long long int> &r, miniFE::Vector<double, int, long long int> &p, typename TypeTraits<double>::magnitude_type & rtrans,typename TypeTraits<double>::magnitude_type &oldrtrans,miniFE::CSRMatrix<double, int, long long int>::LocalOrdinalType &num_iters) {
 
+  //std::stringstream oss( std::stringstream::out | std::stringstream::binary ); 
+  //
   typedef typename OperatorType::ScalarType ScalarType;
   typedef typename OperatorType::GlobalOrdinalType GlobalOrdinalType;
   typedef typename OperatorType::LocalOrdinalType LocalOrdinalType;
   typedef typename TypeTraits<ScalarType>::magnitude_type magnitude_type;
 
-  std::stringstream oss( std::stringstream::out | std::stringstream::binary );  
+  FTIT_type FTI_GlobalOrdinal;
+  FTI_InitType(&FTI_GlobalOrdinal, sizeof(GlobalOrdinal));
+
+  FTIT_type FTI_LocalOrdinal;
+  FTI_InitType(&FTI_LocalOrdinal, sizeof(LocalOrdinal));
+
+  FTIT_type FTI_Scalar;
+  FTI_InitType(&FTI_Scalar, sizeof(Scalar));
+
+  FTIT_type FTI_MPIRequest;
+  FTI_InitType(&FTI_MPIRequest, sizeof(MPI_Request));
+
+  FTIT_type FTI_BOOL;
+  FTI_InitType(&FTI_BOOL, sizeof(bool));
+
+  FTIT_type FTI_Magnitude;
+  FTI_InitType(&FTI_Magnitude, sizeof(typename TypeTraits<ScalarType>::magnitude_type));
+
+  FTIT_type FTI_Time;
+  FTI_InitType(&FTI_Time, sizeof(timer_type));
+
+  FTIT_type FTI_LocalOrdinalType;
+  FTI_InitType(&FTI_LocalOrdinalType, sizeof(LocalOrdinalType));
 
   // checkpoint A
   int size;
   size=A.external_index.size();
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.external_index[i]), sizeof(GlobalOrdinal));
-  }
- 
+  FTI_Protect(1,&A.external_index[0],size,FTI_GlobalOrdinal);
+  
   size=A.external_local_index.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.external_local_index[i]), sizeof(GlobalOrdinal));
-  }
+  FTI_Protect(2,&A.external_local_index[0],size,FTI_GlobalOrdinal);
   
   size=A.elements_to_send.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.elements_to_send[i]), sizeof(GlobalOrdinal));
-  }
+  FTI_Protect(3,&A.elements_to_send[0],size,FTI_GlobalOrdinal);
 
   size=A.neighbors.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.neighbors[i]), sizeof(int));
-  }
+  FTI_Protect(4,&A.neighbors[0],size,FTI_INTG);
 
   size=A.recv_length.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.recv_length[i]), sizeof(LocalOrdinal));
-  }
+  FTI_Protect(5,&A.recv_length[0],size,FTI_LocalOrdinal);
 
   size=A.send_length.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.send_length[i]), sizeof(LocalOrdinal));
-  }
+  FTI_Protect(6,&A.send_length[0],size,FTI_LocalOrdinal);
 
   size=A.send_buffer.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.send_buffer[i]), sizeof(Scalar));
-  }
+  FTI_Protect(7,&A.send_buffer[0],size,FTI_Scalar);
 
   size=A.request.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.request[i]), sizeof(MPI_Request));
-  }
+  FTI_Protect(8,&A.request[0],size,FTI_MPIRequest);
 
   size=A.rows.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.rows[i]), sizeof(GlobalOrdinal));
-  }
+  FTI_Protect(9,&A.rows[0],size,FTI_GlobalOrdinal);
 
   size=A.row_offsets.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.row_offsets[i]), sizeof(LocalOrdinal));
-  }
-
+  FTI_Protect(10,&A.row_offsets[0],size,FTI_LocalOrdinal);
+/*
   size=A.row_offsets_external.size(); 
   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
   for (int i=0;i<size;i++) {
     oss.write(reinterpret_cast<char *>(&A.row_offsets_external[i]), sizeof(LocalOrdinal));
   }
-
+*/
   size=A.packed_cols.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.packed_cols[i]), sizeof(GlobalOrdinal));
-  }
+  FTI_Protect(11,&A.packed_cols[0],size,FTI_GlobalOrdinal);
 
   size=A.packed_coefs.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&A.packed_coefs[i]), sizeof(Scalar));
-  }
+  FTI_Protect(12,&A.packed_coefs[0],size,FTI_Scalar);
 
-  oss.write(reinterpret_cast<char *>(&A.has_local_indices), sizeof(bool));
+  FTI_Protect(13,&A.has_local_indices,1,FTI_BOOL);
 
-  oss.write(reinterpret_cast<char *>(&A.num_cols), sizeof(LocalOrdinal));
-
+  FTI_Protect(14,&A.num_cols,1,FTI_LocalOrdinal);
 
   // checkpoint b
-  oss.write(reinterpret_cast<char *>(&b.startIndex), sizeof(GlobalOrdinal));
+  FTI_Protect(15,&b.startIndex,1,FTI_GlobalOrdinal);
   
-  oss.write(reinterpret_cast<char *>(&b.local_size), sizeof(LocalOrdinal));
+  FTI_Protect(16,&b.local_size,1,FTI_LocalOrdinal);
 
   size=b.coefs.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&b.coefs[i]), sizeof(Scalar));
-  }
+  FTI_Protect(17,&b.coefs[0],size,FTI_Scalar);
 
   // checkpoint x
-  oss.write(reinterpret_cast<char *>(&x.startIndex), sizeof(GlobalOrdinal));
+  FTI_Protect(18,&x.startIndex,1,FTI_GlobalOrdinal);
   
-  oss.write(reinterpret_cast<char *>(&x.local_size), sizeof(LocalOrdinal));
+  FTI_Protect(19,&x.local_size,1,FTI_LocalOrdinal);
 
   size=x.coefs.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&x.coefs[i]), sizeof(Scalar));
-  }
+  FTI_Protect(20,&x.coefs[0],size,FTI_Scalar);
 
   // checkpoint r
-  oss.write(reinterpret_cast<char *>(&r.startIndex), sizeof(GlobalOrdinal));
+  FTI_Protect(21,&r.startIndex,1,FTI_GlobalOrdinal);
   
-  oss.write(reinterpret_cast<char *>(&r.local_size), sizeof(LocalOrdinal));
+  FTI_Protect(22,&r.local_size,1,FTI_LocalOrdinal);
 
   size=r.coefs.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&r.coefs[i]), sizeof(Scalar));
-  }
+  FTI_Protect(23,&r.coefs[0],size,FTI_Scalar);
 
   // checkpoint p
-  oss.write(reinterpret_cast<char *>(&p.startIndex), sizeof(GlobalOrdinal));
+  FTI_Protect(24,&p.startIndex,1,FTI_GlobalOrdinal);
   
-  oss.write(reinterpret_cast<char *>(&p.local_size), sizeof(LocalOrdinal));
+  FTI_Protect(25,&p.local_size,1,FTI_LocalOrdinal);
 
   size=p.coefs.size(); 
-  oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-  for (int i=0;i<size;i++) {
-    oss.write(reinterpret_cast<char *>(&p.coefs[i]), sizeof(Scalar));
-  }
+  FTI_Protect(26,&p.coefs[0],size,FTI_Scalar);
 
   // checkpoint Ap
   //oss.write(reinterpret_cast<char *>(&Ap.startIndex), sizeof(GlobalOrdinal));
@@ -207,28 +184,23 @@ ApplicationCheckpointWrite(miniFE::CSRMatrix<double, int, long long int> &A, min
   //}
 
   // checkpoint normr ?
-  oss.write(reinterpret_cast<char *>(&normr),sizeof(typename TypeTraits<ScalarType>::magnitude_type));
+  FTI_Protect(27,&normr,1,FTI_Magnitude);
   
   // checkpoint mg_cg_times
-  oss.write(reinterpret_cast<char *>(my_cg_times),sizeof(timer_type));
+  FTI_Protect(28,my_cg_times,1,FTI_Time);
   
   // checkpoint rtrans
-  oss.write(reinterpret_cast<char *>(&rtrans),sizeof(typename TypeTraits<ScalarType>::magnitude_type));
+  FTI_Protect(29,&rtrans,1,FTI_Magnitude);
   
   // checkpoint oldrtrans
-  oss.write(reinterpret_cast<char *>(&oldrtrans),sizeof(typename TypeTraits<ScalarType>::magnitude_type));
+  FTI_Protect(30,&oldrtrans,1,FTI_Magnitude);
   
   // checkpoint num_iters
-  oss.write(reinterpret_cast<char *>(&num_iters),sizeof(LocalOrdinalType));
+  FTI_Protect(31,&num_iters,1,FTI_LocalOrdinalType);
   
-  size = oss.str().size();
-  
-  printf("Checkpoint size is %d bytes for rank %d ...\n", size, rank);
-  write_cp(cp2f, cp2m, cp2a, rank, num_iters, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);  
-
 }
 
-
+/*
 template<typename OperatorType=miniFE::CSRMatrix<double, int, long long int>,
          typename VectorType=miniFE::Vector<double, int, long long int>,
          typename Matvec=miniFE::matvec_overlap<miniFE::CSRMatrix<double, int, long long int>, miniFE::Vector<double, int, long long int> >,
@@ -251,79 +223,105 @@ ApplicationCheckpointRead(int survivor, int cp2f, int cp2m, int cp2a, int rank, 
   // checkpoint A
   int size;
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.external_index.resize(size);
+  //printf("external_index old size: %d \n", A.external_index.size());
+  //A.external_index.resize(size);
+  //printf("external_index new size: %d \n", size);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.external_index[i]), sizeof(GlobalOrdinal));
   }
  
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.external_local_index.resize(size); 
+  //printf("external_local_index old size: %d with rank %d \n", A.external_local_index.size(), rank);
+  //A.external_local_index.resize(size); 
+  //printf("external_local_index new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.external_local_index[i]), sizeof(GlobalOrdinal));
   }
   
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.elements_to_send.resize(size); 
+  //printf("elements_to_send old size: %d with rank %d \n", A.elements_to_send.size(), rank);
+  //A.elements_to_send.resize(size); 
+  //printf("elements_to_send new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.elements_to_send[i]), sizeof(GlobalOrdinal));
   }
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.neighbors.resize(size); 
+  //printf("A.neighbors old size: %d with rank %d \n", A.neighbors.size(), rank);
+  //A.neighbors.resize(size); 
+  //printf("A.neighbors new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.neighbors[i]), sizeof(int));
   }
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.recv_length.resize(size); 
+  //printf("A.recv_length old size: %d with rank %d \n", A.recv_length.size(), rank);
+  //A.recv_length.resize(size); 
+  //printf("A.recv_length new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.recv_length[i]), sizeof(LocalOrdinal));
   }
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.send_length.resize(size); 
+  //printf("A.send_length old size: %d with rank %d \n", A.send_length.size(), rank);
+  //A.send_length.resize(size); 
+  //printf("A.send_length new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.send_length[i]), sizeof(LocalOrdinal));
   }
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.send_buffer.resize(size); 
+  //printf("A.send_buffer old size: %d with rank %d \n", A.send_buffer.size(), rank);
+  //A.send_buffer.resize(size); 
+  //printf("A.send_buffer new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.send_buffer[i]), sizeof(Scalar));
   }
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.request.resize(size); 
+  //printf("A.request old size: %d with rank %d \n", A.request.size(), rank);
+  //A.request.resize(size); 
+  //printf("A.request new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.request[i]), sizeof(MPI_Request));
   }
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.rows.resize(size); 
+  //printf("A.rows old size: %d with rank %d \n", A.rows.size(), rank);
+  //A.rows.resize(size); 
+  //printf("A.rows new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.rows[i]), sizeof(GlobalOrdinal));
   }
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.row_offsets.resize(size); 
+  //printf("A.row_offsets old size: %d with rank %d \n", A.row_offsets.size(), rank);
+  //A.row_offsets.resize(size); 
+  //printf("A.row_offsets new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.row_offsets[i]), sizeof(LocalOrdinal));
   }
 
-  iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.row_offsets_external.resize(size); 
-  for (int i=0;i<size;i++) {
-    iss.read(reinterpret_cast<char *>(&A.row_offsets_external[i]), sizeof(LocalOrdinal));
-  }
+  //iss.read(reinterpret_cast<char *>(&size), sizeof(int));
+  //printf("A.row_offsets_external old size: %d with rank %d \n", A.row_offsets_external.size(), rank);
+  //A.row_offsets_external.resize(size); 
+  //printf("A.row_offsets_external new size: %d with rank %d \n", size, rank);
+  //for (int i=0;i<size;i++) {
+  //  iss.read(reinterpret_cast<char *>(&A.row_offsets_external[i]), sizeof(LocalOrdinal));
+  //}
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.packed_cols.resize(size); 
+  //printf("A.packed_cols old size: %d with rank %d \n", A.packed_cols.size(), rank);
+  //A.packed_cols.resize(size); 
+  //printf("A.packed_cols new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.packed_cols[i]), sizeof(GlobalOrdinal));
   }
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  A.packed_coefs.resize(size); 
+  //printf("A.packed_coefs old size: %d with rank %d \n", A.packed_coefs.size(), rank);
+  //A.packed_coefs.resize(size); 
+  //printf("A.packed_coefs new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&A.packed_coefs[i]), sizeof(Scalar));
   }
@@ -338,7 +336,9 @@ ApplicationCheckpointRead(int survivor, int cp2f, int cp2m, int cp2a, int rank, 
   iss.read(reinterpret_cast<char *>(&x.local_size), sizeof(LocalOrdinal));
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  x.coefs.resize(size); 
+  //printf("x.coefs old size: %d with rank %d \n", x.coefs.size(), rank);
+  //x.coefs.resize(size); 
+  //printf("x.coefs new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&x.coefs[i]), sizeof(Scalar));
   }
@@ -350,7 +350,9 @@ ApplicationCheckpointRead(int survivor, int cp2f, int cp2m, int cp2a, int rank, 
   iss.read(reinterpret_cast<char *>(&b.local_size), sizeof(LocalOrdinal));
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  b.coefs.resize(size); 
+  //printf("b.coefs old size: %d with rank %d \n", b.coefs.size(), rank);
+  //b.coefs.resize(size); 
+  //printf("b.coefs new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&b.coefs[i]), sizeof(Scalar));
   }
@@ -361,7 +363,9 @@ ApplicationCheckpointRead(int survivor, int cp2f, int cp2m, int cp2a, int rank, 
   iss.read(reinterpret_cast<char *>(&r.local_size), sizeof(LocalOrdinal));
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  r.coefs.resize(size); 
+  //printf("r.coefs old size: %d with rank %d \n", r.coefs.size(), rank);
+  //r.coefs.resize(size); 
+  //printf("r.coefs new size: %d with rank %d \n", size, rank);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&r.coefs[i]), sizeof(Scalar));
   }
@@ -372,7 +376,9 @@ ApplicationCheckpointRead(int survivor, int cp2f, int cp2m, int cp2a, int rank, 
   iss.read(reinterpret_cast<char *>(&p.local_size), sizeof(LocalOrdinal));
 
   iss.read(reinterpret_cast<char *>(&size), sizeof(int));
-  p.coefs.resize(size); 
+  //printf("p.coefs old size: %d \n", p.coefs.size());
+  //p.coefs.resize(size); 
+  //printf("p.coefs new size: %d \n", size);
   for (int i=0;i<size;i++) {
     iss.read(reinterpret_cast<char *>(&p.coefs[i]), sizeof(Scalar));
   }
@@ -407,7 +413,7 @@ ApplicationCheckpointRead(int survivor, int cp2f, int cp2m, int cp2a, int rank, 
   free(data);
 
 }
-
+*/
 
 template<typename Scalar>
 void print_vec(const std::vector<Scalar>& vec, const std::string& name)
@@ -531,49 +537,43 @@ cg_solve(OperatorType& A,
   // read checkpoints
   // when restart
   if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
-    printf("RE-Start execution ... \n");
-   survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
-
-/* timer on */
-    struct timeval start, end;
-    gettimeofday( &start, NULL );
-/* timer on */
-
-    ApplicationCheckpointRead(survivor, params.cp2f, params.cp2m, params.cp2a, myproc, A, b, x, &normr,my_cg_times,r,p,&rtrans,&oldrtrans,&num_iters);
-
-/* timer off */
-    gettimeofday( &end, NULL );
-    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
-    printf("Read CPs - %lf s with rank %d ...\n", dtime, myproc);
-/* timer off */
-
-    k = num_iters;
-    state == OMPI_REINIT_NEW;
     // XXX: Disable FI, assumes 1 failure
     params.procfi = 0;
     params.nodefi = 0;
   }
 
+// FTI CPR code   
+int recovered = 0;
+if (enable_fti) {
+
+  printf("Add FTI protection to Louvain data objects ... \n");
+  FTI_ProtectFE(A, b, x, normr,my_cg_times,r,p,rtrans,oldrtrans, k);
+  printf("Done: Add FTI protection to data objects ... \n");
+
+}
+
+// do FTI Recover
+  if (enable_fti) {
+    if ( FTI_Status() != 0){ 
+       printf("Do FTI Recover to Louvain data objects ... \n");
+       FTI_Recover();
+       printf("Done: FTI Recover data objects from failure ... \n");
+       recovered = 1;
+       params.procfi = 0;
+       params.nodefi = 0;
+    }
+  }
+
   for(; k <= max_iter && normr > tolerance; ++k) {
 
-    // write checkpoints
-    //printf("cp stride: %d \n", params.cp_stride);
-    if ((num_iters%params.cp_stride)==0) {
-
-/* timer on */
-    struct timeval start, end;
-    gettimeofday( &start, NULL );
-/* timer on */
-
-      ApplicationCheckpointWrite(A, b, x, normr,my_cg_times,r,p,rtrans,oldrtrans, k,myproc,params.cp2f,params.cp2m,params.cp2a);
-
-/* timer off */
-    gettimeofday( &end, NULL );
-    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
-    printf("Write CPs - %lf s with rank %d ...\n", dtime, myproc);
-/* timer off */
-
+  // do FTI CPR
+  if (enable_fti){  
+    if ( (!recovered) && (k%params.cp_stride +1) == params.cp_stride ){ 
+      printf("Do FTI checkpointing ... \n"); 
+      FTI_Checkpoint(k,params.level);
     }
+    recovered = 0;
+  }
 
     if (k == 1) {
       TICK(); waxpby(one, r, zero, r, p); TOCK(tWAXPY);

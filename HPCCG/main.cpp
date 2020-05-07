@@ -89,6 +89,9 @@ using std::endl;
 #include "HPCCG.hpp"
 #include "HPC_Sparse_Matrix.hpp"
 #include "dump_matlab_matrix.hpp"
+#include <signal.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 #include "YAML_Element.hpp"
 #include "YAML_Doc.hpp"
@@ -104,9 +107,8 @@ int ione = 1;
 double times[7];
 double t6 = 0.0;
 int nx,ny,nz;
-bool do_restart = false;
 int cp_iters = 1;
-bool cp2f = false, cp2m = false, cp2a = false;
+int level = 0;
 bool procfi = false, nodefi = false;
 
 int niters = 0;
@@ -114,49 +116,37 @@ double normr = 0.0;
 int max_iter = 150;
 double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
 
-int resilient_main(int argc, char **argv, OMPI_reinit_state_t state)
-{
-  if( OMPI_REINIT_REINITED == state ) {
-#ifdef USING_MPI
-
-    // Transform matrix indices from global to local values.
-    // Define number of columns for the local matrix.
-
-    // XXX: Assumes generated matrix
-    generate_matrix(nx, ny, nz, &A, &x, &b, &xexact);
-    t6 = mytimer(); make_local_matrix(A);  t6 = mytimer() - t6;
-    times[6] = t6;
-
-#endif
-
-  }
-
-  ierr = HPCCG( A, b, x, max_iter, tolerance, niters, normr, times,
-          state, cp_iters, cp2f, cp2m, cp2a, procfi, nodefi );
-
-  return 0;
-}
+int resilient_main(int argc, char **argv, OMPI_reinit_state_t state);
 
 int main(int argc, char *argv[])
 {
 
 #ifdef USING_MPI
-
   MPI_Init(&argc, &argv);
+#endif 
+
+  OMPI_Reinit(argc, argv, resilient_main);
+
+#if USE_MPI
+  MPI_Finalize() ;
+#endif
+
+  return 0 ;
+
+}
+
+int resilient_main(int argc, char **argv, OMPI_reinit_state_t state)
+{
+
+if (enable_fti) {
+    FTI_Init(argv[1], MPI_COMM_WORLD);
+}
 
   int size, rank; // Number of MPI processes, My process ID
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
   //  if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive." <<endl;
-
-#else
-
-  int size = 1; // Serial case (not using MPI)
-  int rank = 0;
-
-#endif
-
 
 #ifdef DEBUG
   if (rank==0)
@@ -169,6 +159,11 @@ int main(int argc, char *argv[])
   MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
+   char hostname[65];
+   gethostname(hostname, 65);
+   printf("%s daemon %d rank %d\n", hostname, (int) getpid(), rank);
+   sleep(5);
+
 
   if(argc<3) {
     if (rank==0)
@@ -180,7 +175,6 @@ int main(int argc, char *argv[])
 	   << "Both modes take a mandatory extra arguments related to checkpointing:" << endl
            <<  "     checkpoint frequency = # iters (0 means no checkpoint) >" << endl
            << "There are three optional arguments to select checkpointing mode (valid combinations permitted)" << endl
-           << "     -cp2f (file CP) -cp2m (memory CP) -cp2a (adjacent rank CP)" << endl
            << "There are also two optional arguments for fault injection" << endl
            << "     -procfi (enables random process FI) -nodefi (enables random node FI)" << endl;
     exit(1);
@@ -188,51 +182,32 @@ int main(int argc, char *argv[])
 
   if (argc>=5)
   {
-    nx = atoi(argv[1]);
-    ny = atoi(argv[2]);
-    nz = atoi(argv[3]);
+    nx = atoi(argv[2]);
+    ny = atoi(argv[3]);
+    nz = atoi(argv[4]);
     generate_matrix(nx, ny, nz, &A, &x, &b, &xexact);
-    cp_iters = atoi(argv[4]);
+    cp_iters = atoi(argv[5]);
     i = 5;
   }
   else
   {
     assert(false && "File input is not supported at this version!\n");
-    read_HPC_row(argv[1], &A, &x, &b, &xexact);
-    cp_iters = atoi(argv[2]);
+    read_HPC_row(argv[2], &A, &x, &b, &xexact);
+    cp_iters = atoi(argv[3]);
     i = 3;
   }
 
   // Parse optional arguments
   while( i < argc ) {
-    if( !strcmp("-restart", argv[i]) )
-      do_restart = true;
-    else if( !strcmp("-cp2f", argv[i]) )
-      cp2f = true;
-    else if( !strcmp("-cp2m", argv[i]) )
-      cp2m = true;
-    else if( !strcmp("-cp2a", argv[i]) )
-      cp2a = true;
-    else if( !strcmp("-procfi", argv[i]) )
+    if( !strcmp("-procfi", argv[i]) )
       procfi = true;
     else if( !strcmp("-nodefi", argv[i]) )
       nodefi = true;
+    else if( !strcmp("-level", argv[i]) )
+      level = atoi(argv[i+1]);
 
     i++;
   }
-
-  if( do_restart )
-    assert( cp2f && !cp2m && !cp2a && "Restarting job support ONLY file checkpoints!\n");
-
-  // Check checkpointing options are valid
-  if( cp_iters ) {
-    assert( cp2f || ( cp2f && cp2m ) || ( cp2m && cp2a ) && "Requesting checkpoints with invalid or unsupported checkpoint mode!\n" );
-    if( cp2m && cp2a )
-      assert( size>1 && "Cannot do memory+adjacent checkpoint with a single rank!\n");
-  }
-
-  // Assert only one or none enabled FI method
-  assert( ! (procfi && nodefi ) && "Cannot perform both procfi and nodefi" );
 
   bool dump_matrix = false;
   if (dump_matrix && size<=4) dump_matlab_matrix(A, rank);
@@ -248,7 +223,10 @@ int main(int argc, char *argv[])
 #endif
 
   double t1 = mytimer();   // Initialize it (if needed)
-  OMPI_Reinit(0, 0, resilient_main);
+
+  ierr = HPCCG( A, b, x, max_iter, tolerance, niters, normr, times,
+          state, cp_iters, procfi, nodefi, level );
+
   if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
 
 #ifdef USING_MPI
@@ -357,9 +335,9 @@ int main(int argc, char *argv[])
   //        << residual << ".\n" << endl;
 
 
-  // Finish up
-#ifdef USING_MPI
-  MPI_Finalize();
-#endif
+if (enable_fti) {
+    FTI_Finalize();
+}
+
   return 0 ;
 }

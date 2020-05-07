@@ -36,9 +36,11 @@ CFLAGS = \
  -I../parcsr_mv\
  -I../parcsr_ls\
  -I../krylov\
+ -I/g/g90/guo7/mylibs/FTI/include/\
  ${INCLUDE_CFLAGS}\
  -DHYPRE_TIMING
-                                                                                               
+ #//-Denable-fti
+                                                                                              
 LFLAGS =\
  -L.\
  -L../parcsr_ls\
@@ -47,12 +49,14 @@ LFLAGS =\
  -L../seq_mv\
  -L../krylov\
  -L../utilities\
+ -L/g/g90/guo7/mylibs/FTI/lib64/\
  -lparcsr_ls\
  -lparcsr_mv\
  -lseq_mv\
  -lIJ_mv\
  -lkrylov\
  -lHYPRE_utilities\
+ -lfti\
  ${INCLUDE_LFLAGS}
 
 ##################################################################
@@ -62,7 +66,7 @@ LFLAGS =\
 all: amg 
                                                                                                                                          
 clean:
-	@rm -f *.o check_* tmp_* *core
+	@rm -f *.o check_* tmp_* *core amg
                                                                                                                                          
 veryclean: clean
 	@rm -f amg

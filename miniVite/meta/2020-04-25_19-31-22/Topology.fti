@@ -1,0 +1,13 @@
+
+[injection]
+rank                           = 0
+number                         = 0
+position                       = 0
+frequency                      = 0
+
+
+[topology]
+0                              = node0
+1                              = node1
+
+

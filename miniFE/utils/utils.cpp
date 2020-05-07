@@ -112,6 +112,10 @@ void get_parameters(int argc, char** argv, Parameters& params)
             params.cp2m = 1;
             i++;
          }
+         else if(strcmp(argv[i], "-level") == 0) {
+            params.level = atoi(argv[i+1]);
+            i+=2;
+         }
          else if(strcmp(argv[i], "-cp2a") == 0) {
             params.cp2a = 1;
             i++;

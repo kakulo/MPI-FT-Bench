@@ -100,6 +100,25 @@ int main(int argc, char** argv) {
 }
 
 int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
+
+  int size, rank; // Number of MPI processes, My process ID
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+#ifdef DEBUG
+    {
+      char hostname[256];
+      gethostname(hostname, sizeof(hostname));
+      printf("PID %d on %s ready for attach for rank %d \n", getpid(), hostname, rank);
+      fflush(stdout);
+      //sleep(20);
+    }
+#endif
+
+if (enable_fti) {
+    FTI_Init(argv[1], MPI_COMM_WORLD);
+}
+
   miniFE::Parameters params;
   miniFE::get_parameters(argc, argv, params);
 
@@ -182,17 +201,7 @@ int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
   //To run miniFE with float instead of double, or 'long long' instead of int,
   //etc., change these template-parameters by changing the macro definitions in
   //the makefile or on the make command-line.
-
-#ifdef DEBUG
-    {
-      char hostname[256];
-      gethostname(hostname, sizeof(hostname));
-      printf("PID %d on %s ready for attach\n", getpid(), hostname);
-      fflush(stdout);
-      sleep(20);
-    }
-#endif
-
+  //
   printf("Enter into the driver() function ...\n");
   int return_code =
      miniFE::driver< MINIFE_SCALAR, MINIFE_LOCAL_ORDINAL, MINIFE_GLOBAL_ORDINAL>(global_box, my_box, params, doc, state);
@@ -227,6 +236,10 @@ int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
     doc.generateYAML();
   }
 
+
+if (enable_fti) {
+    FTI_Finalize();
+}
 
   //miniFE::finalize_mpi();
 

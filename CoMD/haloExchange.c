@@ -51,28 +51,6 @@ enum HaloFaceOrder {HALO_X_MINUS, HALO_X_PLUS,
 /// Don't change the order of the axes in this enum.
 enum HaloAxisOrder {HALO_X_AXIS, HALO_Y_AXIS, HALO_Z_AXIS};
 
-/// Extra data members that are needed for the exchange of atom data.
-/// For an atom exchange, the HaloExchangeSt::parms will point to a
-/// structure of this type.
-typedef struct AtomExchangeParmsSt
-{
-   int nCells[6];        //!< Number of cells in cellList for each face.
-   int* cellList[6];     //!< List of link cells from which to load data for each face.
-   real_t* pbcFactor[6]; //!< Whether this face is a periodic boundary.
-}
-AtomExchangeParms;
-
-/// Extra data members that are needed for the exchange of force data.
-/// For an force exchange, the HaloExchangeSt::parms will point to a
-/// structure of this type.
-typedef struct ForceExchangeParmsSt
-{
-   int nCells[6];     //!< Number of cells to send/recv for each face.
-   int* sendCells[6]; //!< List of link cells to send for each face.
-   int* recvCells[6]; //!< List of link cells to recv for each face.
-}
-ForceExchangeParms;
-
 /// A structure to package data for a single atom to pack into a
 /// send/recv buffer.  Also used for sorting atoms within link cells.
 typedef struct AtomMsgSt
@@ -679,17 +657,6 @@ size_t sizeofForceHaloExchange(HaloExchange* hh) {
 }
 
 void writeForceHaloExchange(char **data, HaloExchange* hh) {
-   mwrite(hh->nbrRank, sizeof(int), 6, data);
-   mwrite(&(hh->bufCapacity), sizeof(int), 1, data);
-
-   ForceExchangeParms* p = (ForceExchangeParms*) hh->parms;
-   mwrite(p->nCells, sizeof(int), 6, data);
-   for (int i = 0; i < 6; i++) {
-      mwrite(p->sendCells[i], sizeof(int), p->nCells[i], data);
-   }
-   for (int i = 0; i < 6; i++) {
-      mwrite(p->recvCells[i], sizeof(int), p->nCells[i], data);
-   }
 }
 
 HaloExchange* readForceHaloExchange(char **data) {
@@ -732,17 +699,6 @@ size_t sizeofAtomHaloExchange(HaloExchange* hh) {
 }
 
 void writeAtomHaloExchange(char **data, HaloExchange* hh) {
-	mwrite(hh->nbrRank, sizeof(int), 6, data);
-	mwrite(&(hh->bufCapacity), sizeof(int), 1, data);
-
-	AtomExchangeParms* p = (AtomExchangeParms*) hh->parms;
-	mwrite(p->nCells, sizeof(int), 6, data);
-	for (int i = 0; i < 6; i++) {
-		mwrite(p->cellList[i], sizeof(int), p->nCells[i], data);
-	}
-	for (int i = 0; i < 6; i++) {
-		mwrite(p->pbcFactor[i], sizeof(real_t), 3, data);
-	}
 }
 
 HaloExchange* readAtomHaloExchange(char **data) {

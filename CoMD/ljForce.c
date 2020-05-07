@@ -65,32 +65,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include "constants.h"
-#include "mytype.h"
-#include "parallel.h"
-#include "linkCells.h"
-#include "memUtils.h"
-#include "CoMDTypes.h"
-
 #define POT_SHIFT 1.0
-
-/// Derived struct for a Lennard Jones potential.
-/// Polymorphic with BasePotential.
-/// \see BasePotential
-typedef struct LjPotentialSt
-{
-   real_t cutoff;          //!< potential cutoff distance in Angstroms
-   real_t mass;            //!< mass of atoms in intenal units
-   real_t lat;             //!< lattice spacing (angs) of unit cell
-   char latticeType[8];    //!< lattice type, e.g. FCC, BCC, etc.
-   char  name[3];	   //!< element name
-   int	 atomicNo;	   //!< atomic number  
-   int  (*force)(SimFlat* s); //!< function pointer to force routine
-   void (*print)(FILE* file, BasePotential* pot);
-   void (*destroy)(BasePotential** pot); //!< destruction of the potential
-   real_t sigma;
-   real_t epsilon;
-} LjPotential;
 
 static int ljForce(SimFlat* s);
 static void ljPrint(FILE* file, BasePotential* pot);
@@ -253,19 +228,6 @@ size_t sizeofLJForce(BasePotential* p) {
 }
 
 void writeLJForce(char **data, BasePotential* p) {
-	LjPotential* pot = (LjPotential*) p;
-
-	mwrite(&(pot->cutoff), sizeof(real_t), 1, data);
-	mwrite(&(pot->mass), sizeof(real_t), 1, data);
-	mwrite(&(pot->lat), sizeof(real_t), 1, data);
-
-	mwrite(pot->latticeType, sizeof(char), 8, data);
-	mwrite(pot->name, sizeof(char), 3, data);
-
-	mwrite(&(pot->atomicNo), sizeof(int), 1, data);
-
-	mwrite(&(pot->sigma), sizeof(real_t), 1, data);
-	mwrite(&(pot->epsilon), sizeof(real_t), 1, data);
 }
 
 BasePotential* readLJForce(char **data) {

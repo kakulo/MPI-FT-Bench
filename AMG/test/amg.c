@@ -75,6 +75,7 @@ int restart=0;
 int nprocs=0;
 int myrank=0;
 int survivor=0;
+int level=0;
 
 /* new variables for C/R *-/
 int cp_stride;
@@ -188,12 +189,16 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
     * Initialize some stuff
     *-----------------------------------------------------------*/
 
+if (enable_fti) {
+    FTI_Init(argv[1], MPI_COMM_WORLD);
+}
+
    hypre_MPI_Comm_rank(hypre_MPI_COMM_WORLD, &myid );
    hypre_MPI_Comm_size(comm, &nprocs);
 
-   //char hostname[65];
-   //gethostname(hostname, 65);
-   //printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myid);
+   char hostname[65];
+   gethostname(hostname, 65);
+   printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myid);
    //sleep(55);
 
    /*-----------------------------------------------------------
@@ -319,6 +324,10 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
          else if(strcmp(argv[i], "-restart") == 0) {
             restart = 1;
             i++;
+         }
+         else if(strcmp(argv[i], "-level") == 0) {
+            level = atoi(argv[i+1]);
+            i+=2;
          }
          else {
            // printf("ERROR: Unknown command line argument: %s\n", argv[i]);
@@ -610,10 +619,20 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
             if (myid == 0 && print_stats)
                hypre_printf("HYPRE_GMRESGetPrecond got good precond\n");
          HYPRE_GMRESSetup (pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x);
+
+  hypre_GMRESData *gmres_data = (hypre_GMRESData *)pcg_solver;
+  hypre_GMRESFunctions *gmres_functions = gmres_data->functions;
+ 
+   double b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
+	printf("test1: BNORM is %f \n", b_norm);
          HYPRE_BoomerAMGGetCumNnzAP(pcg_precond, &nnz_AP);
          cum_nnz_AP += nnz_AP;
- 
+
+   b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
+	printf("test2: BNORM is %f \n", b_norm);
          HYPRE_GMRESSolve (pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x, state);
+   b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
+	printf("test3: BNORM is %f \n", b_norm);
  
          HYPRE_GMRESGetNumIterations(pcg_solver, &num_iterations);
          HYPRE_GMRESGetFinalRelativeResidualNorm(pcg_solver,&final_res_norm);
@@ -624,17 +643,31 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
             hypre_printf("Final GMRES Relative Residual Norm = %e\n", final_res_norm);
             hypre_printf("\n");
          }
+	printf("#iters in one block: %d ...\n", num_iterations);
          cum_num_its += num_iterations;
       
          for (i=0; i < 4; i++)
          {
+	printf("In %d iteration of the main loop ...\n", i);
+   b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
+	printf("test3: BNORM is %f \n", b_norm);
             HYPRE_Int gmres_iter = 6-i;
             eps = 0.01;
             AddOrRestoreAIJ(ij_A, eps, 1);
+   b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
+	printf("test4: BNORM is %f \n", b_norm);
             HYPRE_ParVectorAxpy(eps,x,b);
+   b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
+	printf("test5: BNORM is %f \n", b_norm);
             HYPRE_GMRESSetMaxIter(pcg_solver, gmres_iter);
+   b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
+	printf("test6: BNORM is %f \n", b_norm);
             HYPRE_GMRESSetTol(pcg_solver, 0.0);
+   b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
+	printf("test7: BNORM is %f \n", b_norm);
             HYPRE_GMRESSolve(pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x, state);
+   b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
+	printf("test8: BNORM is %f \n", b_norm);
             HYPRE_GMRESGetNumIterations(pcg_solver, &num_iterations);
             HYPRE_GMRESGetFinalRelativeResidualNorm(pcg_solver,&final_res_norm);
             if (myid == 0 && print_stats)
@@ -645,6 +678,7 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
                hypre_printf("\n");
             }
             cum_num_its += num_iterations;
+	printf("#iters in one block: %d ...\n", num_iterations);
          }
  
          HYPRE_BoomerAMGDestroy(pcg_precond);
@@ -703,6 +737,10 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
 */
 
   //fclose(fp);
+
+if (enable_fti) {
+    FTI_Finalize();
+}
 
   return 0;
 }

@@ -1,7 +1,0 @@
-mpicxx -std=c++11 -g -O0 -fopenmp -DPRINT_DIST_STATS -DUSE_MPI_RMA  -c -o main.o main.cpp
-In file included from main.cpp:57:0:
-dspl.hpp:59:17: fatal error: fti.h: No such file or directory
- #include <fti.h>
-                 ^
-compilation terminated.
-make: *** [main.o] Error 1

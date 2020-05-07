@@ -1,0 +1,29 @@
+# DO NOT DELETE
+
+ljForce.o: ljForce.h constants.h mytype.h parallel.h linkCells.h memUtils.h
+ljForce.o: CoMDTypes.h haloExchange.h decomposition.h initAtoms.h
+haloExchange.o: haloExchange.h mytype.h CoMDTypes.h linkCells.h
+haloExchange.o: decomposition.h initAtoms.h parallel.h eam.h constants.h
+haloExchange.o: memUtils.h performanceTimers.h
+linkCells.o: linkCells.h mytype.h parallel.h memUtils.h decomposition.h
+linkCells.o: performanceTimers.h CoMDTypes.h haloExchange.h initAtoms.h
+timestep.o: timestep.h CoMDTypes.h mytype.h haloExchange.h linkCells.h
+timestep.o: decomposition.h initAtoms.h parallel.h performanceTimers.h
+yamlOutput.o: yamlOutput.h CoMD_info.h mytype.h parallel.h
+performanceTimers.o: performanceTimers.h mytype.h parallel.h yamlOutput.h
+performanceTimers.o: memUtils.h
+cmdLineParser.o: cmdLineParser.h mytype.h memUtils.h
+mycommand.o: mycommand.h cmdLineParser.h parallel.h mytype.h
+decomposition.o: decomposition.h mytype.h memUtils.h parallel.h
+initAtoms.o: initAtoms.h mytype.h constants.h decomposition.h parallel.h
+initAtoms.o: random.h linkCells.h timestep.h CoMDTypes.h haloExchange.h
+initAtoms.o: memUtils.h performanceTimers.h
+CoMD.o: CoMDTypes.h mytype.h haloExchange.h linkCells.h decomposition.h
+CoMD.o: initAtoms.h eam.h constants.h memUtils.h parallel.h
+CoMD.o: performanceTimers.h ljForce.h yamlOutput.h mycommand.h timestep.h
+CoMD.o: ../libcheckpoint/checkpoint.h
+eam.o: eam.h mytype.h constants.h memUtils.h parallel.h linkCells.h
+eam.o: CoMDTypes.h haloExchange.h decomposition.h initAtoms.h
+eam.o: performanceTimers.h
+parallel.o: parallel.h mytype.h
+random.o: random.h mytype.h

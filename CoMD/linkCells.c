@@ -488,17 +488,6 @@ size_t sizeofLinkCell(LinkCell* boxes) {
 }
 
 void writeLinkCell(char **data, LinkCell* boxes) {
-	mwrite(boxes->gridSize, sizeof(int), 3, data);
-	mwrite(&(boxes->nLocalBoxes), sizeof(int), 1, data);
-	mwrite(&(boxes->nHaloBoxes), sizeof(int), 1, data);
-	mwrite(&(boxes->nTotalBoxes), sizeof(int), 1, data);
-
-	mwrite(boxes->localMin, sizeof(real_t), 3, data);
-	mwrite(boxes->localMax, sizeof(real_t), 3, data);
-	mwrite(boxes->boxSize, sizeof(real_t), 3, data);
-	mwrite(boxes->invBoxSize, sizeof(real_t), 3, data);
-
-	mwrite(boxes->nAtoms, sizeof(int), boxes->nTotalBoxes, data);
 }
 
 LinkCell* readLinkCell(char **data) {

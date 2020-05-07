@@ -201,7 +201,8 @@ Command parseCommandLine(int argc, char** argv)
    cmd.yproc = 1;
    cmd.zproc = 1;
    cmd.nSteps = 100;
-   cmd.printRate = 10;
+   //cmd.printRate = 10;
+   cmd.printRate = 1;
    cmd.dt = 1.0;
    cmd.lat = -1.0;
    cmd.temperature = 600.0;
@@ -212,7 +213,59 @@ Command parseCommandLine(int argc, char** argv)
    cmd.cp2f = 0;
    cmd.cp2m = 0;
    cmd.cp2a = 0;
+   cmd.cp_stride = 0;
+   cmd.level = 0;
 
+
+  // Parse optional arguments
+  int i = 1;
+  while( i < argc ) {
+    if( !strcmp("-level", argv[i]) )
+      cmd.level = atoi(argv[i+1]);
+    else if( !strcmp("-cp_stride", argv[i]) )
+      cmd.cp_stride = atoi(argv[i+1]);
+    else if( !strcmp("-procfi", argv[i]) )
+      cmd.procfi = 1;
+    else if( !strcmp("-nodefi", argv[i]) )
+      cmd.nodefi = 1;
+    else if( !strcmp("-help", argv[i]) )
+      printf("print this message \n");
+    else if( !strcmp("-potDir", argv[i]) )
+      strcpy(cmd.potDir, argv[i+1]);
+    else if( !strcmp("-potName", argv[i]) )
+      strcpy(cmd.potName, argv[i+1]);
+    else if( !strcmp("-potType", argv[i]) )
+      strcpy(cmd.potType, argv[i+1]);
+    else if( !strcmp("-doeam", argv[i]) )
+      cmd.doeam = atoi(argv[i+1]);
+    else if( !strcmp("-nx", argv[i]) )
+      cmd.nx = atoi(argv[i+1]);
+    else if( !strcmp("-ny", argv[i]) )
+      cmd.ny = atoi(argv[i+1]);
+    else if( !strcmp("-nz", argv[i]) )
+      cmd.nz = atoi(argv[i+1]);
+    else if( !strcmp("-xproc", argv[i]) )
+      cmd.xproc = atoi(argv[i+1]);
+    else if( !strcmp("-yproc", argv[i]) )
+      cmd.yproc = atoi(argv[i+1]);
+    else if( !strcmp("-zproc", argv[i]) )
+      cmd.zproc = atoi(argv[i+1]);
+    else if( !strcmp("-nSteps", argv[i]) )
+      cmd.nSteps = atoi(argv[i+1]);
+    else if( !strcmp("-printRate", argv[i]) )
+      cmd.printRate = atoi(argv[i+1]);
+    else if( !strcmp("-dt", argv[i]) )
+      cmd.dt = atof(argv[i+1]);
+    else if( !strcmp("-lat", argv[i]) )
+      cmd.lat = atof(argv[i+1]);
+    else if( !strcmp("-temp", argv[i]) )
+      cmd.temperature = atof(argv[i+1]);
+    else if( !strcmp("-delta", argv[i]) )
+      cmd.initialDelta = atof(argv[i+1]);
+
+    i++;
+   }
+/*
    int help=0;
    // add arguments for processing.  Please update the html documentation too!
    addArg("help",       'h', 0, 'i',  &(help),             0,             "print this message");
@@ -256,7 +309,7 @@ Command parseCommandLine(int argc, char** argv)
       exit(2);
    }
    freeArgs();
-
+*/
    return cmd;
 }
 

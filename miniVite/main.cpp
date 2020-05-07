@@ -76,7 +76,7 @@ static GraphWeight threshold = 1.0E-6;
 static void parseCommandLine(const int argc, char * const argv[]);
 
 // FTI Protect for Graph
-static void FTI_Protect_Graph(Graph &g);
+//static void FTI_Protect_Graph(Graph &g);
 
 int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) ;
 
@@ -121,7 +121,7 @@ if (enable_fti) {
    char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), me);
-   //sleep(5);
+   //sleep(45);
 
   createCommunityMPIType();
   double td0, td1, td, tdt;
@@ -148,6 +148,7 @@ if (enable_fti) {
 
   int recovered = 0;
 
+/*
   // code for FTI CPR
   if (enable_fti) {
       printf("Add FTI protection to Graph g ... \n");
@@ -165,6 +166,7 @@ if (enable_fti) {
 	  FTI_Checkpoint(0,level);
       }
   }
+*/
  
   assert(g != nullptr);
 #ifdef PRINT_DIST_STATS 
@@ -395,6 +397,7 @@ void parseCommandLine(const int argc, char * const argv[])
   }
 } // parseCommandLine
 
+/*
 // FTI protect for Graph
 void FTI_Protect_Graph(Graph &g) {
 
@@ -425,4 +428,4 @@ void FTI_Protect_Graph(Graph &g) {
   FTI_Protect(6,&g.parts_[0],size,FTI_GraphElem);
 
 } // FTI_Protect_Graph
-
+*/

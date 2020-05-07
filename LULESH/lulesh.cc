@@ -2689,7 +2689,6 @@ void LagrangeLeapFrog(Domain& domain)
 #ifdef SEDOV_SYNC_POS_VEL_LATE
    CommSyncPosVel(domain) ;
       start = MPI_Wtime();
-printf("test7 time: %f \n", start);
 #endif
 #endif   
 }
@@ -2746,11 +2745,6 @@ if (enable_fti) {
    sleep(5);
 
     ParseCommandLineOptions(argc, argv, myRank, &opts);
-
-    if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) { 
-	opts.procfi = 0;
-        opts.nodefi = 0;	
-    }
 
     /* Restart MPI application form a checkpoint *-/
     if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
@@ -2827,6 +2821,12 @@ if (enable_fti) {
 
 	int recovered = 0;
 
+    if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) { 
+	opts.procfi = 0;
+        opts.nodefi = 0;	
+    }
+
+
 // FTI CPR code
     if (enable_fti) {
 	recovered = 0;
@@ -2834,17 +2834,34 @@ if (enable_fti) {
 	FTI_Protect_LULESH(*locDom, opts, start);
 	printf("Done: Add FTI protection to data objects ... \n");
 
-	if ( FTI_Status() != 0){ 
-	    printf("Do FTI Recover to data objects from failure ... \n");
-	    FTI_Recover();
-	    printf("Done: FTI Recover data objects from failure ... \n");
-	    recovered = 1;
-	}
-
     }
 // FTI CPR code
 
     while((locDom->time() < locDom->stoptime()) && (locDom->cycle() < opts.its)) {
+
+#if USE_MPI
+	if (enable_fti) {
+		if ( FTI_Status() != 0){ 
+	    		printf("Do FTI Recover to data objects from failure ... \n");
+	    		FTI_Recover();
+	    		printf("Done: FTI Recover data objects from failure ... \n");
+	    		recovered = 1;
+        		opts.procfi = 0;
+        		opts.nodefi = 0;
+		}
+	}
+        /* Checkpoint the state of the application */
+	// do FTI CPR
+	if (enable_fti){
+	    if ( (!recovered) && ((locDom->cycle())%opts.cpInterval +1) == opts.cpInterval ){ 
+		printf("Do FTI checkpointing ... \n");
+		int cyc = locDom->cycle();
+		FTI_Checkpoint(cyc, opts.level);
+	    }
+	    recovered = 0;
+	}
+	// do FTI CPR
+#endif
 
         TimeIncrement(*locDom) ;
         LagrangeLeapFrog(*locDom) ;
@@ -2855,19 +2872,6 @@ if (enable_fti) {
         }
 #if USE_MPI
         MPI_Barrier(MPI_COMM_WORLD);
-#endif
-        /* Checkpoint the state of the application */
-#if USE_MPI
-	    // do FTI CPR
-	    if (enable_fti){ 
-		if ( (!recovered) && ((locDom->cycle())%opts.cpInterval +1) == opts.cpInterval ){ 
-			printf("Do FTI checkpointing ... \n");
-			int cyc = locDom->cycle();
-			FTI_Checkpoint(cyc, opts.level);
-		}
-		recovered = 0;
-	    }
-	    // do FTI CPR
 #endif
 
         if (opts.procfi == 1 && myRank == (numRanks-1) && locDom->cycle()==51){

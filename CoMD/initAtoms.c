@@ -248,26 +248,6 @@ size_t sizeofAtoms(SimFlat* sim) {
 }
 
 void writeAtoms(char **data, SimFlat* sim) {
-   mwrite(&(sim->atoms->nLocal), sizeof(int), 1, data);
-   mwrite(&(sim->atoms->nGlobal), sizeof(int), 1, data);
-
-   int maxtotalatoms = MAXATOMS * (sim->boxes->nTotalBoxes);
-   mwrite(sim->atoms->gid, sizeof(int), maxtotalatoms, data);
-   mwrite(sim->atoms->iSpecies, sizeof(int), maxtotalatoms, data);
-
-   for(int i = 0; i < maxtotalatoms; i++)
-   {
-      mwrite(sim->atoms->r[i], sizeof(real_t), 3, data);
-   }
-   for(int i = 0; i < maxtotalatoms; i++)
-   {
-      mwrite(sim->atoms->p[i], sizeof(real_t), 3, data);
-   }
-   for(int i = 0; i < maxtotalatoms; i++)
-   {
-      mwrite(sim->atoms->f[i], sizeof(real_t), 3, data);
-   }
-   mwrite(sim->atoms->U, sizeof(real_t), maxtotalatoms, data);
 }
 
 Atoms* readAtoms(char **data, LinkCell* boxes) {

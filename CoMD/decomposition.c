@@ -68,15 +68,6 @@ int processorNum(Domain* domain, int dix, int diy, int diz)
 }
 
 void writeDecomposition(char **data, Domain* domain) {
-   mwrite(domain->procGrid, sizeof(int), 3, data);
-   mwrite(domain->procCoord, sizeof(int), 3, data);
-
-   mwrite(domain->globalMin, sizeof(real_t), 3, data);
-   mwrite(domain->globalMax, sizeof(real_t), 3, data);
-   mwrite(domain->globalExtent, sizeof(real_t), 3, data);
-   mwrite(domain->localMin, sizeof(real_t), 3, data);
-   mwrite(domain->localMax, sizeof(real_t), 3, data);
-   mwrite(domain->localExtent, sizeof(real_t), 3, data);
 }
 
 size_t sizeofDecomposition() {

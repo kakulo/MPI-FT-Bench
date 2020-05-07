@@ -1,0 +1,50 @@
+
+[ckpt_info]
+ckpt_type                      = full
+ckpt_id                        = 49
+
+
+[0]
+ckpt_file_name                 = Ckpt49-Rank1.fti
+ckpt_file_size                 = 4
+ckpt_file_maxs                 = 4
+ckpt_checksum                  = d5d1144fe73954aa74d54267e0d10e7a
+var0_id                        = 0
+var0_size                      = 4
+var0_pos                       = 0
+var0_name                      = 
+
+
+[1]
+ckpt_file_name                 = Ckpt49-Rank3.fti
+ckpt_file_size                 = 4
+ckpt_file_maxs                 = 4
+ckpt_checksum                  = d5d1144fe73954aa74d54267e0d10e7a
+var0_id                        = 0
+var0_size                      = 4
+var0_pos                       = 0
+var0_name                      = 
+
+
+[2]
+ckpt_file_name                 = Ckpt49-Rank5.fti
+ckpt_file_size                 = 4
+ckpt_file_maxs                 = 4
+ckpt_checksum                  = d5d1144fe73954aa74d54267e0d10e7a
+var0_id                        = 0
+var0_size                      = 4
+var0_pos                       = 0
+var0_name                      = 
+
+
+[3]
+ckpt_file_name                 = Ckpt49-Rank7.fti
+ckpt_file_size                 = 4
+ckpt_file_maxs                 = 4
+ckpt_checksum                  = d5d1144fe73954aa74d54267e0d10e7a
+var0_id                        = 0
+var0_size                      = 4
+var0_pos                       = 0
+var0_name                      = 
+
+

@@ -274,209 +274,210 @@ void FTI_Protect_LULESH(Domain& locDom, struct cmdLineOpts &opts, double start) 
 
    int size;
    size = locDom.m_x.size();
-   FTI_Protect(n,&locDom.m_x[0],size,FTI_DBLE);
+   FTI_Protect(0,&locDom.m_x[0],size,FTI_DBLE);
 
    size = locDom.m_y.size();
-   FTI_Protect(n+1,&locDom.m_y[0],size,FTI_DBLE);
+   FTI_Protect(1,&locDom.m_y[0],size,FTI_DBLE);
 
    size = locDom.m_z.size();
-   FTI_Protect(n+1,&locDom.m_z[0],size,FTI_DBLE);
+   FTI_Protect(2,&locDom.m_z[0],size,FTI_DBLE);
 
    size = locDom.m_xd.size();
-   FTI_Protect(n+1,&locDom.m_xd[0],size,FTI_DBLE);
+   FTI_Protect(3,&locDom.m_xd[0],size,FTI_DBLE);
 
    size = locDom.m_yd.size();
-   FTI_Protect(n+1,&locDom.m_yd[0],size,FTI_DBLE);
+   FTI_Protect(4,&locDom.m_yd[0],size,FTI_DBLE);
 
    size = locDom.m_zd.size();
-   FTI_Protect(n+1,&locDom.m_zd[0],size,FTI_DBLE);
+   FTI_Protect(5,&locDom.m_zd[0],size,FTI_DBLE);
 
    size = locDom.m_xdd.size();
-   FTI_Protect(n+1,&locDom.m_xdd[0],size,FTI_DBLE);
+   FTI_Protect(6,&locDom.m_xdd[0],size,FTI_DBLE);
 
    size = locDom.m_ydd.size();
-   FTI_Protect(n+1,&locDom.m_ydd[0],size,FTI_DBLE);
+   FTI_Protect(7,&locDom.m_ydd[0],size,FTI_DBLE);
 
    size = locDom.m_zdd.size();
-   FTI_Protect(n+1,&locDom.m_zdd[0],size,FTI_DBLE);
+   FTI_Protect(8,&locDom.m_zdd[0],size,FTI_DBLE);
 
    size = locDom.m_fx.size();
-   FTI_Protect(n+1,&locDom.m_fx[0],size,FTI_DBLE);
+   FTI_Protect(9,&locDom.m_fx[0],size,FTI_DBLE);
 
    size = locDom.m_fy.size();
-   FTI_Protect(n+1,&locDom.m_fy[0],size,FTI_DBLE);
+   FTI_Protect(10,&locDom.m_fy[0],size,FTI_DBLE);
 
    size = locDom.m_fz.size();
-   FTI_Protect(n+1,&locDom.m_fz[0],size,FTI_DBLE);
+   FTI_Protect(11,&locDom.m_fz[0],size,FTI_DBLE);
 
    size = locDom.m_nodalMass.size();
-   FTI_Protect(n+1,&locDom.m_nodalMass[0],size,FTI_DBLE);
+   FTI_Protect(12,&locDom.m_nodalMass[0],size,FTI_DBLE);
 
    size = locDom.m_symmX.size();
-   FTI_Protect(n+1,&locDom.m_symmX[0],size,FTI_INTG);
+   FTI_Protect(13,&locDom.m_symmX[0],size,FTI_INTG);
 
    size = locDom.m_symmY.size();
-   FTI_Protect(n+1,&locDom.m_symmY[0],size,FTI_INTG);
+   FTI_Protect(14,&locDom.m_symmY[0],size,FTI_INTG);
 
    size = locDom.m_symmZ.size();
-   FTI_Protect(n+1,&locDom.m_symmZ[0],size,FTI_INTG);
+   FTI_Protect(15,&locDom.m_symmZ[0],size,FTI_INTG);
 
-   FTI_Protect(n+1,&locDom.m_numReg,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_cost,1,FTI_INTG);
-   FTI_Protect(n+1,locDom.m_regElemSize,locDom.m_numReg,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_numElem,1,FTI_INTG);
-   FTI_Protect(n+1,locDom.m_regNumList,locDom.m_numElem,FTI_INTG);
-
-   for(int i = 0; i < locDom.m_numReg; i++)
-   {
-      FTI_Protect(n+1,locDom.m_regElemlist[i],locDom.regElemSize(i),FTI_INTG);
-   }
+   FTI_Protect(16,&locDom.m_numReg,1,FTI_INTG);
+   FTI_Protect(17,&locDom.m_cost,1,FTI_INTG);
+   FTI_Protect(18,locDom.m_regElemSize,locDom.m_numReg,FTI_INTG);
+   FTI_Protect(19,&locDom.m_numElem,1,FTI_INTG);
+   FTI_Protect(20,locDom.m_regNumList,locDom.m_numElem,FTI_INTG);
 
    size = locDom.m_nodelist.size();
-   FTI_Protect(n+1,&locDom.m_nodelist[0],size,FTI_INTG);
+   FTI_Protect(21,&locDom.m_nodelist[0],size,FTI_INTG);
 
    size = locDom.m_lxim.size();
-   FTI_Protect(n+1,&locDom.m_lxim[0],size,FTI_INTG);
+   FTI_Protect(22,&locDom.m_lxim[0],size,FTI_INTG);
 
    size = locDom.m_lxip.size();
-   FTI_Protect(n+1,&locDom.m_lxip[0],size,FTI_INTG);
+   FTI_Protect(23,&locDom.m_lxip[0],size,FTI_INTG);
 
    size = locDom.m_letam.size();
-   FTI_Protect(n+1,&locDom.m_letam[0],size,FTI_INTG);
+   FTI_Protect(24,&locDom.m_letam[0],size,FTI_INTG);
 
    size = locDom.m_letap.size();
-   FTI_Protect(n+1,&locDom.m_letap[0],size,FTI_INTG);
+   FTI_Protect(25,&locDom.m_letap[0],size,FTI_INTG);
 
    size = locDom.m_lzetam.size();
-   FTI_Protect(n+1,&locDom.m_lzetam[0],size,FTI_INTG);
+   FTI_Protect(26,&locDom.m_lzetam[0],size,FTI_INTG);
 
    size = locDom.m_lzetap.size();
-   FTI_Protect(n+1,&locDom.m_lzetap[0],size,FTI_INTG);
+   FTI_Protect(27,&locDom.m_lzetap[0],size,FTI_INTG);
 
    size = locDom.m_elemBC.size();
-   FTI_Protect(n+1,&locDom.m_elemBC[0],size,FTI_INTG);
+   FTI_Protect(28,&locDom.m_elemBC[0],size,FTI_INTG);
 
    size = locDom.m_dxx.size();
-   FTI_Protect(n+1,&locDom.m_dxx[0],size,FTI_DBLE);
+   FTI_Protect(29,&locDom.m_dxx[0],size,FTI_DBLE);
 
    size = locDom.m_dyy.size();
-   FTI_Protect(n+1,&locDom.m_dyy[0],size,FTI_DBLE);
+   FTI_Protect(30,&locDom.m_dyy[0],size,FTI_DBLE);
 
    size = locDom.m_dzz.size();
-   FTI_Protect(n+1,&locDom.m_dzz[0],size,FTI_DBLE);
+   FTI_Protect(31,&locDom.m_dzz[0],size,FTI_DBLE);
 
    size = locDom.m_delv_xi.size();
-   FTI_Protect(n+1,&locDom.m_delv_xi[0],size,FTI_DBLE);
+   FTI_Protect(32,&locDom.m_delv_xi[0],size,FTI_DBLE);
 
    size = locDom.m_delv_eta.size();
-   FTI_Protect(n+1,&locDom.m_delv_eta[0],size,FTI_DBLE);
+   FTI_Protect(33,&locDom.m_delv_eta[0],size,FTI_DBLE);
 
    size = locDom.m_delv_zeta.size();
-   FTI_Protect(n+1,&locDom.m_delv_zeta[0],size,FTI_DBLE);
+   FTI_Protect(34,&locDom.m_delv_zeta[0],size,FTI_DBLE);
 
    size = locDom.m_delx_xi.size();
-   FTI_Protect(n+1,&locDom.m_delx_xi[0],size,FTI_DBLE);
+   FTI_Protect(35,&locDom.m_delx_xi[0],size,FTI_DBLE);
 
    size = locDom.m_delx_eta.size();
-   FTI_Protect(n+1,&locDom.m_delx_eta[0],size,FTI_DBLE);
+   FTI_Protect(36,&locDom.m_delx_eta[0],size,FTI_DBLE);
 
    size = locDom.m_delx_zeta.size();
-   FTI_Protect(n+1,&locDom.m_delx_zeta[0],size,FTI_DBLE);
+   FTI_Protect(37,&locDom.m_delx_zeta[0],size,FTI_DBLE);
 
    size = locDom.m_e.size();
-   FTI_Protect(n+1,&locDom.m_e[0],size,FTI_DBLE);
+   FTI_Protect(38,&locDom.m_e[0],size,FTI_DBLE);
 
    size = locDom.m_p.size();
-   FTI_Protect(n+1,&locDom.m_p[0],size,FTI_DBLE);
+   FTI_Protect(39,&locDom.m_p[0],size,FTI_DBLE);
 
    size = locDom.m_q.size();
-   FTI_Protect(n+1,&locDom.m_q[0],size,FTI_DBLE);
+   FTI_Protect(40,&locDom.m_q[0],size,FTI_DBLE);
 
    size = locDom.m_ql.size();
-   FTI_Protect(n+1,&locDom.m_ql[0],size,FTI_DBLE);
+   FTI_Protect(41,&locDom.m_ql[0],size,FTI_DBLE);
 
    size = locDom.m_qq.size();
-   FTI_Protect(n+1,&locDom.m_qq[0],size,FTI_DBLE);
+   FTI_Protect(42,&locDom.m_qq[0],size,FTI_DBLE);
 
    size = locDom.m_v.size();
-   FTI_Protect(n+1,&locDom.m_v[0],size,FTI_DBLE);
+   FTI_Protect(43,&locDom.m_v[0],size,FTI_DBLE);
 
    size = locDom.m_volo.size();
-   FTI_Protect(n+1,&locDom.m_volo[0],size,FTI_DBLE);
+   FTI_Protect(44,&locDom.m_volo[0],size,FTI_DBLE);
 
    size = locDom.m_vnew.size();
-   FTI_Protect(n+1,&locDom.m_vnew[0],size,FTI_DBLE);
+   FTI_Protect(45,&locDom.m_vnew[0],size,FTI_DBLE);
 
    size = locDom.m_delv.size();
-   FTI_Protect(n+1,&locDom.m_delv[0],size,FTI_DBLE);
+   FTI_Protect(46,&locDom.m_delv[0],size,FTI_DBLE);
 
    size = locDom.m_vdov.size();
-   FTI_Protect(n+1,&locDom.m_vdov[0],size,FTI_DBLE);
+   FTI_Protect(47,&locDom.m_vdov[0],size,FTI_DBLE);
 
    size = locDom.m_arealg.size();
-   FTI_Protect(n+1,&locDom.m_arealg[0],size,FTI_DBLE);
+   FTI_Protect(48,&locDom.m_arealg[0],size,FTI_DBLE);
 
    size = locDom.m_ss.size();
-   FTI_Protect(n+1,&locDom.m_ss[0],size,FTI_DBLE);
+   FTI_Protect(49,&locDom.m_ss[0],size,FTI_DBLE);
 
    size = locDom.m_elemMass.size();
-   FTI_Protect(n+1,&locDom.m_elemMass[0],size,FTI_DBLE);
+   FTI_Protect(50,&locDom.m_elemMass[0],size,FTI_DBLE);
 
-   FTI_Protect(n+1,&locDom.m_dtcourant,1,FTI_DBLE);
-   FTI_Protect(n+1,&locDom.m_dthydro,1,FTI_DBLE);
-   FTI_Protect(n+1,&locDom.m_cycle,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_dtfixed,1,FTI_DBLE);
-   FTI_Protect(n+1,&locDom.m_time,1,FTI_DBLE);
-   FTI_Protect(n+1,&locDom.m_deltatime,1,FTI_DBLE);
-   FTI_Protect(n+1,&locDom.m_deltatimemultlb,1,FTI_DBLE);
-   FTI_Protect(n+1,&locDom.m_deltatimemultub,1,FTI_DBLE);
-   FTI_Protect(n+1,&locDom.m_dtmax,1,FTI_DBLE);
-   FTI_Protect(n+1,&locDom.m_stoptime,1,FTI_DBLE);
+   FTI_Protect(51,&locDom.m_dtcourant,1,FTI_DBLE);
+   FTI_Protect(52,&locDom.m_dthydro,1,FTI_DBLE);
+   FTI_Protect(53,&locDom.m_cycle,1,FTI_INTG);
+   FTI_Protect(54,&locDom.m_dtfixed,1,FTI_DBLE);
+   FTI_Protect(55,&locDom.m_time,1,FTI_DBLE);
+   FTI_Protect(56,&locDom.m_deltatime,1,FTI_DBLE);
+   FTI_Protect(57,&locDom.m_deltatimemultlb,1,FTI_DBLE);
+   FTI_Protect(58,&locDom.m_deltatimemultub,1,FTI_DBLE);
+   FTI_Protect(59,&locDom.m_dtmax,1,FTI_DBLE);
+   FTI_Protect(60,&locDom.m_stoptime,1,FTI_DBLE);
 
-   FTI_Protect(n+1,&locDom.m_numRanks,1,FTI_INTG);
+   FTI_Protect(61,&locDom.m_numRanks,1,FTI_INTG);
 
-   FTI_Protect(n+1,&locDom.m_colLoc,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_rowLoc,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_planeLoc,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_tp,1,FTI_INTG);
+   FTI_Protect(62,&locDom.m_colLoc,1,FTI_INTG);
+   FTI_Protect(63,&locDom.m_rowLoc,1,FTI_INTG);
+   FTI_Protect(64,&locDom.m_planeLoc,1,FTI_INTG);
+   FTI_Protect(65,&locDom.m_tp,1,FTI_INTG);
 
-   FTI_Protect(n+1,&locDom.m_sizeX,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_sizeY,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_sizeZ,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_numElem,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_numNode,1,FTI_INTG);
+   FTI_Protect(66,&locDom.m_sizeX,1,FTI_INTG);
+   FTI_Protect(67,&locDom.m_sizeY,1,FTI_INTG);
+   FTI_Protect(68,&locDom.m_sizeZ,1,FTI_INTG);
+   FTI_Protect(69,&locDom.m_numElem,1,FTI_INTG);
+   FTI_Protect(70,&locDom.m_numNode,1,FTI_INTG);
 
-   FTI_Protect(n+1,&locDom.m_maxPlaneSize,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_maxEdgeSize,1,FTI_INTG);
+   FTI_Protect(71,&locDom.m_maxPlaneSize,1,FTI_INTG);
+   FTI_Protect(72,&locDom.m_maxEdgeSize,1,FTI_INTG);
 
 #if _OPENMP
-   FTI_Protect(n+1,locDom.m_nodeElemStart,locDom.m_numNode+1,FTI_INTG);
+   FTI_Protect(73,locDom.m_nodeElemStart,locDom.m_numNode+1,FTI_INTG);
    int elem = locDom.m_nodeElemStart[locDom.numNode()];
-   FTI_Protect(n+1,locDom.m_nodeElemCornerList,elem,FTI_INTG);
+   FTI_Protect(74,locDom.m_nodeElemCornerList,elem,FTI_INTG);
 #endif
 
-   FTI_Protect(n+1,&locDom.m_rowMin,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_rowMax,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_colMin,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_colMax,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_planeMin,1,FTI_INTG);
-   FTI_Protect(n+1,&locDom.m_planeMax,1,FTI_INTG);
+   FTI_Protect(75,&locDom.m_rowMin,1,FTI_INTG);
+   FTI_Protect(76,&locDom.m_rowMax,1,FTI_INTG);
+   FTI_Protect(77,&locDom.m_colMin,1,FTI_INTG);
+   FTI_Protect(78,&locDom.m_colMax,1,FTI_INTG);
+   FTI_Protect(79,&locDom.m_planeMin,1,FTI_INTG);
+   FTI_Protect(80,&locDom.m_planeMax,1,FTI_INTG);
 
    //Size of comm send/recv buffer
-   FTI_Protect(n+1,&locDom.commBufSize,1,FTI_INTG);
-   FTI_Protect(n+1,locDom.commDataSend,locDom.commBufSize,FTI_DBLE);
-   FTI_Protect(n+1,locDom.commDataRecv,locDom.commBufSize,FTI_DBLE);
+   FTI_Protect(81,&locDom.commBufSize,1,FTI_INTG);
+   FTI_Protect(82,locDom.commDataSend,locDom.commBufSize,FTI_DBLE);
+   FTI_Protect(83,locDom.commDataRecv,locDom.commBufSize,FTI_DBLE);
 
    //struct
    // define a new FTI type
-   FTIT_type FTI_CMD;
-   FTI_InitType(&FTI_CMD, 16*sizeof(int));
-   FTI_Protect(n+1,&opts,1,FTI_CMD);
+   //FTIT_type FTI_CMD;
+   //FTI_InitType(&FTI_CMD, 16*sizeof(int));
+   //FTI_Protect(84,&opts,1,FTI_CMD);
 
    //Time
 #if USE_MPI
-   FTI_Protect(n+1,&start,1,FTI_DBLE);
+   FTI_Protect(84,&start,1,FTI_DBLE);
 #endif
+
+   int i;
+   for(i = 0; i < locDom.m_numReg; i++)
+   {
+      FTI_Protect(85+i,locDom.m_regElemlist[i],locDom.regElemSize(i),FTI_INTG);
+   }
 
    //std::string sos = oss.str();
 

@@ -57,7 +57,7 @@ OBJS += ../../libcheckpoint/checkpoint.o
 all: libkrylov.a
 
 clean:
-	rm -f *.o *.dxx
+	rm -f *.o *.a *.dxx
 
 veryclean: clean
 	rm -f lib*.a

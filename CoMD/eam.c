@@ -92,53 +92,7 @@
 #include <math.h>
 #include <assert.h>
 
-#include "constants.h"
-#include "memUtils.h"
-#include "parallel.h"
-#include "linkCells.h"
-#include "CoMDTypes.h"
-#include "performanceTimers.h"
-#include "haloExchange.h"
-
 #define MAX(A,B) ((A) > (B) ? (A) : (B))
-
-/// Handles interpolation of tabular data.
-///
-/// \see initInterpolationObject
-/// \see interpolate
-typedef struct InterpolationObjectSt 
-{
-   int n;          //!< the number of values in the table
-   real_t x0;      //!< the starting ordinate range
-   real_t invDx;   //!< the inverse of the table spacing
-   real_t* values; //!< the abscissa values
-} InterpolationObject;
-
-/// Derived struct for an EAM potential.
-/// Uses table lookups for function evaluation.
-/// Polymorphic with BasePotential.
-/// \see BasePotential
-typedef struct EamPotentialSt 
-{
-   real_t cutoff;          //!< potential cutoff distance in Angstroms
-   real_t mass;            //!< mass of atoms in intenal units
-   real_t lat;             //!< lattice spacing (angs) of unit cell
-   char latticeType[8];    //!< lattice type, e.g. FCC, BCC, etc.
-   char  name[3];	   //!< element name
-   int	 atomicNo;	   //!< atomic number  
-   int  (*force)(SimFlat* s); //!< function pointer to force routine
-   void (*print)(FILE* file, BasePotential* pot);
-   void (*destroy)(BasePotential** pot); //!< destruction of the potential
-   InterpolationObject* phi;  //!< Pair energy
-   InterpolationObject* rho;  //!< Electron Density
-   InterpolationObject* f;    //!< Embedding Energy
-
-   real_t* rhobar;        //!< per atom storage for rhobar
-   real_t* dfEmbed;       //!< per atom storage for derivative of Embedding
-   HaloExchange* forceExchange;
-   ForceExchangeData* forceExchangeData;
-} EamPotential;
-
 // EAM functionality
 static int eamForce(SimFlat* s);
 static void eamPrint(FILE* file, BasePotential* pot);
@@ -890,46 +844,6 @@ size_t sizeofEamPotential(BasePotential* p, LinkCell* boxes) {
 }
 
 void writeEamPotential(char **data, BasePotential* p, LinkCell* boxes) {
-	EamPotential* pot = (EamPotential*) p;
-
-	mwrite(&(pot->cutoff), sizeof(real_t), 1, data);
-	mwrite(&(pot->mass), sizeof(real_t), 1, data);
-	mwrite(&(pot->lat), sizeof(real_t), 1, data);
-
-	mwrite(pot->latticeType, sizeof(char), 8, data);
-	mwrite(&(pot->name), sizeof(char), 3, data);
-
-	mwrite(&(pot->atomicNo), sizeof(int), 1, data);
-
-	int phiSize = pot->phi->n;
-	mwrite(&phiSize, sizeof(int), 1, data);
-	mwrite(&(pot->phi->x0), sizeof(real_t), 1, data);
-	mwrite(&(pot->phi->invDx), sizeof(real_t), 1, data);
-	mwrite(pot->phi->values, sizeof(real_t), phiSize + 3, data);
-
-	int rhoSize = pot->rho->n;
-	mwrite(&rhoSize, sizeof(int), 1, data);
-	mwrite(&(pot->rho->x0), sizeof(real_t), 1, data);
-	mwrite(&(pot->rho->invDx), sizeof(real_t), 1, data);
-	mwrite(pot->rho->values, sizeof(real_t), rhoSize + 3, data);
-
-	int fSize = pot->f->n;
-	mwrite(&fSize, sizeof(int), 1, data);
-	mwrite(&(pot->f->x0), sizeof(real_t), 1, data);
-	mwrite(&(pot->f->invDx), sizeof(real_t), 1, data);
-	mwrite(pot->f->values, sizeof(real_t), fSize + 3, data);
-
-	/// Size for rhobar and dfembed
-	int size = MAXATOMS * boxes->nTotalBoxes;
-	mwrite(pot->rhobar, sizeof(real_t), size, data);
-	mwrite(pot->dfEmbed, sizeof(real_t), size, data);
-
-	/// HaloExchange
-	writeForceHaloExchange(data, pot->forceExchange);
-
-	mwrite(pot->forceExchangeData->dfEmbed, sizeof(real_t), size, data);
-
-	writeLinkCell(data, pot->forceExchangeData->boxes);
 }
 
 BasePotential* readEamPotential(char **data, LinkCell* boxes) {

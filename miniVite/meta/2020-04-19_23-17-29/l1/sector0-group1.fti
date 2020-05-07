@@ -1,0 +1,36 @@
+
+[ckpt_info]
+ckpt_type                      = full
+ckpt_id                        = 4
+
+
+[0]
+ckpt_file_name                 = Ckpt4-Rank1.fti
+ckpt_file_size                 = 4256
+ckpt_file_maxs                 = 4512
+ckpt_checksum                  = 262880215732f59fd9c16ace91a0cf57
+var0_id                        = 0
+var0_size                      = 3856
+var0_pos                       = 0
+var0_name                      = 
+var1_id                        = 1
+var1_size                      = 400
+var1_pos                       = 3856
+var1_name                      = 
+
+
+[1]
+ckpt_file_name                 = Ckpt4-Rank3.fti
+ckpt_file_size                 = 4512
+ckpt_file_maxs                 = 4512
+ckpt_checksum                  = 7d978682a5d23562b23ebfbd0b825c30
+var0_id                        = 0
+var0_size                      = 4112
+var0_pos                       = 0
+var0_name                      = 
+var1_id                        = 1
+var1_size                      = 400
+var1_pos                       = 4112
+var1_name                      = 
+
+

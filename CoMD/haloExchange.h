@@ -101,4 +101,26 @@ HaloExchange* readForceHaloExchange(char **data);
 /// Get checkpoint size
 size_t sizeofForceHaloExchange(HaloExchange* atomExchange);
 
+/// Extra data members that are needed for the exchange of atom data.
+/// For an atom exchange, the HaloExchangeSt::parms will point to a
+/// structure of this type.
+typedef struct AtomExchangeParmsSt
+{
+   int nCells[6];        //!< Number of cells in cellList for each face.
+   int* cellList[6];     //!< List of link cells from which to load data for each face.
+   real_t* pbcFactor[6]; //!< Whether this face is a periodic boundary.
+}
+AtomExchangeParms;
+
+/// Extra data members that are needed for the exchange of force data.
+/// For an force exchange, the HaloExchangeSt::parms will point to a
+/// structure of this type.
+typedef struct ForceExchangeParmsSt
+{
+   int nCells[6];     //!< Number of cells to send/recv for each face.
+   int* sendCells[6]; //!< List of link cells to send for each face.
+   int* recvCells[6]; //!< List of link cells to recv for each face.
+}ForceExchangeParms;
+
+
 #endif

@@ -101,7 +101,7 @@ const int CommunityDataTag  = 5;
 
 static MPI_Datatype commType;
 
-static void FTI_Protect_Louvain(int numIters, size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight); 
+static void FTI_Protect_Louvain(int numIters, size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight, Graph &g, int rank, int g_edge_list_sz); 
 
 
 void distSumVertexDegree(const Graph &g, vector<GraphWeight> &vDegree, vector<Comm> &localCinfo)
@@ -1264,12 +1264,12 @@ void exchangeVertexReqs(const Graph &dg, size_t &ssz, size_t &rsz,
 } // exchangeVertexReqs
 
 #if defined(USE_MPI_RMA)
-GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
+GraphWeight distLouvainMethod(const int me, const int nprocs, Graph &dg,
         size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, 
         vector<GraphElem> &svdata, vector<GraphElem> &rvdata, const GraphWeight lower, 
         const GraphWeight thresh, int &iters, MPI_Win &commwin, OMPI_reinit_state_t state, int level)
 #else
-GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
+GraphWeight distLouvainMethod(const int me, const int nprocs, Graph &dg,
         size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, 
         vector<GraphElem> &svdata, vector<GraphElem> &rvdata, const GraphWeight lower, 
         const GraphWeight thresh, int &iters, OMPI_reinit_state_t state, int level)
@@ -1336,19 +1336,16 @@ GraphWeight distLouvainMethod(const int me, const int nprocs, const Graph &dg,
      nodefi = 0;
   }
 
+  int g_edge_list_sz = dg.edge_list_.size();
+  printf("Normal: g_edge_list_sz - %d \n", g_edge_list_sz);
+
 // FTI CPR code   
 int recovered = 0;
 if (enable_fti) {
 
-  recovered = 0;
   printf("Add FTI protection to Louvain data objects ... \n");
-  FTI_Protect_Louvain( numIters, ssz, rsz, ssizes, rsizes, svdata, rvdata, pastComm, currComm, targetComm, remoteComm, remoteCinfo, remoteCupdate, localCinfo, localCupdate, vDegree, clusterWeight );
-
-  if ( FTI_Status() != 0){ 
-     printf("Do FTI Recover to Louvain data objects ... \n");
-     FTI_Recover();
-     recovered = 1;
-  }
+  FTI_Protect_Louvain( numIters, ssz, rsz, ssizes, rsizes, svdata, rvdata, pastComm, currComm, targetComm, remoteComm, remoteCinfo, remoteCupdate, localCinfo, localCupdate, vDegree, clusterWeight, dg , myrank, g_edge_list_sz);
+  printf("Done: Add FTI protection to data objects ... \n");
 
 }
 
@@ -1363,6 +1360,33 @@ if (enable_fti) {
   // end of 
   // writing varialbes to checkpionts
 
+  // do FTI Recover
+  if (enable_fti) {
+    if ( FTI_Status() != 0){ 
+/*
+       printf("FTI: Before recovery g_edge_list_sz - %d with rank %d \n", g_edge_list_sz, myrank);
+	int res = FTI_RecoverVarInit();
+	printf("test1 \n");
+        res += FTI_RecoverVar(8);
+	printf("test2 \n");
+	res += FTI_RecoverVarFinalize();
+	printf("test3 \n");
+	  printf("the value of FTI_SCES: %d \n", FTI_SCES);
+       if (res != 0) {
+	  printf("Recovery failed for g_edge_list_sz ... \n");
+       }
+       printf("FTI: After recovery g_edge_list_sz - %d with rank %d \n", g_edge_list_sz, myrank);
+       dg.edge_indices_.resize(g_edge_list_sz);
+*/
+       printf("Do FTI Recover to Louvain data objects ... \n");
+       FTI_Recover();
+       printf("Done: FTI Recover data objects from failure ... \n");
+       recovered = 1;
+       procfi = 0;
+       nodefi = 0;
+    }
+  }
+
   // do FTI CPR
   if (enable_fti){  
     if ( (!recovered) && (numIters%cp_stride +1) == cp_stride ){ 
@@ -1372,12 +1396,12 @@ if (enable_fti) {
   }
 
   // simulation of proc/node failures
-  if (procfi == 1 && myrank == (procsize-1) && numIters==8){
+  if (procfi == 1 && myrank == (procsize-1) && numIters==4){
      printf("KILL rank %d\n", myrank);
      raise(SIGKILL);
   }
 
-  if (nodefi == 1 && myrank == (procsize-1) && numIters==8){
+  if (nodefi == 1 && myrank == (procsize-1) && numIters==4){
      char hostname[64];
      gethostname(hostname, 64);
      printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), myrank);
@@ -1495,79 +1519,98 @@ if (enable_fti) {
   return prevMod;
 } // distLouvainMethod plain
 
-static void FTI_Protect_Louvain(int numIters, size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight) {
+static void FTI_Protect_Louvain(int numIters, size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight, Graph &g, int rank, int g_edge_list_sz) {
+
+#if USE_32_BIT_GRAPH
+
+FTI_InitType(&FTI_GraphElem, sizeof(int32_t));
+FTI_InitType(&FTI_GraphWeight, sizeof(float));
+FTI_InitType(&FTI_EDGE, sizeof(int32_t)+sizeof(float)); 
+FTI_InitType(&FTI_Comm, sizeof(int32_t)+sizeof(float)); 
+
+#else
+
+FTI_InitType(&FTI_GraphElem, sizeof(int64_t));
+FTI_InitType(&FTI_GraphWeight, sizeof(double));
+FTI_InitType(&FTI_EDGE, sizeof(int64_t)+sizeof(double));
+FTI_InitType(&FTI_Comm, sizeof(int64_t)+sizeof(double));
+
+#endif
+
+  int n = 22;
 
   // Create a new FTI data type - FTI_GraphElem
-  FTIT_type FTI_GraphElem;
-  FTI_InitType(&FTI_GraphElem, sizeof(GraphElem)); 
+  //FTIT_type FTI_GraphElem;
+  //FTI_InitType(&FTI_GraphElem, sizeof(GraphElem)); 
 
-  int n = 0;
-  FTI_Protect(n+1,&numIters,1,FTI_INTG);
-  FTI_Protect(n+1,&ssz,1,FTI_INTG);
-  FTI_Protect(n+1,&rsz,1,FTI_INTG);
-
-  int size;
-  size=ssizes.size();
-  FTI_Protect(n+1,&ssizes[0],size,FTI_INTG);
-
-  size=rsizes.size();
-  FTI_Protect(n+1,&rsizes[0],size,FTI_GraphElem);
-
-  size=svdata.size();
-  FTI_Protect(n+1,&svdata[0],size,FTI_GraphElem);
-
-  size=rvdata.size();
-  FTI_Protect(n+1,&rvdata[0],size,FTI_GraphElem);
-
-  size=pastComm.size();
-  FTI_Protect(n+1,&pastComm[0],size,FTI_GraphElem);
-
-  size=currComm.size();
-  FTI_Protect(n+1,&currComm[0],size,FTI_GraphElem);
-
-  size=targetComm.size();
-  FTI_Protect(n+1,&targetComm[0],size,FTI_GraphElem);
-
-  for (auto& it:remoteComm) {
-     GraphElem remoteCommFirst = it.first;
-     FTI_Protect(n+1,&remoteCommFirst,1,FTI_GraphElem);
-     GraphElem remoteCommSecond = it.second;
-     FTI_Protect(n+1,&remoteCommSecond,1,FTI_GraphElem);
-  }
+  // Create a new FTI data type - FTI_EDGE
+  //FTIT_type FTI_EDGE;
+  //FTI_InitType(&FTI_EDGE, sizeof(GraphElem)+sizeof(GraphWeight)); 
 
   // Create a new FTI data type - FTI_Comm
-  FTIT_type FTI_Comm;
-  FTI_InitType(&FTI_Comm, sizeof(GraphElem)+sizeof(GraphWeight)); 
-
-  for (auto& it:remoteCinfo) {
-     GraphElem remoteCinfoFirst = it.first;
-     FTI_Protect(n+1,&remoteCinfoFirst,1,FTI_GraphElem);
-     Comm remoteCinfoSecond = it.second;
-     FTI_Protect(n+1,&remoteCinfoSecond,1,FTI_Comm);
-  }
-
-  for (auto& it:remoteCupdate) {
-     GraphElem remoteCupdateFirst = it.first;
-     FTI_Protect(n+1,&remoteCupdateFirst,1,FTI_GraphElem);
-     Comm remoteCupdateSecond = it.second;
-     FTI_Protect(n+1,&remoteCupdateSecond,1,FTI_Comm);
-  }
-
-  size=localCinfo.size();
-  FTI_Protect(n+1,&localCinfo[0],size,FTI_Comm);
-
-  size=localCupdate.size();
-  FTI_Protect(n+1,&localCupdate[0],size,FTI_Comm);
+  //FTIT_type FTI_Comm;
+  //FTI_InitType(&FTI_Comm, sizeof(GraphElem)+sizeof(GraphWeight)); 
 
   // Create a new FTI data type - FTI_GraphWeight
-  FTIT_type FTI_GraphWeight;
-  FTI_InitType(&FTI_GraphWeight, sizeof(GraphWeight));
+  //FTIT_type FTI_GraphWeight;
+  //FTI_InitType(&FTI_GraphWeight, sizeof(GraphWeight));
+
+  // protect lnv_,lne_,nv_,ne_
+  FTI_Protect(1,&g.lnv_,1,FTI_GraphElem);
+  FTI_Protect(2,&g.lne_,1,FTI_GraphElem);
+  FTI_Protect(3,&g.nv_,1,FTI_GraphElem);
+  FTI_Protect(4,&g.ne_,1,FTI_GraphElem);
+
+  FTI_Protect(5,&numIters,1,FTI_INTG);
+
+  // protect parts_
+  int size=g.parts_.size();
+  FTI_Protect(6,&g.parts_[0],size,FTI_GraphElem);
+
+  // protect edge_list_
+  size=g.edge_list_.size();
+  FTI_Protect(7,&g.edge_list_[0],size,FTI_EDGE);
+
+  FTI_Protect(8,&g_edge_list_sz,1,FTI_INTG);
+  FTI_Protect(9,&ssz,1,FTI_INTG);
+  FTI_Protect(10,&rsz,1,FTI_INTG);
+
+  size=ssizes.size();
+  FTI_Protect(11,&ssizes[0],size,FTI_INTG);
+
+  size=rsizes.size();
+  FTI_Protect(12,&rsizes[0],size,FTI_GraphElem);
+
+  size=rvdata.size();
+  FTI_Protect(13,&rvdata[0],size,FTI_GraphElem);
+
+  size=pastComm.size();
+  FTI_Protect(14,&pastComm[0],size,FTI_GraphElem);
+
+  size=currComm.size();
+  FTI_Protect(15,&currComm[0],size,FTI_GraphElem);
+
+  size=targetComm.size();
+  FTI_Protect(16,&targetComm[0],size,FTI_GraphElem);
+
+  size=localCinfo.size();
+  FTI_Protect(17,&localCinfo[0],size,FTI_Comm);
+
+  size=localCupdate.size();
+  FTI_Protect(18,&localCupdate[0],size,FTI_Comm);
 
   size=vDegree.size();
-  FTI_Protect(n+1,&vDegree[0],size,FTI_GraphWeight);
+  FTI_Protect(19,&vDegree[0],size,FTI_GraphWeight);
 
   size=clusterWeight.size();
-  FTI_Protect(n+1,&clusterWeight[0],size,FTI_GraphWeight);
+  FTI_Protect(20,&clusterWeight[0],size,FTI_GraphWeight);
+
+  size=svdata.size();
+	printf("size of svdata: %d with rank: %d \n", size, rank);
+  FTI_Protect(21,&svdata[0],size,FTI_GraphElem);
+
+  size=g.edge_indices_.size();
+  FTI_Protect(22,&g.edge_indices_[0],size,FTI_GraphElem);
 
 } // FTI_Protect_Louvain
 
