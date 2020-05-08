@@ -468,7 +468,6 @@ hypre_GMRESSolve(void  *gmres_vdata,
     if (enable_fti) {
 	recovered = 0;
 	printf("Add FTI protection to data objects ... \n");
-	FTI_Protect(0,&i,1,FTI_INTG);
   	FTI_Protect(1, &iter, 1, FTI_INTG);
   	FTIT_type FTI_REAL;
   	FTI_InitType(&FTI_REAL, sizeof(HYPRE_Real));
