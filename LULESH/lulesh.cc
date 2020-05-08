@@ -2695,7 +2695,6 @@ void LagrangeLeapFrog(Domain& domain)
 #ifdef SEDOV_SYNC_POS_VEL_LATE
    CommSyncPosVel(domain) ;
       start = MPI_Wtime();
-printf("test7 time: %f \n", start);
 #endif
 #endif   
 }
@@ -2743,6 +2742,17 @@ int main(int argc, char *argv[])
   numRanks = 1;
   myRank = 0;
 #endif
+
+  //restart:
+  int do_recover = _setjmp(stack_jmp_buf);
+  /* We set an errhandler on world, so that a failure is not fatal anymore. */
+  SetCommErrhandler();
+  int survivor = IsSurvivor();
+
+if (enable_fti) {
+    FTI_Init(argv[1], world);
+}
+
   /* Set defaults that can be overridden by command line opts */
   opts.its = 9999999;
   opts.nx  = 30;
@@ -2759,18 +2769,19 @@ int main(int argc, char *argv[])
   opts.cp2f = 0;
   opts.cp2m = 0;
   opts.cp2a = 0;
+  opts.level = 0;
 
   ParseCommandLineOptions(argc, argv, myRank, &opts);
 
-
-  //restart:
-  int do_recover = _setjmp(stack_jmp_buf);
-  /* We set an errhandler on world, so that a failure is not fatal anymore. */
-  SetCommErrhandler();
-  int survivor = IsSurvivor();
+#ifdef DEBUG
+  char hostname[65];
+  gethostname(hostname, 65);
+  printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myRank);
+  sleep(5);
+#endif
 
   //printf("Rank %d do_recover %d survivor %d\n", myRank, do_recover, survivor); //ggout
-  if (do_recover || !survivor ) {
+/*  if (do_recover || !survivor ) {
 #if USE_MPI
     struct timeval tv;
     gettimeofday( &tv, NULL );
@@ -2791,7 +2802,8 @@ int main(int argc, char *argv[])
     opts.nodefi = 0;
 #endif
   } else {
-    if ((myRank == 0) && (opts.quiet == 0)) {
+*/
+      if ((myRank == 0) && (opts.quiet == 0)) {
       printf("Running problem size %d^3 per domain until completion\n", opts.nx);
       printf("Num processors: %d\n", numRanks);
 #if _OPENMP
@@ -2839,13 +2851,52 @@ int main(int argc, char *argv[])
     //timeval start;
     gettimeofday(&start, NULL) ;
 #endif
+
+  int recovered = 0;
+  if (do_recover || !survivor ) {
+	opts.procfi = 0;
+	opts.nodefi = 0;
   }
+
+// FTI CPR code
+    if (enable_fti) {
+	recovered = 0;
+	printf("Add FTI protection to data objects ... \n");
+	FTI_Protect_LULESH(*locDom, opts, start);
+	printf("Done: Add FTI protection to data objects ... \n");
+
+    }
+// FTI CPR code
 
   int count = opts.cpInterval + locDom->cycle();
   //debug to see region sizes
   //   for(Int_t i = 0; i < locDom->numReg(); i++)
   //      std::cout << "region" << i + 1<< "size" << locDom->regElemSize(i) <<std::endl;
   while((locDom->time() < locDom->stoptime()) && (locDom->cycle() < opts.its)) {
+
+#if USE_MPI
+	if (enable_fti) {
+		if ( FTI_Status() != 0){ 
+	    		printf("Do FTI Recover to data objects from failure ... \n");
+	    		FTI_Recover();
+	    		printf("Done: FTI Recover data objects from failure ... \n");
+	    		recovered = 1;
+        		opts.procfi = 0;
+        		opts.nodefi = 0;
+		}
+	}
+        /* Checkpoint the state of the application */
+	// do FTI CPR
+	if (enable_fti){
+	    if ( (!recovered) && ((locDom->cycle())%opts.cpInterval +1) == opts.cpInterval ){ 
+		printf("Do FTI checkpointing ... \n");
+		int cyc = locDom->cycle();
+		FTI_Checkpoint(cyc, opts.level);
+	    }
+	    recovered = 0;
+	}
+	// do FTI CPR
+#endif
 
     TimeIncrement(*locDom) ;
     LagrangeLeapFrog(*locDom) ;
@@ -2857,24 +2908,8 @@ int main(int argc, char *argv[])
 #if USE_MPI
     MPI_Barrier(world);
 #endif
-    /* Checkpoint the state of the application */
-    //#ifdef USE_CP
-#if USE_MPI
-    if (locDom->cycle() == count) {
-      struct timeval start_ts, end_ts;
-      gettimeofday( &start_ts, NULL );
 
-      ApplicationCheckpointWrite(opts.cp2f, opts.cp2m, opts.cp2a, myRank, *locDom, opts, start);
-
-      gettimeofday( &end_ts, NULL );
-      double dtime = ( end_ts.tv_sec - start_ts.tv_sec ) + ( end_ts.tv_usec - start_ts.tv_usec ) / 1000000.0;
-      printf("TIME WRITECP app %lf s rank %d\n", dtime, myRank );
-
-      count += opts.cpInterval;
-    }
-#endif
-
-    if (opts.procfi == 1 && myRank == (numRanks-1) && locDom->cycle()==11){
+    if (opts.procfi == 1 && myRank == (numRanks-1) && locDom->cycle()==51){
       struct timeval tv;
       gettimeofday( &tv, NULL );
       double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
@@ -2882,7 +2917,7 @@ int main(int argc, char *argv[])
       raise(SIGTERM);
     }
 
-    if (opts.nodefi == 1 && myRank == (numRanks-1) && locDom->cycle()==11){
+    if (opts.nodefi == 1 && myRank == (numRanks-1) && locDom->cycle()==51){
       char hostname[64];
       gethostname(hostname, 64);
       struct timeval tv;
@@ -2919,6 +2954,10 @@ int main(int argc, char *argv[])
   if ((myRank == 0) && (opts.quiet == 0)) {
     VerifyAndWriteFinalOutput(elapsed_timeG, *locDom, opts.nx, numRanks);
   }
+
+if (enable_fti) {
+    FTI_Finalize();
+}
 
 #if USE_MPI
   MPI_Finalize() ;

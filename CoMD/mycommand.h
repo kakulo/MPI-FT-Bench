@@ -32,6 +32,8 @@ typedef struct CommandSt
    int cp2f;
    int cp2m;
    int cp2a;
+   int cp_stride;
+   int level;
 } Command;
 
 /// Process command line arguments into an easy to handle structure.

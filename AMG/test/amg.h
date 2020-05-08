@@ -12,5 +12,6 @@ extern int restart;
 extern int nprocs;
 extern int myrank;
 extern int survivor;
+extern int level;
 
 #endif

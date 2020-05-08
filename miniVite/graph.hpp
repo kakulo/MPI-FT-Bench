@@ -299,7 +299,7 @@ class Graph
         std::vector<GraphElem> edge_indices_;
         std::vector<Edge> edge_list_;
         std::vector<GraphElem> parts_;       
-    private:
+    //private:
         GraphElem lnv_, lne_, nv_, ne_;
 	// removed for C/R
         //std::vector<GraphElem> parts_;       
@@ -1000,7 +1000,8 @@ class GenerateRGG
                 // make sure each process has a 
                 // different seed this time since
                 // we want random edges
-                unsigned rande_seed = (unsigned)(time(0)^getpid());
+                //unsigned rande_seed = (unsigned)(time(0)^getpid());
+                unsigned rande_seed = (unsigned)(rank_*2); // fix the seed for RNG
                 GraphWeight weight = 1.0;
                 std::hash<GraphElem> reh;
                

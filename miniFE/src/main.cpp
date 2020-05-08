@@ -122,6 +122,9 @@ restart:
   /* We set an errhandler on world, so that a failure is not fatal anymore. */
   SetCommErrhandler();
 
+if (enable_fti) {
+    FTI_Init(argv[1], world);
+}
 
   miniFE::timer_type start_time = miniFE::mytimer();
 
@@ -244,6 +247,9 @@ restart:
     doc.generateYAML();
   }
 
+if (enable_fti) {
+    FTI_Finalize();
+}
 
   miniFE::finalize_mpi();
 

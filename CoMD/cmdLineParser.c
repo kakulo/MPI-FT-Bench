@@ -180,10 +180,10 @@ void processArgs(int argc, char** argv)
       o = findOption(myargs,c);
       if ( ! o )
       {
-         fprintf(screenOut,"\n\n"
-            "    invalid switch : -%c in getopt()\n"
-            "\n\n",
-            c);
+         //fprintf(screenOut,"\n\n"
+           // "    invalid switch : -%c in getopt()\n"
+           // "\n\n",
+           // c);
          break;
       }      
       if(! o->argFlag)
@@ -212,11 +212,12 @@ void processArgs(int argc, char** argv)
                sscanf(optarg,"%c",(char*)o->ptr);
                break;
             default:
-               fprintf(screenOut,"\n\n"
-                  "    invalid type : %c in getopt()\n"
-                  "    valid values are 'e', 'z'. 'i','d','f','s', and 'c'\n"
-                  "\n\n",
-                  c);      
+		;
+               //fprintf(screenOut,"\n\n"
+                 // "    invalid type : %c in getopt()\n"
+                 // "    valid values are 'e', 'z'. 'i','d','f','s', and 'c'\n"
+                 // "\n\n",
+                 // c);      
          }
       }
    }

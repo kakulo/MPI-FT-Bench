@@ -20,6 +20,7 @@
 #include <setjmp.h>
 #include "../libcheckpoint/checkpoint.h"
 #include <sys/time.h>
+#include "fti.h"
 
 static int myRank = 0;
 static int nRanks = 1;
@@ -294,6 +295,20 @@ void destroyParallel()
 #ifdef DO_MPI
    MPI_Finalize();
 #endif
+}
+
+void ftiInitialParallel(char** argv) 
+{
+#ifdef DO_MPI 
+   FTI_Init(argv[1], world);
+#endif
+}
+
+void ftifinalizeParallel()
+{
+#ifdef DO_MPI
+   FTI_Finalize();
+#endif 
 }
 
 void barrierParallel()

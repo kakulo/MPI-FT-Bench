@@ -89,7 +89,7 @@ int HPCCG(HPC_Sparse_Matrix * A,
     const double * const b, double * const x,
     const int max_iter, const double tolerance, int &niters, double & normr,
     double * times,
-    int do_recover, int cp_iters, bool cp2f, bool cp2m, bool cp2a, bool procfi, bool nodefi)
+    int do_recover, int cp_iters, bool procfi, bool nodefi, int level)
 
 {
   double t_begin = mytimer();  // Start timing right away
@@ -130,49 +130,23 @@ int HPCCG(HPC_Sparse_Matrix * A,
 #endif
 
   int k = 1;
-  int print_freq = max_iter/10;
+  int print_freq = max_iter/20;
   if (print_freq>50) print_freq=50;
   if (print_freq<1)  print_freq=1;
 
   int survivor = IsSurvivor();
 
+  int recovered = 0;
+
   // Read checkpointing either because of recovery being a survivor
   // or being a newly spawned process
   if( do_recover || !survivor ) {
-    struct timeval tv;
-    gettimeofday( &tv, NULL );
-    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
-    printf("TIMESTAMP RESTART %lf s rank %d %s\n", ts, rank, ( survivor? "SURVIVOR" : "SPAWNED" ) );
     // XXX: disable FI
     procfi = false;
     nodefi = false;
-
-    struct timeval start, end;
-    gettimeofday( &start, NULL );
-    char *data;
-    readCheckpoint( survivor, cp2f, cp2m, cp2a, rank, &data );
-    // Unpack to application data
-    char *data_ptr = data;
-    std::memcpy(r, data_ptr, sizeof(double) * nrow);
-    data_ptr += sizeof(double) * nrow;
-    std::memcpy(p, data_ptr, sizeof(double) * ncol);
-    data_ptr += sizeof(double) * ncol;
-    std::memcpy(&normr, data_ptr, sizeof(double) );
-    data_ptr += sizeof(double);
-    std::memcpy(&rtrans, data_ptr, sizeof(double) );
-    data_ptr += sizeof(double);
-    std::memcpy(&niters, data_ptr, sizeof(int) );
-    data_ptr += sizeof(int);
-    std::memcpy(&k, data_ptr, sizeof(int) );
-
-    free(data);
-
-    gettimeofday( &end, NULL );
-    double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
-    printf("TIME READCP app %lf s rank %d\n", dtime, rank );
   }
-  else {
-    // p is of length ncols, copy x to p for sparse MV operation
+    
+// p is of length ncols, copy x to p for sparse MV operation
     TICK(); waxpby(nrow, 1.0, x, 0.0, x, p); TOCK(t2);
 #ifdef USING_MPI
     TICK(); exchange_externals(A,p); TOCK(t5);
@@ -183,10 +157,47 @@ int HPCCG(HPC_Sparse_Matrix * A,
     normr = sqrt(rtrans);
 
     if (rank==0) cout << "Initial Residual = "<< normr << endl;
-  }
+
+// FTI CPR code
+    if (enable_fti) {
+	recovered = 0;
+	printf("Add FTI protection to data objects ... \n");
+	FTI_Protect(0,r,nrow,FTI_DBLE);
+	FTI_Protect(1,p,ncol,FTI_DBLE);
+	FTI_Protect(2,&normr,1,FTI_DBLE);
+	FTI_Protect(3,&rtrans,1,FTI_DBLE);
+	FTI_Protect(4,&niters,1,FTI_INTG);
+	FTI_Protect(5,&k,1,FTI_INTG);
+	printf("Done: Add FTI protection to data objects ... \n");
+
+    }
+// FTI CPR code
+
+if (enable_fti) {
+		if ( FTI_Status() != 0){ 
+	    		printf("Do FTI Recover to data objects from failure ... \n");
+	    		FTI_Recover();
+	    		printf("Done: FTI Recover data objects from failure ... \n");
+	    		recovered = 1;
+        		procfi = false;
+        		nodefi = false;
+		}
+}
+
 
   for(; k<max_iter && normr > tolerance; k++ )
   {
+        /* Checkpoint the state of the application */
+	// do FTI CPR
+	if (enable_fti){
+	    if ( (!recovered) && cp_iters > 0 && (k%cp_iters +1) == cp_iters ){ 
+		FTI_Checkpoint(k, level);
+	    }
+	    recovered = 0;
+	}
+	// do FTI CPR
+
+/*
     if( cp_iters > 0 && (k%cp_iters) == 0 ) {
       struct timeval start, end;
       gettimeofday( &start, NULL );
@@ -210,8 +221,9 @@ int HPCCG(HPC_Sparse_Matrix * A,
       double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
       printf("TIME WRITECP app %lf s rank %d\n", dtime, rank );
     }
+*/
 
-    if( procfi && k == fi_iter && fi_rank == rank ) {
+    if( procfi && k == 50 && fi_rank == rank ) {
       struct timeval tv;
       gettimeofday( &tv, NULL );
       double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
@@ -219,7 +231,7 @@ int HPCCG(HPC_Sparse_Matrix * A,
       fflush(stdout);
       kill( getpid(), SIGTERM);
     }
-    if( nodefi && k == fi_iter && fi_rank == rank ) {
+    if( nodefi && k == 50 && fi_rank == rank ) {
       char hostname[64];
       gethostname(hostname, 64);
       struct timeval tv;
@@ -242,7 +254,8 @@ int HPCCG(HPC_Sparse_Matrix * A,
 	  TICK(); waxpby (nrow, 1.0, r, beta, p, p);  TOCK(t2);// 2*nrow ops
 	}
       normr = sqrt(rtrans);
-      if (rank==0 && (k%print_freq == 0 || k+1 == max_iter))
+      //if (rank==0 && (k%print_freq == 0 || k+1 == max_iter))
+      if (rank==0)
 	cout << "Iteration = "<< k << "   Residual = "<< normr << endl;
 
 #ifdef USING_MPI

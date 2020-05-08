@@ -4,6 +4,17 @@
 #define __PERFORMANCE_TIMERS_H_
 
 #include <stdio.h>
+#include <stdio.h>
+#include <sys/time.h>
+#include <string.h>
+#include <stdint.h>
+#include <inttypes.h>
+#include <math.h>
+
+static uint64_t getTime(void);
+static double getTick(void);
+static void timerStats(void);
+
 
 /// Timer handles
 enum TimerHandle{
@@ -74,5 +85,35 @@ void readTimers(char **data);
 
 /// Get checkpoint size
 size_t sizeofTimers();
+
+/// Timer data collected.  Also facilitates computing averages and
+/// statistics.
+typedef struct TimersSt
+{
+   uint64_t start;     //!< call start time
+   uint64_t total;     //!< current total time
+   uint64_t count;     //!< current call count
+   uint64_t elapsed;   //!< lap time
+ 
+   int minRank;        //!< rank with min value
+   int maxRank;        //!< rank with max value
+
+   double minValue;    //!< min over ranks
+   double maxValue;    //!< max over ranks
+   double average;     //!< average over ranks
+   double stdev;       //!< stdev across ranks
+} Timers;
+
+/// Global timing data collected.
+typedef struct TimerGlobalSt
+{
+   double atomRate;       //!< average time (us) per atom per rank 
+   double atomAllRate;    //!< average time (us) per atom
+   double atomsPerUSec;   //!< average atoms per time (us)
+} TimerGlobal;
+
+static Timers perfTimer[numberOfTimers];
+static TimerGlobal perfGlobal;
+
 
 #endif

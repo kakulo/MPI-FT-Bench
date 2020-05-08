@@ -94,6 +94,10 @@ using std::endl;
 #include "YAML_Doc.hpp"
 
 #include "ulfm-util.hpp"
+#include <signal.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
 extern jmp_buf stack_jmp_buf;
 
 /* world will swap between worldc[0] and worldc[1] after each respawn */
@@ -114,8 +118,8 @@ int main(int argc, char *argv[])
   double times[7];
   double t6 = 0.0;
   int nx,ny,nz;
+  int level = 0;
   int cp_iters = 1;
-  bool cp2f = false, cp2m = false, cp2a = false;
   bool procfi = false, nodefi = false;
 
 #ifdef USING_MPI
@@ -132,6 +136,10 @@ restart:
   MPI_Comm_size(world, &size);
   MPI_Comm_rank(world, &rank);
 
+if (enable_fti) {
+    FTI_Init(argv[1], world);
+}
+
   //  if (size < 100) cout << "Process "<<rank<<" of "<<size<<" is alive." <<endl;
 
 #else
@@ -143,6 +151,9 @@ restart:
 
 
 #ifdef DEBUG
+  char hostname[65];
+  gethostname(hostname, 65); 
+  printf("%s daemon %d rank %d\n", hostname, (int) getpid(), rank);
   if (rank==0)
    {
     int junk = 0;
@@ -164,8 +175,6 @@ restart:
 	   << "     where HPC_data_file is a globally accessible file containing matrix data." << endl
 	   << "Both modes take a mandatory extra arguments related to checkpointing:" << endl
            <<  "     checkpoint frequency = # iters (0 means no checkpoint) >" << endl
-           << "There are three optional arguments to select checkpointing mode (valid combinations permitted)" << endl
-           << "     -cp2f (file CP) -cp2m (memory CP) -cp2a (adjacent rank CP)" << endl
            << "There are also two optional arguments for fault injection" << endl
            << "     -procfi (enables random process FI) -nodefi (enables random node FI)" << endl;
     exit(1);
@@ -173,46 +182,32 @@ restart:
 
   if (argc>=4)
   {
-    nx = atoi(argv[1]);
-    ny = atoi(argv[2]);
+    nx = atoi(argv[2]);
+    ny = atoi(argv[3]);
     nz = atoi(argv[3]);
     generate_matrix(nx, ny, nz, &A, &x, &b, &xexact);
-    cp_iters = atoi(argv[4]);
+    cp_iters = atoi(argv[5]);
     i = 5;
   }
   else
   {
     assert(false && "File input is not supported at this version!\n");
-    read_HPC_row(argv[1], &A, &x, &b, &xexact);
-    cp_iters = atoi(argv[2]);
+    read_HPC_row(argv[2], &A, &x, &b, &xexact);
+    cp_iters = atoi(argv[3]);
     i = 3;
   }
 
   // Parse optional arguments
   while( i < argc ) {
-    if( !strcmp("-cp2f", argv[i]) )
-      cp2f = true;
-    else if( !strcmp("-cp2m", argv[i]) )
-      cp2m = true;
-    else if( !strcmp("-cp2a", argv[i]) )
-      cp2a = true;
-    else if( !strcmp("-procfi", argv[i]) )
+    if( !strcmp("-procfi", argv[i]) )
       procfi = true;
     else if( !strcmp("-nodefi", argv[i]) )
       nodefi = true;
+    else if( !strcmp("-level", argv[i]) )
+      level = atoi(argv[i+1]);
 
     i++;
   }
-
-  // Check checkpointing options are valid
-  if( cp_iters ) {
-    assert( cp2f || ( cp2f && cp2m ) || ( cp2m && cp2a ) && "Requesting checkpoints with invalid or unsupported checkpoint mode!\n" );
-    if( cp2m && cp2a )
-      assert( size>1 && "Cannot do memory+adjacent checkpoint with a single rank!\n");
-  }
-
-  // Assert only one or none enabled FI method
-  assert( ! (procfi && nodefi ) && "Cannot perform both procfi and nodefi" );
 
   bool dump_matrix = false;
   if (dump_matrix && size<=4) dump_matlab_matrix(A, rank);
@@ -233,7 +228,7 @@ restart:
   int max_iter = 150;
   double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
   ierr = HPCCG( A, b, x, max_iter, tolerance, niters, normr, times,
-      do_recover, cp_iters, cp2f, cp2m, cp2a, procfi, nodefi );
+      do_recover, cp_iters, procfi, nodefi, level );
   if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
 
 #ifdef USING_MPI
@@ -341,6 +336,9 @@ restart:
   //   cout << "Difference between computed and exact  = " 
   //        << residual << ".\n" << endl;
 
+if (enable_fti) {
+    FTI_Finalize();
+}
 
   // Finish up
 #ifdef USING_MPI

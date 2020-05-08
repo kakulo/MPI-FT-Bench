@@ -63,6 +63,9 @@
 #include "timestep.h"
 #include "constants.h"
 
+#include <fti.h> 
+#define enable_fti 1
+
 #include <mpi.h>
 #include <mpi-ext.h>
 #include <signal.h>
@@ -92,48 +95,50 @@ static void printThings(SimFlat* s, int iStep, double elapsedTime);
 static void printSimulationDataYaml(FILE* file, SimFlat* s);
 static void sanityChecks(Command cmd, double cutoff, double latticeConst, char latticeType[8]);
 
-static void application_checkpoint_write(int cp2f, int cp2m, int cp2a, int rank, int step, int doeam, SimFlat* sim, Validate* validate);
-static SimFlat* application_checkpoint_read(int survivor, int cp2f, int cp2m, int cp2a, int rank, int *step, int *doeam, Validate** validate);
+//static void application_checkpoint_write(int cp2f, int cp2m, int cp2a, int rank, int step, int doeam, SimFlat* sim, Validate* validate);
+//static SimFlat* application_checkpoint_read(int survivor, int cp2f, int cp2m, int cp2a, int rank, int *step, int *doeam, Validate** validate);
 
-static size_t sizeofCheckpoint(int doeam, SimFlat* sim) {
-   size_t sizeofCP = 0;
-   sizeofCP += 3 * sizeof(int) + sizeof(double) + 2 * sizeof(real_t);
+//static size_t sizeofCheckpoint(int doeam, SimFlat* sim) {
+  // size_t sizeofCP = 0;
+  // sizeofCP += 3 * sizeof(int) + sizeof(double) + 2 * sizeof(real_t);
 
    /********** Domain *********/
-   sizeofCP += sizeofDecomposition();
+  // sizeofCP += sizeofDecomposition();
 
    /************** LinkCell *********/
-   sizeofCP += sizeofLinkCell(sim->boxes);
+  // sizeofCP += sizeofLinkCell(sim->boxes);
 
    /************** Atoms ****************/
-   sizeofCP += sizeofAtoms(sim);
+  // sizeofCP += sizeofAtoms(sim);
 
    /*************** SpeciesData ***********/
-   sizeofCP += sizeof(char)*3;
-   sizeofCP += sizeof(int);
-   sizeofCP += sizeof(real_t);
+  // sizeofCP += sizeof(char)*3;
+  // sizeofCP += sizeof(int);
+  // sizeofCP += sizeof(real_t);
 
    /************* BasePotential ************/
-   sizeofCP += sizeof(int);
-   if (doeam) {
-      sizeofCP += sizeofEamPotential(sim->pot, sim->boxes);
-   } else {
-      sizeofCP += sizeofLJForce();
-   }
+  // sizeofCP += sizeof(int);
+  // if (doeam) {
+  //    sizeofCP += sizeofEamPotential(sim->pot, sim->boxes);
+  // } else {
+  //    sizeofCP += sizeofLJForce();
+  // }
 
    /************** HaloExchange *************/
-   sizeofCP += sizeofAtomHaloExchange(sim->atomExchange);
+  // sizeofCP += sizeofAtomHaloExchange(sim->atomExchange);
 
    /*********** Validate **********/
-   sizeofCP += sizeof(double);
-   sizeofCP += sizeof(int);
+  // sizeofCP += sizeof(double);
+  // sizeofCP += sizeof(int);
 
 
    /*********** Timers **********/
-   sizeofCP += sizeofTimers();
+  // sizeofCP += sizeofTimers();
 
-   return sizeofCP;
-}
+  // return sizeofCP;
+//}
+
+void fti_protect(int doeam, SimFlat* sim, Validate* validate);
 
 /* ULFM */
 extern jmp_buf stack_jmp_buf;
@@ -150,8 +155,9 @@ int main(int argc, char** argv)
 
    initParallel(&argc, &argv);
 
-restart:
-   do_recover = _setjmp(stack_jmp_buf);
+//restart:
+
+      do_recover = _setjmp(stack_jmp_buf);
    /* We set an errhandler on world, so that a failure is not fatal anymore. */
    setCommErrhandler();
    int survivor = isSurvivor();
@@ -160,38 +166,22 @@ restart:
 
    // Recovering, survivor process MUST NOT re-parse command line arguments
    // data get corrupted
-   if( !do_recover )
-       cmd = parseCommandLine(argc, argv);
 
+   char hostname[65];
+   gethostname(hostname, 65);
+   printf("%s daemon %d rank %d\n", hostname, (int) getpid(), getMyRank());
+   //sleep(15);
+ 
    //printf("Rank %d do_recover %d survivor %d cp2f %d cp2m %d cp2a %d\n",
            //getMyRank(), do_recover, survivor, cmd.cp2f, cmd.cp2m, cmd.cp2a );// ggout
-   if ( do_recover || !survivor )
-   {
-      struct timeval tv;
-      gettimeofday( &tv, NULL );
-      double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
-      printf("TIMESTAMP RESTART %lf s rank %d %s\n", ts, getMyRank(), ( survivor? "SURVIVOR" : "SPAWNED" ) );
-      // XXX: disable fault injection
-      cmd.procfi = 0;
-      cmd.nodefi = 0;
-
-      struct timeval start, end;
-      gettimeofday(&start, NULL);
-      sim = application_checkpoint_read(survivor, cmd.cp2f, cmd.cp2m, cmd.cp2a, getMyRank(), &iStep, &isEam, &validate);
-      gettimeofday(&end, NULL);
-      double dtime = (double)( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
-      printf("TIME READCP app %lf s %d\n", dtime, getMyRank() );
-
-      timestampBarrier("Restarting Initialization\n");
-      nSteps = sim->nSteps;
-      printRate = sim->printRate;
-   }
-   else {
       profileStart(totalTimer);
       timestampBarrier("Starting Initialization\n");
 
       yamlAppInfo(yamlFile);
       yamlAppInfo(screenOut);
+
+      if( !do_recover )
+          cmd = parseCommandLine(argc, argv);
 
       printCmdYaml(yamlFile, &cmd);
       printCmdYaml(screenOut, &cmd);
@@ -203,6 +193,10 @@ restart:
       validate = initValidate(sim); // atom counts, energy
       timestampBarrier("Initialization Finished\n");
 
+    if (enable_fti) {
+        ftiInitialParallel(argv);
+    }
+
       timestampBarrier("Starting simulation\n");
 
       nSteps = sim->nSteps;
@@ -210,11 +204,50 @@ restart:
       iStep = 0;
       isEam = cmd.doeam;
       profileStart(loopTimer);
-   }
+
+      if ( do_recover || !survivor ) {
+     		// disable fault injection here
+     		cmd.procfi = 0;
+     		cmd.nodefi = 0;
+       		timestampBarrier("Restarting Initialization\n");
+      }
+
+    // FTI CPR code   
+    int recovered = 0;
+    if (enable_fti) {
+      printf("Add FTI protection to Louvain data objects ... \n");
+      FTI_Protect(0, &iStep, 1, FTI_INTG);
+      FTI_Protect(1, &isEam, 1, FTI_INTG);
+      fti_protect(isEam, sim, validate);
+      printf("Done: Add FTI protection to data objects ... \n");
+    }
+
+    if (enable_fti) {
+	if ( FTI_Status() != 0){ 
+	    printf("Do FTI Recover to data objects from failure ... \n");
+	    FTI_Recover();
+	    printf("Done: FTI Recover data objects from failure ... \n");
+	    recovered = 1;
+            cmd.procfi = 0;
+            cmd.nodefi = 0;
+	}
+    }
 
    // This is the CoMD main loop
    for (; iStep<nSteps;)
    {
+	// do FTI CPR
+	if (enable_fti){
+	
+	    //if ( (!recovered) && cmd.cp_stride > 0 && (iStep%cmd.cp_stride +1) == cmd.cp_stride ){ 
+	    if ( (!recovered) && cmd.cp_stride > 0 && (iStep%cmd.cp_stride == 0 )){ 
+		FTI_Checkpoint(iStep, cmd.level);
+		printf("Doing checkpinting ... \n");
+	    }
+	    recovered = 0;
+	}
+	// do FTI CPR
+	
       startTimer(commReduceTimer);
       sumAtoms(sim);
       stopTimer(commReduceTimer);
@@ -228,16 +261,8 @@ restart:
       iStep += printRate;
 
       timestampBarrier("End of Iteration\n");
-      if( cmd.cp2f || cmd.cp2m || cmd.cp2a ) {
-          struct timeval start, end;
-          gettimeofday( &start, NULL );
-          application_checkpoint_write(cmd.cp2f, cmd.cp2m, cmd.cp2a, getMyRank(), iStep, isEam, sim, validate);
-          gettimeofday( &end, NULL );
-          double dtime = (double)( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
-          printf("TIME WRITECP app %lf s rank %d\n", dtime, getMyRank() );
-      }
 
-      if (cmd.procfi && getMyRank() == (getNRanks()-1) && iStep==11){
+      if (cmd.procfi && getMyRank() == (getNRanks()-1) && iStep==21){
          struct timeval tv;
          gettimeofday( &tv, NULL );
          double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
@@ -246,7 +271,7 @@ restart:
          raise(SIGTERM);
       }
 
-      if (cmd.nodefi && getMyRank() == (getNRanks()-1) && iStep==11){
+      if (cmd.nodefi && getMyRank() == (getNRanks()-1) && iStep==21){
          char hostname[HOST_NAME_MAX + 1];
          gethostname(hostname, HOST_NAME_MAX + 1);
          struct timeval tv;
@@ -274,11 +299,15 @@ restart:
    destroySimulation(&sim);
    comdFree(validate);
 
-   finalizeSubsystems();
-
    timestampBarrier("CoMD Ending\n");
 
+   finalizeSubsystems();
+
    destroyParallel();
+
+if (enable_fti) {
+   ftifinalizeParallel();
+}
 
    return 0;
 }
@@ -621,112 +650,269 @@ void sanityChecks(Command cmd, double cutoff, double latticeConst, char latticeT
       exit(failCode);
 }
 
-void application_checkpoint_write(int cp2f, int cp2m, int cp2a, int rank, int step, int doeam, SimFlat* sim, Validate* validate) {
-   size_t size = sizeofCheckpoint( doeam, sim );
-   char *data = comdMalloc( size );
-   char *data_ptr = data;
+void fti_protect(int doeam, SimFlat* sim, Validate* validate) {
 
-   mwrite(&step, sizeof(int), 1, &data_ptr);
-   mwrite(&(sim->nSteps), sizeof(int), 1, &data_ptr);
-   mwrite(&(sim->printRate), sizeof(int), 1, &data_ptr);
-   mwrite(&(sim->dt), sizeof(double), 1, &data_ptr);
-   mwrite(&(sim->ePotential), sizeof(real_t), 1, &data_ptr);
-   mwrite(&(sim->eKinetic), sizeof(real_t), 1, &data_ptr);
+   //FTI_Protect(1, &(sim->nSteps), 1, FTI_INTG);
+   FTI_Protect(2, &(sim->printRate), 1, FTI_INTG);
+   FTI_Protect(3, &(sim->dt), 1, FTI_DBLE);
+#ifdef SINGLE
+   FTI_Protect(4, &(sim->ePotential), 1, FTI_SFLT);
+   FTI_Protect(5, &(sim->eKinetic), 1, FTI_SFLT);
+#else
+   FTI_Protect(4, &(sim->ePotential), 1, FTI_DBLE);
+   FTI_Protect(5, &(sim->eKinetic), 1, FTI_DBLE);
+#endif
 
    /********** Domain *********/
-   writeDecomposition(&data_ptr, sim->domain);
+   FTI_Protect(6, sim->domain->procGrid, 3, FTI_INTG);
+   FTI_Protect(7, sim->domain->procCoord, 3, FTI_INTG);
+
+#ifdef SINGLE
+   FTI_Protect(8, sim->domain->globalMin, 3, FTI_SFLT);
+   FTI_Protect(9, sim->domain->globalMax, 3, FTI_SFLT);
+   FTI_Protect(10, sim->domain->globalExtent, 3, FTI_SFLT);
+   FTI_Protect(11, sim->domain->localMin, 3, FTI_SFLT);
+   FTI_Protect(12, sim->domain->localMax, 3, FTI_SFLT);
+   FTI_Protect(13, sim->domain->localExtent, 3, FTI_SFLT);
+#else
+   FTI_Protect(8, sim->domain->globalMin, 3, FTI_DBLE);
+   FTI_Protect(9, sim->domain->globalMax, 3, FTI_DBLE);
+   FTI_Protect(10, sim->domain->globalExtent, 3, FTI_DBLE);
+   FTI_Protect(11, sim->domain->localMin, 3, FTI_DBLE);
+   FTI_Protect(12, sim->domain->localMax, 3, FTI_DBLE);
+   FTI_Protect(13, sim->domain->localExtent, 3, FTI_DBLE);
+#endif
 
    /************** LinkCell *********/
-   writeLinkCell(&data_ptr, sim->boxes);
+   FTI_Protect(14, sim->boxes->gridSize, 3, FTI_INTG);
+   FTI_Protect(15, &(sim->boxes->nLocalBoxes), 1, FTI_INTG);
+   FTI_Protect(16, &(sim->boxes->nHaloBoxes), 1, FTI_INTG);
+   FTI_Protect(17, &(sim->boxes->nTotalBoxes), 1, FTI_INTG);
 
-   /************** Atoms ****************/
-   writeAtoms(&data_ptr, sim);
+#ifdef SINGLE
+   FTI_Protect(18, sim->boxes->localMin, 3, FTI_SFLT);
+   FTI_Protect(19, sim->boxes->localMax, 3, FTI_SFLT);
+   FTI_Protect(20, sim->boxes->boxSize, 3, FTI_SFLT);
+   FTI_Protect(21, sim->boxes->invBoxSize, 3, FTI_SFLT);
+#else
+   FTI_Protect(18, sim->boxes->localMin, 3, FTI_DBLE);
+   FTI_Protect(19, sim->boxes->localMax, 3, FTI_DBLE);
+   FTI_Protect(20, sim->boxes->boxSize, 3, FTI_DBLE);
+   FTI_Protect(21, sim->boxes->invBoxSize, 3, FTI_DBLE);
+#endif
+
+   FTI_Protect(22, sim->boxes->nAtoms, sim->boxes->nTotalBoxes, FTI_INTG);
 
    /*************** SpeciesData ***********/
-   mwrite(sim->species->name, sizeof(char), 3, &data_ptr);
-   mwrite(&(sim->species->atomicNo), sizeof(int), 1, &data_ptr);
-   mwrite(&(sim->species->mass), sizeof(real_t), 1, &data_ptr);
+   FTI_Protect(23, sim->species->name, 3, FTI_CHAR);
+   FTI_Protect(24, &(sim->species->atomicNo), 1, FTI_INTG);
+
+#ifdef SINGLE
+   FTI_Protect(25, &(sim->species->mass), 1, FTI_SFLT);
+#else
+   FTI_Protect(25, &(sim->species->mass), 1, FTI_DBLE);
+#endif
 
    /************* BasePotential ************/
-   mwrite(&doeam, sizeof(int), 1, &data_ptr);
    if(doeam) {
-      writeEamPotential(&data_ptr, sim->pot, sim->boxes);
+	EamPotential* pot = (EamPotential*) sim->pot;
+#ifdef SINGLE
+   	FTI_Protect(27, &(pot->cutoff), 1, FTI_SFLT);
+   	FTI_Protect(28, &(pot->mass), 1, FTI_SFLT);
+   	FTI_Protect(29, &(pot->lat), 1, FTI_SFLT);
+#else
+   	FTI_Protect(27, &(pot->cutoff), 1, FTI_DBLE);
+   	FTI_Protect(28, &(pot->mass), 1, FTI_DBLE);
+   	FTI_Protect(29, &(pot->lat), 1, FTI_DBLE);
+#endif
+
+   	FTI_Protect(30, pot->latticeType, 8, FTI_CHAR);
+   	FTI_Protect(31, &(pot->name), 3, FTI_CHAR);
+
+   	FTI_Protect(32, &(pot->atomicNo), 1, FTI_INTG);
+
+   	FTI_Protect(33, &(pot->phi->n), 1, FTI_INTG);
+#ifdef SINGLE
+   	FTI_Protect(34, &(pot->phi->x0), 1, FTI_SFLT);
+   	FTI_Protect(35, &(pot->phi->invDx), 1, FTI_SFLT);
+	int phiSize = pot->phi->n;
+   	FTI_Protect(36, pot->phi->values, phiSize+3, FTI_SFLT);
+#else
+   	FTI_Protect(34, &(pot->phi->x0), 1, FTI_DBLE);
+   	FTI_Protect(35, &(pot->phi->invDx), 1, FTI_DBLE);
+	int phiSize = pot->phi->n;
+   	FTI_Protect(36, pot->phi->values, phiSize+3, FTI_DBLE);
+#endif
+
+   	FTI_Protect(37, &(pot->rho->n), 1, FTI_INTG);
+#ifdef SINGLE
+   	FTI_Protect(38, &(pot->rho->x0), 1, FTI_SFLT);
+   	FTI_Protect(39, &(pot->rho->invDx), 1, FTI_SFLT);
+	int rhoSize = pot->rho->n;
+   	FTI_Protect(40, pot->rho->values, rhoSize+3, FTI_SFLT);
+#else
+   	FTI_Protect(38, &(pot->rho->x0), 1, FTI_DBLE);
+   	FTI_Protect(39, &(pot->rho->invDx), 1, FTI_DBLE);
+	int rhoSize = pot->rho->n;
+   	FTI_Protect(40, pot->rho->values, rhoSize+3, FTI_DBLE);
+#endif
+
+   	FTI_Protect(41, &(pot->f->n), 1, FTI_INTG);
+#ifdef SINGLE
+   	FTI_Protect(42, &(pot->f->x0), 1, FTI_SFLT);
+   	FTI_Protect(43, &(pot->f->invDx), 1, FTI_SFLT);
+	int fSize = pot->f->n;
+   	FTI_Protect(44, pot->f->values, fSize+3, FTI_SFLT);
+#else
+   	FTI_Protect(42, &(pot->f->x0), 1, FTI_DBLE);
+   	FTI_Protect(43, &(pot->f->invDx), 1, FTI_DBLE);
+	int fSize = pot->f->n;
+   	FTI_Protect(44, pot->f->values, fSize+3, FTI_DBLE);
+#endif
+
+	/// Size for rhobar and dfembed
+	int size = MAXATOMS * sim->boxes->nTotalBoxes;
+#ifdef SINGLE
+   	FTI_Protect(45, pot->rhobar, size, FTI_SFLT);
+   	FTI_Protect(46, pot->dfEmbed, size, FTI_SFLT);
+	/// HaloExchange
+   	FTI_Protect(47, pot->forceExchangeData->dfEmbed, size, FTI_SFLT);
+#else
+   	FTI_Protect(45, pot->rhobar, size, FTI_DBLE);
+   	FTI_Protect(46, pot->dfEmbed, size, FTI_DBLE);
+	/// HaloExchange
+   	FTI_Protect(47, pot->forceExchangeData->dfEmbed, size, FTI_DBLE);
+#endif
+
+   /************** LinkCell *********/
+   FTI_Protect(48, pot->forceExchangeData->boxes->gridSize, 3, FTI_INTG);
+   FTI_Protect(49, &(pot->forceExchangeData->boxes->nLocalBoxes), 1, FTI_INTG);
+   FTI_Protect(50, &(pot->forceExchangeData->boxes->nHaloBoxes), 1, FTI_INTG);
+   FTI_Protect(51, &(pot->forceExchangeData->boxes->nTotalBoxes), 1, FTI_INTG);
+
+#ifdef SINGLE
+   FTI_Protect(52, pot->forceExchangeData->boxes->localMin, 3, FTI_SFLT);
+   FTI_Protect(53, pot->forceExchangeData->boxes->localMax, 3, FTI_SFLT);
+   FTI_Protect(54, pot->forceExchangeData->boxes->boxSize, 3, FTI_SFLT);
+   FTI_Protect(55, pot->forceExchangeData->boxes->invBoxSize, 3, FTI_SFLT);
+#else
+   FTI_Protect(52, pot->forceExchangeData->boxes->localMin, 3, FTI_DBLE);
+   FTI_Protect(53, pot->forceExchangeData->boxes->localMax, 3, FTI_DBLE);
+   FTI_Protect(54, pot->forceExchangeData->boxes->boxSize, 3, FTI_DBLE);
+   FTI_Protect(55, pot->forceExchangeData->boxes->invBoxSize, 3, FTI_DBLE);
+#endif
+
+   FTI_Protect(56, pot->forceExchangeData->boxes->nAtoms, pot->forceExchangeData->boxes->nTotalBoxes, FTI_INTG);
+
+// ForceHaloExchange
+   FTI_Protect(57, sim->atomExchange->nbrRank, 6, FTI_INTG);
+   FTI_Protect(58, &(sim->atomExchange->bufCapacity), 1, FTI_INTG);
+
+   ForceExchangeParms* p = (ForceExchangeParms*) sim->atomExchange->parms;
+   FTI_Protect(59, p->nCells, 6, FTI_INTG);
+   FTI_Protect(60, p->sendCells[0], p->nCells[0], FTI_INTG);
+   FTI_Protect(61, p->sendCells[1], p->nCells[1], FTI_INTG);
+   FTI_Protect(62, p->sendCells[2], p->nCells[2], FTI_INTG);
+   FTI_Protect(63, p->sendCells[3], p->nCells[3], FTI_INTG);
+   FTI_Protect(64, p->sendCells[4], p->nCells[4], FTI_INTG);
+   FTI_Protect(65, p->sendCells[5], p->nCells[5], FTI_INTG);
+   FTI_Protect(66, p->recvCells[0], p->nCells[0], FTI_INTG);
+   FTI_Protect(67, p->recvCells[1], p->nCells[1], FTI_INTG);
+   FTI_Protect(68, p->recvCells[2], p->nCells[2], FTI_INTG);
+   FTI_Protect(69, p->recvCells[3], p->nCells[3], FTI_INTG);
+   FTI_Protect(70, p->recvCells[4], p->nCells[4], FTI_INTG);
+   FTI_Protect(71, p->recvCells[5], p->nCells[5], FTI_INTG);
+
    }
    else {
-      writeLJForce(&data_ptr, sim->pot);
+	LjPotential* pot1 = (LjPotential*) sim->pot;
+#ifdef SINGLE
+   FTI_Protect(72, &(pot1->cutoff), 1, FTI_SFLT);
+   FTI_Protect(73, &(pot1->mass), 1, FTI_SFLT);
+   FTI_Protect(74, &(pot1->lat), 1, FTI_SFLT);
+   FTI_Protect(75, &(pot1->sigma), 1, FTI_SFLT);
+   FTI_Protect(76, &(pot1->epsilon), 1, FTI_SFLT);
+#else
+   FTI_Protect(72, &(pot1->cutoff), 1, FTI_DBLE);
+   FTI_Protect(73, &(pot1->mass), 1, FTI_DBLE);
+   FTI_Protect(74, &(pot1->lat), 1, FTI_DBLE);
+   FTI_Protect(75, &(pot1->sigma), 1, FTI_DBLE);
+   FTI_Protect(76, &(pot1->epsilon), 1, FTI_DBLE);
+#endif
+
+   FTI_Protect(77, pot1->latticeType, 8, FTI_CHAR);
+   FTI_Protect(78, pot1->name, 3, FTI_CHAR);
+   FTI_Protect(79, &(pot1->atomicNo), 1, FTI_INTG);
+
    }
 
    /************** HaloExchange *************/
-   writeAtomHaloExchange(&data_ptr, sim->atomExchange);
+   FTI_Protect(80, sim->atomExchange->nbrRank, 6, FTI_INTG);
+   FTI_Protect(81, &(sim->atomExchange->bufCapacity), 1, FTI_INTG);
+
+   AtomExchangeParms* p = (AtomExchangeParms*) sim->atomExchange->parms;
+   FTI_Protect(82, p->nCells, 6, FTI_INTG);
+   FTI_Protect(83, p->cellList[0], p->nCells[0], FTI_INTG);
+   FTI_Protect(84, p->cellList[1], p->nCells[1], FTI_INTG);
+   FTI_Protect(85, p->cellList[2], p->nCells[2], FTI_INTG);
+   FTI_Protect(86, p->cellList[3], p->nCells[3], FTI_INTG);
+   FTI_Protect(87, p->cellList[4], p->nCells[4], FTI_INTG);
+   FTI_Protect(88, p->cellList[5], p->nCells[5], FTI_INTG);
+#ifdef SINGLE
+   FTI_Protect(89, p->pbcFactor[0], 3, FTI_SFLT);
+   FTI_Protect(90, p->pbcFactor[1], 3, FTI_SFLT);
+   FTI_Protect(91, p->pbcFactor[2], 3, FTI_SFLT);
+   FTI_Protect(92, p->pbcFactor[3], 3, FTI_SFLT);
+   FTI_Protect(93, p->pbcFactor[4], 3, FTI_SFLT);
+   FTI_Protect(94, p->pbcFactor[5], 3, FTI_SFLT);
+#else
+   FTI_Protect(89, p->pbcFactor[0], 3, FTI_DBLE);
+   FTI_Protect(90, p->pbcFactor[1], 3, FTI_DBLE);
+   FTI_Protect(91, p->pbcFactor[2], 3, FTI_DBLE);
+   FTI_Protect(92, p->pbcFactor[3], 3, FTI_DBLE);
+   FTI_Protect(93, p->pbcFactor[4], 3, FTI_DBLE);
+   FTI_Protect(94, p->pbcFactor[5], 3, FTI_DBLE);
+#endif
 
    /*********** Validate **********/
-   mwrite(&validate->eTot0, sizeof(double), 1, &data_ptr);
-   mwrite(&validate->nAtoms0, sizeof(int), 1, &data_ptr);
+   FTI_Protect(95, &validate->eTot0, 1, FTI_DBLE);
+   FTI_Protect(96, &validate->nAtoms0, 1, FTI_INTG);
 
-   /*********** Timers **********/
-   writeTimers(&data_ptr);
+   /************** Atoms ****************/
+   FTI_Protect(97, &(sim->atoms->nLocal), 1, FTI_INTG);
+   FTI_Protect(98, &(sim->atoms->nGlobal), 1, FTI_INTG);
 
-   writeCheckpoint(cp2f, cp2m, cp2a, rank, step, data, size);
+   int maxtotalatoms = MAXATOMS * (sim->boxes->nTotalBoxes);
+   FTI_Protect(99, sim->atoms->gid, maxtotalatoms, FTI_INTG);
+   FTI_Protect(100, sim->atoms->iSpecies, maxtotalatoms, FTI_INTG);
 
-   comdFree( data );
+#ifdef SINGLE
+   FTI_Protect(101, sim->atoms->U, maxtotalatoms, FTI_SFLT);
+#else
+   FTI_Protect(101, sim->atoms->U, maxtotalatoms, FTI_DBLE);
+#endif
+
+   // define a new FTI data type
+   FTIT_type FTI_REAL3;
+#ifdef SINGLE
+   FTI_InitType(&FTI_REAL3, 3*sizeof(float));
+#else
+   FTI_InitType(&FTI_REAL3, 3*sizeof(double));
+#endif   
+
+      FTI_Protect(102, sim->atoms->r[0], maxtotalatoms, FTI_REAL3);
+
+      FTI_Protect(103, sim->atoms->p[0], maxtotalatoms, FTI_REAL3);
+
+      FTI_Protect(104, sim->atoms->f[0], maxtotalatoms, FTI_REAL3);
+
+      // Timers
+      FTIT_type FTI_TIMER;
+      FTI_InitType(&FTI_TIMER, sizeof(Timers));
+      FTI_Protect(105, perfTimer, numberOfTimers, FTI_TIMER);
+
 }
 
-static SimFlat* application_checkpoint_read(int survivor, int cp2f, int cp2m, int cp2a, int rank, int *step, int *doeam, Validate** validate) {
-   SimFlat* sim = comdMalloc(sizeof(SimFlat));
-   char *data;
-
-   int size = readCheckpoint(survivor, cp2f, cp2m, cp2a, rank, &data);
-
-   char *data_ptr = data;
-   mread(step, sizeof(int), 1, &data_ptr);
-   mread(&(sim->nSteps), sizeof(int), 1, &data_ptr);
-   mread(&(sim->printRate), sizeof(int), 1, &data_ptr);
-   mread(&(sim->dt), sizeof(double), 1, &data_ptr);
-   mread(&sim->ePotential, sizeof(real_t), 1, &data_ptr);
-   mread(&sim->eKinetic, sizeof(real_t), 1, &data_ptr);
-
-   /******* Domain *******/
-   sim->domain = readDecomposition(&data_ptr);
-
-   /******** LinkCell *****/
-   sim->boxes = readLinkCell(&data_ptr);
-
-   /******** Atoms *********/
-   sim->atoms = readAtoms(&data_ptr, sim->boxes);
-
-   /******** SpeciesData *******/
-   SpeciesData* species = comdMalloc(sizeof(SpeciesData));
-
-   mread(species->name, sizeof(char), 3, &data_ptr);
-   mread(&species->atomicNo, sizeof(int), 1, &data_ptr);
-   mread(&species->mass, sizeof(real_t), 1, &data_ptr);
-
-   sim->species = species;
-
-   /******** BasePotential ********/
-   mread(doeam, sizeof(int), 1, &data_ptr);
-   if(*doeam) {
-      sim->pot = readEamPotential(&data_ptr, sim->boxes);
-   }
-   else {
-      sim->pot = readLJForce(&data_ptr);
-   }
-
-   /********* HaloExchange *******/
-   sim->atomExchange = readAtomHaloExchange(&data_ptr);
-
-   /********* Validate *********/
-   *validate = (Validate*)comdMalloc(sizeof(Validate));
-   mread(&((*validate)->eTot0), sizeof(double), 1, &data_ptr);
-   mread(&((*validate)->nAtoms0), sizeof(int), 1, &data_ptr);
-
-   /******** Timers *********/
-   readTimers(&data_ptr);
-
-   free(data);
-
-   return sim;
-}
 // --------------------------------------------------------------
 
 

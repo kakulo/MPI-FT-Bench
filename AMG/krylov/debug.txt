@@ -1,0 +1,3 @@
+salloc: Granted job allocation 5102879
+salloc: Relinquishing job allocation 5102879
+salloc: Job allocation 5102879 has been revoked.

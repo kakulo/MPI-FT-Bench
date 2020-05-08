@@ -50,7 +50,7 @@
 #include <sstream>
 #include <string>
 
-#include <omp.h>
+//#include <omp.h>
 #include <mpi.h>
 
 #include "dspl.hpp"
@@ -75,14 +75,14 @@ static bool randomNumberLCG = false;
 static bool isUnitEdgeWeight = true;
 static GraphWeight threshold = 1.0E-6;
 
-// parse command line parameters
-static void parseCommandLine(const int argc, char * const argv[]);
-
-// write checkpoints for Graph
-static void GraphCheckpointWrite(Graph &g, int rank);
+// FTI Protect for Graph
+//static void FTI_Protect_Graph(Graph &g);
 
 // read checkpoints for Graph
 static void GraphCheckpointRead(int survivor, int rank, Graph &g);
+
+// parse command line parameters
+static void parseCommandLine(const int argc, char * const argv[]);
 
 /* ULFM: world will swap between worldc[0] and worldc[1] after each respawn */
 extern MPI_Comm worldc[2];
@@ -96,9 +96,9 @@ extern jmp_buf stack_jmp_buf;
 int main(int argc, char *argv[])
 {
   double t0, t1, t2, t3, ti = 0.0;
-  int max_threads;
+  int max_threads=0;
 
-  max_threads = omp_get_max_threads();
+  //max_threads = omp_get_max_threads();
 
   if (max_threads > 1) {
       int provided;
@@ -117,18 +117,21 @@ int main(int argc, char *argv[])
   MPI_Comm_size(world, &nprocs);
   MPI_Comm_rank(world, &me);
 
-  parseCommandLine(argc, argv);
-
-restart:
+//restart:
   int do_recover = _setjmp(stack_jmp_buf);
   /* We set an errhandler on world, so that a failure is not fatal anymore. */
   SetCommErrhandler();
 
+if (enable_fti) {
+    FTI_Init(argv[1], world);
+}
+
+  parseCommandLine(argc, argv);
 
    char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), me);
-   sleep(45);
+   //sleep(45);
 
   createCommunityMPIType();
   double td0, td1, td, tdt;
@@ -153,26 +156,9 @@ restart:
       //g->print();
   }
 
-  // read graph from checkpoints
-  // Read checkpointing either because of recovery being a survivor
   int survivor = IsSurvivor();
-  if (do_recover || !survivor) {
-     printf("RE-Start execution ... \n");
-     printf("Read checkpoint graph data ... \n");
-     GraphCheckpointRead(survivor,me,*g);
-  }
-  // end of 
-  // reading graph from checkpoints
-
-  // code for C/R (1)
-  // write graph to checkpoints
-  if (cp_stride>0 && restart==0) {
-      printf("Write checkpoint graph data ... \n");
-      GraphCheckpointWrite(*g,me); 
-  }
-  // end of 
-  // writing graph to checkpoints  
- 
+  int recovered = 0;
+  
   assert(g != nullptr);
 #ifdef PRINT_DIST_STATS 
   g->print_dist_stats();
@@ -213,10 +199,10 @@ restart:
 
 #if defined(USE_MPI_RMA)
   currMod = distLouvainMethod(do_recover, survivor, me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
-                svdata, rvdata, currMod, threshold, iters, commwin);
+                svdata, rvdata, currMod, threshold, iters, commwin,level);
 #else
   currMod = distLouvainMethod(do_recover, survivor, me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
-                svdata, rvdata, currMod, threshold, iters);
+                svdata, rvdata, currMod, threshold, iters,level);
 #endif
   MPI_Barrier(world);
   t0 = MPI_Wtime();
@@ -236,6 +222,10 @@ restart:
   delete g;
   destroyCommunityMPIType();
 
+if (enable_fti) {
+    FTI_Finalize();
+}
+
   MPI_Finalize();
 
   return 0;
@@ -245,52 +235,18 @@ void parseCommandLine(const int argc, char * const argv[])
 {
   int ret;
 
-  while ((ret = getopt(argc, argv, "f:br:t:n:wlp:")) != -1) {
-    switch (ret) {
-    case 'f':
-      inputFileName.assign(optarg);
-      break;
-    case 'b':
-      readBalanced = true;
-      break;
-    case 'r':
-      ranksPerNode = atoi(optarg);
-      break;
-    case 't':
-      threshold = atof(optarg);
-      break;
-    case 'n':
-      nvRGG = atol(optarg);
-      if (nvRGG > 0)
-          generateGraph = true; 
-      break;
-    case 'w':
-      isUnitEdgeWeight = false;
-      break;
-    case 'l':
-      randomNumberLCG = true;
-      break;
-    case 'p':
-      randomEdgePercent = atoi(optarg);
-      break;
-    default:
-      //assert(0 && "Should not reach here!!");
-      break;
-    }
-  }
-
   // new code for C/R implementation
   if(argc > 1) {
       int i = 1; 
       while (i<argc) {
-	 int ok;
+	 int ok=0;
          if(strcmp(argv[i], "-CP") == 0) {
             if (i+1 >= argc) {
                printf("Missing integer argument to -cp\n");
             }
             ok = atoi(argv[i+1]);
             if(!ok) {
-               printf("Parse Error on option -cp integer value required after argument\n");
+               printf("Parse Error on option -cp integer value required after argument - CP: %d \n", ok);
             }
             cp_stride=ok;
             i+=2;
@@ -319,9 +275,49 @@ void parseCommandLine(const int argc, char * const argv[])
             restart = 1;
             i++;
          }
-         else {
-            //printf("ERROR: Unknown command line argument: %s\n", argv[i]);
+         else if(strcmp(argv[i], "-LEVEL") == 0) {
+            level = atoi(argv[i+1]);
+            i+=2;
+         }
+	 else if(strcmp(argv[i], "config.L1.fti") == 0) {
+	    i++;
+	 }
+	 else if(strcmp(argv[i], "-f") == 0) {	
+	    inputFileName.assign(argv[i+1]);
+	    i+=2;
+	 }
+         else if(strcmp(argv[i], "-b") == 0) {
+            readBalanced = true;
             i++;
+         }
+         else if(strcmp(argv[i], "-r") == 0) {
+            ranksPerNode = atoi(argv[i+1]);
+            i+=2;
+         }
+         else if(strcmp(argv[i], "-t") == 0) {
+            threshold = atof(argv[i+1]);
+            i+=2;
+         }
+         else if(strcmp(argv[i], "-n") == 0) {
+            nvRGG = atol(argv[i+1]);
+	    if (nvRGG > 0)
+		generateGraph = true;
+            i+=2;
+         }
+         else if(strcmp(argv[i], "-w") == 0) {
+            isUnitEdgeWeight = false;
+            i++;
+         }
+         else if(strcmp(argv[i], "-l") == 0) {
+            randomNumberLCG = true;
+            i++;
+         }
+         else if(strcmp(argv[i], "-p") == 0) {
+            randomEdgePercent = atoi(argv[i+1]);
+            i+=2;
+         }
+         else {
+	    i++;
          }
       }
   }
@@ -359,6 +355,7 @@ void parseCommandLine(const int argc, char * const argv[])
   }
 } // parseCommandLine
 
+/*
 void GraphCheckpointWrite(Graph &g, int rank) {
 
   std::stringstream oss( std::stringstream::out | std::stringstream::binary); 
@@ -457,5 +454,5 @@ static void GraphCheckpointRead(int survivor, int rank, Graph &g) {
      iss.read(reinterpret_cast<char *>(&g.parts_[i]),sizeof(GraphElem));
   }
 } // GraphCheckpointRead
-
+*/
 

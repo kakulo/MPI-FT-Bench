@@ -40,7 +40,7 @@ struct Parameters {
      use_elem_mat_fields(1), verify_solution(0),
      device(0),num_devices(2),skip_device(9999),numa(1),
      procfi(0),nodefi(0),restart(0),
-     cp2f(0),cp2m(0),cp2a(0)
+     cp2f(0),cp2m(0),cp2a(0),level(0)
   {}
 
   int nx;
@@ -65,6 +65,7 @@ struct Parameters {
   int cp2f;
   int cp2m;
   int cp2a;
+  int level;
 };//struct Parameters
 
 }//namespace miniFE

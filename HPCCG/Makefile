@@ -71,6 +71,7 @@ USE_MPI = -DUSING_MPI
 #    Then specify the path to your MPI header file (include a -I)
 
 #MPI_INC = -I/usr/MPICH/SDK.gcc/include
+FTI_INC = -I/g/g90/guo7/mylibs/FTI/include/
 
 
 # 3) Specify C++ compiler optimization flags (if any)
@@ -80,8 +81,7 @@ USE_MPI = -DUSING_MPI
 #IA32 with GCC: 
 #CPP_OPT_FLAGS = -O3 -funroll-all-loops -malign-double
 #CPP_OPT_FLAGS = -O3 -ftree-vectorize -ftree-vectorizer-verbose=2
-CPP_OPT_FLAGS = -O3
-
+CPP_OPT_FLAGS = -O0 -g
 #
 # 4) MPI library:
 #    If you:
@@ -91,6 +91,7 @@ CPP_OPT_FLAGS = -O3
 #    Then specify the path to your MPI library (include -L and -l directives)
 
 #MPI_LIB = -L/usr/MPICH/SDK.gcc/lib -lmpich
+FTI_LIB = -L/g/g90/guo7/mylibs/FTI/lib64/ -lfti
 
 #
 # 5) Build with OpenMP or not?
@@ -119,7 +120,7 @@ TARGET = test_HPCCG
 
 ################### Derived Quantities (no modification required) ##############
 
-CXXFLAGS= $(CPP_OPT_FLAGS) $(OMP_FLAGS) $(USE_OMP) $(USE_MPI) $(MPI_INC)
+CXXFLAGS= $(CPP_OPT_FLAGS) $(OMP_FLAGS) $(USE_OMP) $(USE_MPI) $(MPI_INC) $(FTI_INC)
 
 LIB_PATHS= $(SYS_LIB)
 
@@ -132,10 +133,10 @@ TEST_CPP = main.cpp generate_matrix.cpp read_HPC_row.cpp \
 TEST_OBJ          = $(TEST_CPP:.cpp=.o)
 
 $(TARGET): $(TEST_OBJ)
-	$(LINKER) $(CPP_OPT_FLAGS) $(OMP_FLAGS) $(TEST_OBJ) ../libcheckpoint/checkpoint.o $(LIB_PATHS) -o $(TARGET)
+	$(LINKER) $(CPP_OPT_FLAGS) $(OMP_FLAGS) $(TEST_OBJ) ../libcheckpoint/checkpoint.o $(LIB_PATHS) $(FTI_LIB) -o $(TARGET)
 
 test:
 	@echo "Not implemented yet..."
 
 clean:
-	@rm -f *.o  *~ $(TARGET) $(TARGET).exe test_HPCPCG 
+	@rm -f *.o *yaml *core  *~ $(TARGET) $(TARGET).exe test_HPCPCG 

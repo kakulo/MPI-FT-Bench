@@ -56,6 +56,7 @@
 
 #include <mpi.h>
 #include <omp.h>
+#include <fti.h>
 
 #include "graph.hpp"
 #include "utils.hpp"
@@ -68,6 +69,7 @@
 extern MPI_Comm worldc[2];
 extern int worldi;
 #define world (worldc[worldi])
+#define enable_fti 1
 
 using namespace std;
 
@@ -81,6 +83,7 @@ int cp2a = 0;
 int restart = 0;
 int myrank=0;
 int procsize=0;
+int level = 0;
 
 struct Comm {
   GraphElem size;
@@ -103,11 +106,7 @@ const int CommunityDataTag  = 5;
 
 static MPI_Datatype commType;
 
-// write checkpoints for the Louvain iteration
-static void LouvainCheckpointWrite(int me, int numIters, size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight, int rank); 
-
-// read checkpoints for the Louvain iteration
-static void LouvainCheckpointRead(int survivor, int rank, int me, int &numIters, size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight);
+static void FTI_Protect_Louvain(size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight, Graph &g); 
 
 void distSumVertexDegree(const Graph &g, vector<GraphWeight> &vDegree, vector<Comm> &localCinfo)
 {
@@ -1269,15 +1268,15 @@ void exchangeVertexReqs(const Graph &dg, size_t &ssz, size_t &rsz,
 } // exchangeVertexReqs
 
 #if defined(USE_MPI_RMA)
-GraphWeight distLouvainMethod(int do_recover, int survivor, const int me, const int nprocs, const Graph &dg,
+GraphWeight distLouvainMethod(int do_recover, int survivor, const int me, const int nprocs, Graph &dg,
         size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, 
         vector<GraphElem> &svdata, vector<GraphElem> &rvdata, const GraphWeight lower, 
-        const GraphWeight thresh, int &iters, MPI_Win &commwin)
+        const GraphWeight thresh, int &iters, MPI_Win &commwin, int level)
 #else
-GraphWeight distLouvainMethod(int do_recover, int survivor, const int me, const int nprocs, const Graph &dg,
+GraphWeight distLouvainMethod(int do_recover, int survivor, const int me, const int nprocs, Graph &dg,
         size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, 
         vector<GraphElem> &svdata, vector<GraphElem> &rvdata, const GraphWeight lower, 
-        const GraphWeight thresh, int &iters)
+        const GraphWeight thresh, int &iters, int level)
 #endif
 {
   vector<GraphElem> pastComm, currComm, targetComm;
@@ -1335,34 +1334,75 @@ GraphWeight distLouvainMethod(int do_recover, int survivor, const int me, const 
   MPI_Comm_rank(comm, &myrank);
   MPI_Comm_size(comm, &procsize);
 
-  // code for C/R (2.1)
-  // read variables from checkpoints
-  // Read checkpointing either because of recovery being a survivor
   if (do_recover || !survivor) {
-     printf("RE-Start execution ... \n");
-     printf("Read Louvain Loop checkpoint data ... \n");
-     LouvainCheckpointRead(survivor, myrank, me, numIters, ssz, rsz, ssizes, rsizes, svdata, rvdata, pastComm, currComm, targetComm, remoteComm, remoteCinfo, remoteCupdate, localCinfo, localCupdate, vDegree, clusterWeight);
      procfi = 0;
      nodefi = 0;
   }
   // end of 
   // reading variables from checkpoints
 
+  int g_edge_list_sz = dg.edge_list_.size();
+  printf("Normal: g_edge_list_sz - %d \n", g_edge_list_sz);
+
+// FTI CPR code   
+int recovered = 0;
+if (enable_fti) {
+
+  printf("Add FTI protection to Louvain data objects ... \n");
+  FTI_Protect(0,&numIters,1,FTI_INTG);
+  FTI_Protect(9,&ssz,1,FTI_INTG);
+  FTI_Protect(10,&rsz,1,FTI_INTG);
+  FTI_Protect_Louvain( ssz, rsz, ssizes, rsizes, svdata, rvdata, pastComm, currComm, targetComm, remoteComm, remoteCinfo, remoteCupdate, localCinfo, localCupdate, vDegree, clusterWeight, dg );
+  printf("Done: Add FTI protection to data objects ... \n");
+
+}
+
   // start Louvain iteration
   while(true) {
 
   printf("********* Iteration %d ********\n", numIters);
-  // code for C/R (2.2)
-  // write variables to checkpints
-  //static void LouvainCheckpointWrite(int me, int numIters, size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight, int rank); 
-  if (cp_stride>0) {
-    if (numIters%cp_stride==0) {
-       printf("Write Louvain Loop checkpoint data ... \n");
-       LouvainCheckpointWrite(me, numIters, ssz, rsz, ssizes, rsizes, svdata, rvdata, pastComm, currComm, targetComm, remoteComm, remoteCinfo, remoteCupdate, localCinfo, localCupdate, vDegree, clusterWeight, myrank);
-    }
+
+if (cp_stride == 0) {
+       printf("ERROR: Please set '-CP' flage for FTI checkpointing interval ... \n");
   }
   // end of 
   // writing varialbes to checkpionts
+
+  // do FTI Recover
+  if (enable_fti) {
+    if ( FTI_Status() != 0){ 
+/*
+       printf("FTI: Before recovery g_edge_list_sz - %d with rank %d \n", g_edge_list_sz, myrank);
+	int res = FTI_RecoverVarInit();
+	printf("test1 \n");
+        res += FTI_RecoverVar(8);
+	printf("test2 \n");
+	res += FTI_RecoverVarFinalize();
+	printf("test3 \n");
+	  printf("the value of FTI_SCES: %d \n", FTI_SCES);
+       if (res != 0) {
+	  printf("Recovery failed for g_edge_list_sz ... \n");
+       }
+       printf("FTI: After recovery g_edge_list_sz - %d with rank %d \n", g_edge_list_sz, myrank);
+       dg.edge_indices_.resize(g_edge_list_sz);
+*/
+       printf("Do FTI Recover to Louvain data objects ... \n");
+       FTI_Recover();
+       printf("Done: FTI Recover data objects from failure ... \n");
+       recovered = 1;
+       procfi = 0;
+       nodefi = 0;
+    }
+  }
+
+  // do FTI CPR
+  if (enable_fti){  
+    if ( (!recovered) && (numIters%cp_stride +1) == cp_stride ){ 
+      printf("Do FTI checkpointing ... \n"); 
+      FTI_Checkpoint(numIters, level);
+    }
+    recovered = 0;
+  }
 
   // simulation of proc/node failures
   if (procfi == 1 && myrank == (procsize-1) && numIters==4){
@@ -1488,267 +1528,93 @@ GraphWeight distLouvainMethod(int do_recover, int survivor, const int me, const 
   return prevMod;
 } // distLouvainMethod plain
 
-// write checkpoints for the Louvain iteration
-// variables to checkpoint: [dg: c/r outside], me, numIters, ssz,rsz, ssizes,
-// rsizes,svdata,rvdata,pastComm,targetComm,remoteComm,currComm,vDegree,clusterWeight
-// localCinfo, localCupdate, remoteCinfo, remoteCupdate,disp
-static void LouvainCheckpointWrite(int me, int numIters, size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight, int rank) {
+static void FTI_Protect_Louvain( size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight, Graph &g) {
 
-  stringstream oss( stringstream::out | stringstream::binary);
+#if USE_32_BIT_GRAPH
 
-  // checkpoint me
-  oss.write(reinterpret_cast<char *>(&me), sizeof(int));
+FTI_InitType(&FTI_GraphElem, sizeof(int32_t));
+FTI_InitType(&FTI_GraphWeight, sizeof(float));
+FTI_InitType(&FTI_EDGE, sizeof(int32_t)+sizeof(float)); 
+FTI_InitType(&FTI_Comm, sizeof(int32_t)+sizeof(float)); 
 
-  // checkpoint numIters
-  oss.write(reinterpret_cast<char *>(&numIters), sizeof(int));
+#else
 
-  // checkpoint ssz
-  oss.write(reinterpret_cast<char *>(&ssz), sizeof(size_t));
+FTI_InitType(&FTI_GraphElem, sizeof(int64_t));
+FTI_InitType(&FTI_GraphWeight, sizeof(double));
+FTI_InitType(&FTI_EDGE, sizeof(int64_t)+sizeof(double));
+FTI_InitType(&FTI_Comm, sizeof(int64_t)+sizeof(double));
 
-  // checkpoint rsz
-  oss.write(reinterpret_cast<char *>(&rsz), sizeof(size_t));
+#endif
 
-  // checkpoint ssizes
-  int size;
+  int n = 22;
+
+  // Create a new FTI data type - FTI_GraphElem
+  //FTIT_type FTI_GraphElem;
+  //FTI_InitType(&FTI_GraphElem, sizeof(GraphElem)); 
+
+  // Create a new FTI data type - FTI_EDGE
+  //FTIT_type FTI_EDGE;
+  //FTI_InitType(&FTI_EDGE, sizeof(GraphElem)+sizeof(GraphWeight)); 
+
+  // Create a new FTI data type - FTI_Comm
+  //FTIT_type FTI_Comm;
+  //FTI_InitType(&FTI_Comm, sizeof(GraphElem)+sizeof(GraphWeight)); 
+
+  // Create a new FTI data type - FTI_GraphWeight
+  //FTIT_type FTI_GraphWeight;
+  //FTI_InitType(&FTI_GraphWeight, sizeof(GraphWeight));
+
+  // protect lnv_,lne_,nv_,ne_
+  FTI_Protect(1,&g.lnv_,1,FTI_GraphElem);
+  FTI_Protect(2,&g.lne_,1,FTI_GraphElem);
+  FTI_Protect(3,&g.nv_,1,FTI_GraphElem);
+  FTI_Protect(4,&g.ne_,1,FTI_GraphElem);
+
+  // protect parts_
+  int size=g.parts_.size();
+  FTI_Protect(6,&g.parts_[0],size,FTI_GraphElem);
+
+  // protect edge_list_
+  size=g.edge_list_.size();
+  FTI_Protect(7,&g.edge_list_[0],size,FTI_EDGE);
+
   size=ssizes.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&ssizes[i]),sizeof(GraphElem));
-  }
+  FTI_Protect(11,&ssizes[0],size,FTI_INTG);
 
-  // checkpoint rsizes
   size=rsizes.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&rsizes[i]),sizeof(GraphElem));
-  }
+  FTI_Protect(12,&rsizes[0],size,FTI_GraphElem);
 
-  // checkpoint svdata
-  size=svdata.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&svdata[i]),sizeof(GraphElem));
-  }
-
-  // checkpoint rvdata
   size=rvdata.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&rvdata[i]),sizeof(GraphElem));
-  }
+  FTI_Protect(13,&rvdata[0],size,FTI_GraphElem);
 
-  // checkpoint pastComm
   size=pastComm.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&pastComm[i]),sizeof(GraphElem));
-  }
+  FTI_Protect(14,&pastComm[0],size,FTI_GraphElem);
 
-  // checkpoint currComm
   size=currComm.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&currComm[i]),sizeof(GraphElem));
-  }
+  FTI_Protect(15,&currComm[0],size,FTI_GraphElem);
 
-  // checkpoint targetComm
   size=targetComm.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&targetComm[i]),sizeof(GraphElem));
-  }
+  FTI_Protect(16,&targetComm[0],size,FTI_GraphElem);
 
-  // checkpoint remoteComm
-  size=remoteComm.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (auto& it:remoteComm) {
-     GraphElem remoteCommFirst = it.first;
-     oss.write(reinterpret_cast<char *>(&remoteCommFirst),sizeof(GraphElem));
-     GraphElem remoteCommSecond = it.second;
-     oss.write(reinterpret_cast<char *>(&remoteCommSecond),sizeof(GraphElem));
-  }
-
-  // checkpoint remoteCinfo
-  size=remoteCinfo.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (auto& it:remoteCinfo) {
-     GraphElem remoteCinfoFirst = it.first;
-     oss.write(reinterpret_cast<char *>(&remoteCinfoFirst),sizeof(GraphElem));
-     Comm remoteCinfoSecond = it.second;
-     oss.write(reinterpret_cast<char *>(&remoteCinfoSecond),sizeof(Comm));
-  }
-
-  // checkpoint remoteCupdate
-  size=remoteCupdate.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (auto& it:remoteCupdate) {
-     GraphElem remoteCupdateFirst = it.first;
-     oss.write(reinterpret_cast<char *>(&remoteCupdateFirst),sizeof(GraphElem));
-     Comm remoteCupdateSecond = it.second;
-     oss.write(reinterpret_cast<char *>(&remoteCupdateSecond),sizeof(Comm));
-  }
-
-  // checkpoint localCinfo
   size=localCinfo.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&localCinfo[i]),sizeof(Comm));
-  }
+  FTI_Protect(17,&localCinfo[0],size,FTI_Comm);
 
-  // checkpoint localCupdate
   size=localCupdate.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&localCupdate[i]),sizeof(Comm));
-  }
+  FTI_Protect(18,&localCupdate[0],size,FTI_Comm);
 
-  // checkpoint vDegree
   size=vDegree.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&vDegree[i]),sizeof(GraphWeight));
-  }
+  FTI_Protect(19,&vDegree[0],size,FTI_GraphWeight);
 
-  // checkpoint clusterWeight
   size=clusterWeight.size();
-  oss.write(reinterpret_cast<char *>(&size),sizeof(int));
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&clusterWeight[i]),sizeof(GraphWeight));
-  }
+  FTI_Protect(20,&clusterWeight[0],size,FTI_GraphWeight);
 
-  size = oss.str().size();
+  size=svdata.size();
+  FTI_Protect(21,&svdata[0],size,FTI_GraphElem);
 
-  write_cp(cp2f, cp2m, cp2a, rank, numIters, const_cast<char *>( oss.str().c_str() ), size, world);
+  size=g.edge_indices_.size();
+  FTI_Protect(22,&g.edge_indices_[0],size,FTI_GraphElem);
 
-  printf("write checkpoints for Iter %d ... \n", numIters);
-} // LouvainCheckpointWrite
+} // FTI_Protect_Louvain
 
-// read checkpoints for the Louvain iteration
-static void LouvainCheckpointRead(int survivor, int rank, int me, int &numIters, size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, vector<GraphElem> &svdata, vector<GraphElem> &rvdata, vector<GraphElem> &pastComm, vector<GraphElem> &currComm, vector<GraphElem> &targetComm, unordered_map<GraphElem, GraphElem> &remoteComm, map<GraphElem,Comm> &remoteCinfo, map<GraphElem,Comm> &remoteCupdate, vector<Comm> &localCinfo, vector<Comm> &localCupdate, vector<GraphWeight> &vDegree, vector<GraphWeight> &clusterWeight) {
-
-  char *data;
-  size_t sizeofCP=read_cp(survivor, cp2f, cp2m, cp2a, rank, &data, world);
-  stringstream iss(string( data, data + sizeofCP ), stringstream::in | stringstream::binary );
-
-  // checkpoint me
-  iss.read(reinterpret_cast<char *>(&me), sizeof(int));
-
-  // checkpoint numIters
-  iss.read(reinterpret_cast<char *>(&numIters), sizeof(int));
-
-  // checkpoint ssz
-  iss.read(reinterpret_cast<char *>(&ssz), sizeof(size_t));
-
-  // checkpoint rsz
-  iss.read(reinterpret_cast<char *>(&rsz), sizeof(size_t));
-
-  // checkpoint ssizes
-  int size;
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  ssizes.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&ssizes[i]),sizeof(GraphElem));
-  }
-
-  // checkpoint rsizes
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  rsizes.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&rsizes[i]),sizeof(GraphElem));
-  }
-
-  // checkpoint svdata
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  svdata.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&svdata[i]),sizeof(GraphElem));
-  }
-
-  // checkpoint rvdata
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  rvdata.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&rvdata[i]),sizeof(GraphElem));
-  }
-
-  // checkpoint pastComm
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  pastComm.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&pastComm[i]),sizeof(GraphElem));
-  }
-
-  // checkpoint currComm
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  currComm.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&currComm[i]),sizeof(GraphElem));
-  }
-
-  // checkpoint targetComm
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  targetComm.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&targetComm[i]),sizeof(GraphElem));
-  }
-
-  // checkpoint remoteComm
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  GraphElem remoteCommFirst;
-  GraphElem remoteCommSecond;
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&remoteCommFirst),sizeof(GraphElem));
-     iss.read(reinterpret_cast<char *>(&remoteCommSecond),sizeof(GraphElem));
-     remoteComm.emplace(remoteCommFirst,remoteCommSecond); 
-  }
-
-  // checkpoint remoteCinfo
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  GraphElem remoteCinfoFirst;
-  Comm remoteCinfoSecond;
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&remoteCinfoFirst),sizeof(GraphElem));
-     iss.read(reinterpret_cast<char *>(&remoteCinfoSecond),sizeof(Comm));
-     remoteComm.emplace(remoteCommFirst,remoteCommSecond);
-  }
-
-  // checkpoint remoteCupdate
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  GraphElem remoteCupdateFirst;
-  Comm remoteCupdateSecond;
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&remoteCupdateFirst),sizeof(GraphElem));
-     iss.read(reinterpret_cast<char *>(&remoteCupdateSecond),sizeof(Comm));
-     remoteCupdate.emplace(remoteCupdateFirst,remoteCupdateSecond);
-  }
-
-  // checkpoint localCinfo
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  localCinfo.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&localCinfo[i]),sizeof(Comm));
-  }
-
-  // checkpoint localCupdate
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  localCupdate.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&localCupdate[i]),sizeof(Comm));
-  }
-
-  // checkpoint vDegree
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  vDegree.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&vDegree[i]),sizeof(GraphWeight));
-  }
-
-  // checkpoint clusterWeight
-  iss.read(reinterpret_cast<char *>(&size),sizeof(int));
-  clusterWeight.resize(size);
-  for (int i=0;i<size;i++) {
-     iss.read(reinterpret_cast<char *>(&clusterWeight[i]),sizeof(GraphWeight));
-  }
-} // LouvainCheckpointRead
 
 #endif // __DSPL

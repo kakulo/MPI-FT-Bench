@@ -74,5 +74,12 @@ int readCheckpoint(int survivor, int cp2f, int cp2m, int cp2a, int rank, char **
 ///  Return non-zero if code was built with MPI active.
 int builtWithMpi(void);
 
+///  FTI Initialization
+void ftiInitialParallel(char** argv);
+
+///  FTI Finalization
+void ftifinalizeParallel();
+
+
 #endif
 

@@ -1,0 +1,41 @@
+
+[basic]
+head                           = 0
+node_size                      = 2
+ckpt_dir                       = ./local
+glbl_dir                       = ./global
+meta_dir                       = ./meta
+ckpt_l1                        = 1
+ckpt_l2                        = 0
+ckpt_l3                        = 0
+ckpt_l4                        = 0
+inline_l2                      = 1
+inline_l3                      = 1
+inline_l4                      = 1
+keep_last_ckpt                 = 0
+group_size                     = 4
+verbosity                      = 2
+max_sync_intv                  = 512
+ckpt_io                        = 2
+transfer_size                  = 16
+
+
+[restart]
+failure                        = 1
+exec_id                        = 2020-05-07_22-23-54
+
+
+[injection]
+rank                           = 0
+number                         = 0
+position                       = 0
+frequency                      = 0
+
+
+[advanced]
+block_size                     = 1024
+mpi_tag                        = 2612
+local_test                     = 1
+transfer_size                  = 16
+
+

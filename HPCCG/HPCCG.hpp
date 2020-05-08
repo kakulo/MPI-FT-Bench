@@ -52,11 +52,13 @@
 #include <mpi.h> // If this routine is compiled with -DUSING_MPI
                  // then include mpi.h
 #include <mpi-ext.h>
+#include <fti.h>
+#define enable_fti 1
 #endif
 int HPCCG(HPC_Sparse_Matrix * A,
 	  const double * const b, double * const x,
 	  const int max_iter, const double tolerance, int & niters, double & normr, double * times,
-	  int do_recover, int cp_iters, bool cp2f, bool cp2m, bool cp2a, bool procfi, bool nodefi);
+	  int do_recover, int cp_iters, bool procfi, bool nodefi, int level);
 
 // this function will compute the Conjugate Gradient...
 // A <=> Matrix

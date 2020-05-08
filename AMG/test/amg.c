@@ -84,6 +84,7 @@ int restart=0;
 int nprocs=0;
 int myrank=0;
 int survivor=0;
+int level=0;
 
 /* new variables for C/R *-/
 int cp_stride;
@@ -193,11 +194,6 @@ main( hypre_int argc,
   InitULFM(argv);
   
    hypre_MPI_Comm_rank(world, &myid );
-
-   char hostname[65];
-   gethostname(hostname, 65);
-   printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myid);
-   //sleep(35);
 
    /*-----------------------------------------------------------
     * Set defaults
@@ -323,6 +319,10 @@ main( hypre_int argc,
             restart = 1;
             i++;
          }
+         else if(strcmp(argv[i], "-level") == 0) {
+            level = atoi(argv[i+1]);
+            i+=2;
+         }
          else {
             printf("ERROR: Unknown command line argument: %s\n", argv[i]);
             i++;
@@ -374,6 +374,15 @@ restart:
   SetCommErrhandler();
   // Read checkpointing either because of recovery being a survivor
   int survivor = IsSurvivor();
+
+if (enable_fti) {
+   FTI_Init(argv[1], world);
+}
+
+   char hostname[65];
+   gethostname(hostname, 65);
+   printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myid);
+   sleep(5);
 
    /*-----------------------------------------------------------
     * Set up matrix
@@ -705,6 +714,10 @@ restart:
 /*
   hypre_FinalizeMemoryDebug();
 */
+
+if (enable_fti) {
+    FTI_Finalize();
+}
    hypre_MPI_Finalize();
 
    return (0);

@@ -198,6 +198,13 @@ void ParseCommandLineOptions(int argc, char *argv[],
             opts->cp2a = 1;
             i++;
          }
+         else if(strcmp(argv[i], "-level") == 0) {
+            opts->level = atoi(argv[i+1]);
+            i+=2;
+         }
+	 else if(strcmp(argv[i], "config.L1.fti") == 0) {
+	    i++;
+	 }
          else {
             char msg[80];
             PrintCommandLineOptions(argv[0], myRank);
@@ -260,723 +267,231 @@ void VerifyAndWriteFinalOutput(Real_t elapsed_time,
 }
 
 /////////////////////////////////////////////////////////
-// Write application state in checkpoint file
+// FTI Protect application states for checkpointing 
 
-void ApplicationCheckpointWrite(int cp2f, int cp2m, int cp2a, int rank, Domain& locDom, struct cmdLineOpts &opts, double start) {
+void FTI_Protect_LULESH(Domain& locDom, struct cmdLineOpts &opts, double start) {
    // GG: block signals to avoid interruption by SIGREINIT
    /*sigset_t fullset;
    sigfillset(&fullset);
    sigprocmask(SIG_BLOCK, &fullset, NULL);*/
 
-   std::stringstream oss( std::stringstream::out | std::stringstream::binary );
+   int n = 0;
 
    int size;
    size = locDom.m_x.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_x[i]), sizeof(Real_t));
-   }
+   FTI_Protect(0,&locDom.m_x[0],size,FTI_DBLE);
 
    size = locDom.m_y.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_y[i]), sizeof(Real_t));
-   }
+   FTI_Protect(1,&locDom.m_y[0],size,FTI_DBLE);
 
    size = locDom.m_z.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_z[i]), sizeof(Real_t));
-   }
+   FTI_Protect(2,&locDom.m_z[0],size,FTI_DBLE);
 
    size = locDom.m_xd.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_xd[i]), sizeof(Real_t));
-   }
+   FTI_Protect(3,&locDom.m_xd[0],size,FTI_DBLE);
 
    size = locDom.m_yd.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_yd[i]), sizeof(Real_t));
-   }
+   FTI_Protect(4,&locDom.m_yd[0],size,FTI_DBLE);
 
    size = locDom.m_zd.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_zd[i]), sizeof(Real_t));
-   }
+   FTI_Protect(5,&locDom.m_zd[0],size,FTI_DBLE);
 
    size = locDom.m_xdd.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_xdd[i]), sizeof(Real_t));
-   }
+   FTI_Protect(6,&locDom.m_xdd[0],size,FTI_DBLE);
 
    size = locDom.m_ydd.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_ydd[i]), sizeof(Real_t));
-   }
+   FTI_Protect(7,&locDom.m_ydd[0],size,FTI_DBLE);
 
    size = locDom.m_zdd.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_zdd[i]), sizeof(Real_t));
-   }
+   FTI_Protect(8,&locDom.m_zdd[0],size,FTI_DBLE);
 
    size = locDom.m_fx.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_fx[i]), sizeof(Real_t));
-   }
+   FTI_Protect(9,&locDom.m_fx[0],size,FTI_DBLE);
 
    size = locDom.m_fy.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_fy[i]), sizeof(Real_t));
-   }
+   FTI_Protect(10,&locDom.m_fy[0],size,FTI_DBLE);
 
    size = locDom.m_fz.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_fz[i]), sizeof(Real_t));
-   }
+   FTI_Protect(11,&locDom.m_fz[0],size,FTI_DBLE);
 
    size = locDom.m_nodalMass.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_nodalMass[i]), sizeof(Real_t));
-   }
+   FTI_Protect(12,&locDom.m_nodalMass[0],size,FTI_DBLE);
 
    size = locDom.m_symmX.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_symmX[i]), sizeof(Index_t));
-   }
+   FTI_Protect(13,&locDom.m_symmX[0],size,FTI_INTG);
 
    size = locDom.m_symmY.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_symmY[i]), sizeof(Index_t));
-   }
+   FTI_Protect(14,&locDom.m_symmY[0],size,FTI_INTG);
 
    size = locDom.m_symmZ.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_symmZ[i]), sizeof(Index_t));
-   }
+   FTI_Protect(15,&locDom.m_symmZ[0],size,FTI_INTG);
 
-   oss.write(reinterpret_cast<char *>(&locDom.m_numReg), sizeof(Int_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_cost), sizeof(Int_t));
-   oss.write(reinterpret_cast<char *>(locDom.m_regElemSize), sizeof(Index_t) * locDom.m_numReg);
-   oss.write(reinterpret_cast<char *>(&locDom.m_numElem), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(locDom.m_regNumList), sizeof(Index_t) * locDom.m_numElem);
-
-   for(int i = 0; i < locDom.m_numReg; i++)
-   {
-      oss.write(reinterpret_cast<char *>(locDom.m_regElemlist[i]), sizeof(Index_t) * locDom.regElemSize(i));
-   }
+   FTI_Protect(16,&locDom.m_numReg,1,FTI_INTG);
+   FTI_Protect(17,&locDom.m_cost,1,FTI_INTG);
+   FTI_Protect(18,locDom.m_regElemSize,locDom.m_numReg,FTI_INTG);
+   FTI_Protect(19,&locDom.m_numElem,1,FTI_INTG);
+   FTI_Protect(20,locDom.m_regNumList,locDom.m_numElem,FTI_INTG);
 
    size = locDom.m_nodelist.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_nodelist[i]), sizeof(Index_t));
-   }
+   FTI_Protect(21,&locDom.m_nodelist[0],size,FTI_INTG);
 
    size = locDom.m_lxim.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_lxim[i]), sizeof(Index_t));
-   }
+   FTI_Protect(22,&locDom.m_lxim[0],size,FTI_INTG);
 
    size = locDom.m_lxip.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_lxip[i]), sizeof(Index_t));
-   }
+   FTI_Protect(23,&locDom.m_lxip[0],size,FTI_INTG);
 
    size = locDom.m_letam.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_letam[i]), sizeof(Index_t));
-   }
+   FTI_Protect(24,&locDom.m_letam[0],size,FTI_INTG);
 
    size = locDom.m_letap.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_letap[i]), sizeof(Index_t));
-   }
+   FTI_Protect(25,&locDom.m_letap[0],size,FTI_INTG);
 
    size = locDom.m_lzetam.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_lzetam[i]), sizeof(Index_t));
-   }
+   FTI_Protect(26,&locDom.m_lzetam[0],size,FTI_INTG);
 
    size = locDom.m_lzetap.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_lzetap[i]), sizeof(Index_t));
-   }
+   FTI_Protect(27,&locDom.m_lzetap[0],size,FTI_INTG);
 
    size = locDom.m_elemBC.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_elemBC[i]), sizeof(Int_t));
-   }
+   FTI_Protect(28,&locDom.m_elemBC[0],size,FTI_INTG);
 
    size = locDom.m_dxx.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_dxx[i]), sizeof(Real_t));
-   }
+   FTI_Protect(29,&locDom.m_dxx[0],size,FTI_DBLE);
 
    size = locDom.m_dyy.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_dyy[i]), sizeof(Real_t));
-   }
+   FTI_Protect(30,&locDom.m_dyy[0],size,FTI_DBLE);
 
    size = locDom.m_dzz.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_dzz[i]), sizeof(Real_t));
-   }
+   FTI_Protect(31,&locDom.m_dzz[0],size,FTI_DBLE);
 
    size = locDom.m_delv_xi.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_delv_xi[i]), sizeof(Real_t));
-   }
+   FTI_Protect(32,&locDom.m_delv_xi[0],size,FTI_DBLE);
 
    size = locDom.m_delv_eta.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_delv_eta[i]), sizeof(Real_t));
-   }
+   FTI_Protect(33,&locDom.m_delv_eta[0],size,FTI_DBLE);
 
    size = locDom.m_delv_zeta.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_delv_zeta[i]), sizeof(Real_t));
-   }
+   FTI_Protect(34,&locDom.m_delv_zeta[0],size,FTI_DBLE);
 
    size = locDom.m_delx_xi.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_delx_xi[i]), sizeof(Real_t));
-   }
+   FTI_Protect(35,&locDom.m_delx_xi[0],size,FTI_DBLE);
 
    size = locDom.m_delx_eta.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_delx_eta[i]), sizeof(Real_t));
-   }
+   FTI_Protect(36,&locDom.m_delx_eta[0],size,FTI_DBLE);
 
    size = locDom.m_delx_zeta.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_delx_zeta[i]), sizeof(Real_t));
-   }
+   FTI_Protect(37,&locDom.m_delx_zeta[0],size,FTI_DBLE);
 
    size = locDom.m_e.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_e[i]), sizeof(Real_t));
-   }
+   FTI_Protect(38,&locDom.m_e[0],size,FTI_DBLE);
 
    size = locDom.m_p.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_p[i]), sizeof(Real_t));
-   }
+   FTI_Protect(39,&locDom.m_p[0],size,FTI_DBLE);
 
    size = locDom.m_q.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_q[i]), sizeof(Real_t));
-   }
+   FTI_Protect(40,&locDom.m_q[0],size,FTI_DBLE);
 
    size = locDom.m_ql.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_q[i]), sizeof(Real_t));
-   }
+   FTI_Protect(41,&locDom.m_ql[0],size,FTI_DBLE);
 
    size = locDom.m_qq.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_qq[i]), sizeof(Real_t));
-   }
+   FTI_Protect(42,&locDom.m_qq[0],size,FTI_DBLE);
 
    size = locDom.m_v.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_v[i]), sizeof(Real_t));
-   }
+   FTI_Protect(43,&locDom.m_v[0],size,FTI_DBLE);
 
    size = locDom.m_volo.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_volo[i]), sizeof(Real_t));
-   }
+   FTI_Protect(44,&locDom.m_volo[0],size,FTI_DBLE);
 
    size = locDom.m_vnew.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_vnew[i]), sizeof(Real_t));
-   }
+   FTI_Protect(45,&locDom.m_vnew[0],size,FTI_DBLE);
 
    size = locDom.m_delv.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_delv[i]), sizeof(Real_t));
-   }
+   FTI_Protect(46,&locDom.m_delv[0],size,FTI_DBLE);
 
    size = locDom.m_vdov.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_vdov[i]), sizeof(Real_t));
-   }
+   FTI_Protect(47,&locDom.m_vdov[0],size,FTI_DBLE);
 
    size = locDom.m_arealg.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_arealg[i]), sizeof(Real_t));
-   }
+   FTI_Protect(48,&locDom.m_arealg[0],size,FTI_DBLE);
 
    size = locDom.m_ss.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_ss[i]), sizeof(Real_t));
-   }
+   FTI_Protect(49,&locDom.m_ss[0],size,FTI_DBLE);
 
    size = locDom.m_elemMass.size();
-   oss.write(reinterpret_cast<char *>(&size), sizeof(int));
-   for(int i = 0; i < size; i++) {
-      oss.write(reinterpret_cast<char *>(&locDom.m_elemMass[i]), sizeof(Real_t));
-   }
+   FTI_Protect(50,&locDom.m_elemMass[0],size,FTI_DBLE);
 
-   oss.write(reinterpret_cast<char *>(&locDom.m_dtcourant), sizeof(Real_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_dthydro), sizeof(Real_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_cycle), sizeof(Int_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_dtfixed), sizeof(Real_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_time), sizeof(Real_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_deltatime), sizeof(Real_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_deltatimemultlb), sizeof(Real_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_deltatimemultub), sizeof(Real_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_dtmax), sizeof(Real_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_stoptime), sizeof(Real_t));
+   FTI_Protect(51,&locDom.m_dtcourant,1,FTI_DBLE);
+   FTI_Protect(52,&locDom.m_dthydro,1,FTI_DBLE);
+   FTI_Protect(53,&locDom.m_cycle,1,FTI_INTG);
+   FTI_Protect(54,&locDom.m_dtfixed,1,FTI_DBLE);
+   FTI_Protect(55,&locDom.m_time,1,FTI_DBLE);
+   FTI_Protect(56,&locDom.m_deltatime,1,FTI_DBLE);
+   FTI_Protect(57,&locDom.m_deltatimemultlb,1,FTI_DBLE);
+   FTI_Protect(58,&locDom.m_deltatimemultub,1,FTI_DBLE);
+   FTI_Protect(59,&locDom.m_dtmax,1,FTI_DBLE);
+   FTI_Protect(60,&locDom.m_stoptime,1,FTI_DBLE);
 
-   oss.write(reinterpret_cast<char *>(&locDom.m_numRanks), sizeof(Int_t));
+   FTI_Protect(61,&locDom.m_numRanks,1,FTI_INTG);
 
-   oss.write(reinterpret_cast<char *>(&locDom.m_colLoc), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_rowLoc), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_planeLoc), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_tp), sizeof(Index_t));
+   FTI_Protect(62,&locDom.m_colLoc,1,FTI_INTG);
+   FTI_Protect(63,&locDom.m_rowLoc,1,FTI_INTG);
+   FTI_Protect(64,&locDom.m_planeLoc,1,FTI_INTG);
+   FTI_Protect(65,&locDom.m_tp,1,FTI_INTG);
 
-   oss.write(reinterpret_cast<char *>(&locDom.m_sizeX), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_sizeY), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_sizeZ), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_numElem), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_numNode), sizeof(Index_t));
+   FTI_Protect(66,&locDom.m_sizeX,1,FTI_INTG);
+   FTI_Protect(67,&locDom.m_sizeY,1,FTI_INTG);
+   FTI_Protect(68,&locDom.m_sizeZ,1,FTI_INTG);
+   FTI_Protect(69,&locDom.m_numElem,1,FTI_INTG);
+   FTI_Protect(70,&locDom.m_numNode,1,FTI_INTG);
 
-   oss.write(reinterpret_cast<char *>(&locDom.m_maxPlaneSize), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_maxEdgeSize), sizeof(Index_t));
+   FTI_Protect(71,&locDom.m_maxPlaneSize,1,FTI_INTG);
+   FTI_Protect(72,&locDom.m_maxEdgeSize,1,FTI_INTG);
 
 #if _OPENMP
-   oss.write(reinterpret_cast<char *>(locDom.m_nodeElemStart), sizeof(Index_t) * (locDom.m_numNode + 1));
+   FTI_Protect(73,locDom.m_nodeElemStart,locDom.m_numNode+1,FTI_INTG);
    int elem = locDom.m_nodeElemStart[locDom.numNode()];
-   oss.write(reinterpret_cast<char *>(locDom.m_nodeElemCornerList), sizeof(Index_t) * elem);
+   FTI_Protect(74,locDom.m_nodeElemCornerList,elem,FTI_INTG);
 #endif
 
-   oss.write(reinterpret_cast<char *>(&locDom.m_rowMin), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_rowMax), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_colMin), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_colMax), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_planeMin), sizeof(Index_t));
-   oss.write(reinterpret_cast<char *>(&locDom.m_planeMax), sizeof(Index_t));
+   FTI_Protect(75,&locDom.m_rowMin,1,FTI_INTG);
+   FTI_Protect(76,&locDom.m_rowMax,1,FTI_INTG);
+   FTI_Protect(77,&locDom.m_colMin,1,FTI_INTG);
+   FTI_Protect(78,&locDom.m_colMax,1,FTI_INTG);
+   FTI_Protect(79,&locDom.m_planeMin,1,FTI_INTG);
+   FTI_Protect(80,&locDom.m_planeMax,1,FTI_INTG);
 
    //Size of comm send/recv buffer
-   oss.write(reinterpret_cast<char *>(&locDom.commBufSize), sizeof(int));
-   oss.write(reinterpret_cast<char *>(locDom.commDataSend), sizeof(Real_t) * locDom.commBufSize);
-   oss.write(reinterpret_cast<char *>(locDom.commDataRecv), sizeof(Real_t) * locDom.commBufSize);
+   FTI_Protect(81,&locDom.commBufSize,1,FTI_INTG);
+   FTI_Protect(82,locDom.commDataSend,locDom.commBufSize,FTI_DBLE);
+   FTI_Protect(83,locDom.commDataRecv,locDom.commBufSize,FTI_DBLE);
 
    //struct
-   oss.write(reinterpret_cast<char *>(&opts), sizeof(opts));
+   // define a new FTI type
+   //FTIT_type FTI_CMD;
+   //FTI_InitType(&FTI_CMD, 16*sizeof(int));
+   //FTI_Protect(84,&opts,1,FTI_CMD);
 
    //Time
 #if USE_MPI
-   oss.write(reinterpret_cast<char *>(&start), sizeof(double));
+   FTI_Protect(84,&start,1,FTI_DBLE);
 #endif
 
-   //oss.seekg(0, std::ios::end);
-   size = oss.str().size();
-   //oss.seekg(0, std::ios::beg);
-   write_cp(cp2f, cp2m, cp2a, rank, locDom.m_cycle, const_cast<char *>( oss.str().c_str() ), size, world);
+   int i;
+   for(i = 0; i < locDom.m_numReg; i++)
+   {
+      FTI_Protect(85+i,locDom.m_regElemlist[i],locDom.regElemSize(i),FTI_INTG);
+   }
+
+   //std::string sos = oss.str();
+
+   //return sos;
+
+   //size = oss.str().size();
+   //write_cp(cp2f, cp2m, cp2a, rank, locDom.m_cycle, const_cast<char *>( oss.str().c_str() ), size, MPI_COMM_WORLD);
 
    //sigprocmask(SIG_UNBLOCK, &fullset, NULL);
 }
 
-/////////////////////////////////////////////////////////
-// Read application state from checkpoint file
 
-void ApplicationCheckpointRead(
-      int survivor, int cp2f, int cp2m, int cp2a, int rank, Domain& locDom, struct cmdLineOpts &opts, double &start) {
-   char *data;
-   size_t sizeofCP = read_cp(survivor, cp2f, cp2m, cp2a, rank, &data, world);
-
-   std::stringstream iss( std::string( data, data + sizeofCP ), std::stringstream::in | std::stringstream::binary );
-
-   int sz;
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_x.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_x[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_y.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_y[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_z.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_z[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_xd.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_xd[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_yd.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_yd[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_zd.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_zd[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_xdd.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_xdd[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_ydd.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_ydd[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_zdd.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_zdd[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_fx.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_fx[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_fy.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_fy[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_fz.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_fz[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_nodalMass.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_nodalMass[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_symmX.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_symmX[i]), sizeof(Index_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_symmY.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_symmY[i]), sizeof(Index_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_symmZ.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_symmZ[i]), sizeof(Index_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&locDom.m_numReg), sizeof(Int_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_cost), sizeof(Int_t));
-
-   locDom.m_regElemSize = new Index_t[locDom.m_numReg];
-   iss.read(reinterpret_cast<char *>(locDom.m_regElemSize), sizeof(Index_t) * locDom.m_numReg);
-
-   Index_t nElem;
-   iss.read(reinterpret_cast<char *>(&nElem), sizeof(Index_t));
-   locDom.m_regNumList = new Index_t[nElem];
-   iss.read(reinterpret_cast<char *>(locDom.m_regNumList), sizeof(Index_t) * nElem);
-
-   locDom.m_regElemlist = new Index_t*[locDom.m_numReg];
-   for (int i = 0; i < locDom.m_numReg; i++) {
-      locDom.m_regElemlist[i] = new Index_t[locDom.regElemSize(i)];
-   }
-   for(int i = 0; i < locDom.m_numReg; i++)
-   {
-      iss.read(reinterpret_cast<char *>(locDom.m_regElemlist[i]), sizeof(Index_t) * locDom.regElemSize(i));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_nodelist.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_nodelist[i]), sizeof(Index_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_lxim.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_lxim[i]), sizeof(Index_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_lxip.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_lxip[i]), sizeof(Index_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_letam.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_letam[i]), sizeof(Index_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_letap.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_letap[i]), sizeof(Index_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_lzetam.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_lzetam[i]), sizeof(Index_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_lzetap.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_lzetap[i]), sizeof(Index_t));
-   }
-
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_elemBC.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_elemBC[i]), sizeof(Int_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_dxx.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_dxx[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_dyy.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_dyy[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_dzz.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_dzz[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_delv_xi.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_delv_xi[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_delv_eta.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_delv_eta[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_delv_zeta.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_delv_zeta[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_delx_xi.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_delx_xi[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_delx_eta.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_delx_eta[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_delx_zeta.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_delx_zeta[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_e.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_e[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_p.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_p[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_q.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_q[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_ql.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_ql[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_qq.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_qq[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_v.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_v[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_volo.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_volo[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_vnew.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_vnew[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_delv.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_delv[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_vdov.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_vdov[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_arealg.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_arealg[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_ss.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_ss[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&sz), sizeof(int));
-   locDom.m_elemMass.resize(sz);
-   for (int i = 0; i < sz; i++) {
-      iss.read(reinterpret_cast<char *>(&locDom.m_elemMass[i]), sizeof(Real_t));
-   }
-
-   iss.read(reinterpret_cast<char *>(&locDom.m_dtcourant), sizeof(Real_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_dthydro), sizeof(Real_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_cycle), sizeof(Int_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_dtfixed), sizeof(Real_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_time), sizeof(Real_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_deltatime), sizeof(Real_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_deltatimemultlb), sizeof(Real_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_deltatimemultub), sizeof(Real_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_dtmax), sizeof(Real_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_stoptime), sizeof(Real_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_numRanks), sizeof(Int_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_colLoc), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_rowLoc), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_planeLoc), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_tp), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_sizeX), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_sizeY), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_sizeZ), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_numElem), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_numNode), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_maxPlaneSize), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_maxEdgeSize), sizeof(Index_t));
-
-#if _OPENMP
-   locDom.m_nodeElemStart = new Index_t[locDom.m_numNode + 1];
-   iss.read(reinterpret_cast<char *>(locDom.m_nodeElemStart), sizeof(Index_t) * (locDom.m_numNode + 1));
-   int elem = locDom.m_nodeElemStart[locDom.numNode()];
-   locDom.m_nodeElemCornerList = new Index_t[elem];
-   iss.read(reinterpret_cast<char *>(locDom.m_nodeElemCornerList), sizeof(Index_t) * elem);
-#endif
-
-   iss.read(reinterpret_cast<char *>(&locDom.m_rowMin), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_rowMax), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_colMin), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_colMax), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_planeMin), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.m_planeMax), sizeof(Index_t));
-   iss.read(reinterpret_cast<char *>(&locDom.commBufSize), sizeof(int));
-   locDom.commDataSend = new Real_t[locDom.commBufSize];
-   iss.read(reinterpret_cast<char *>(locDom.commDataSend), sizeof(Real_t) * locDom.commBufSize);
-   locDom.commDataRecv = new Real_t[locDom.commBufSize];
-   iss.read(reinterpret_cast<char *>(locDom.commDataRecv), sizeof(Real_t) * locDom.commBufSize);
-
-   //struct
-   iss.read(reinterpret_cast<char *>(&opts), sizeof(opts));
-
-   // time
-#if USE_MPI
-   iss.read(reinterpret_cast<char *>(&start), sizeof(double));
-#endif
-
-   free( data );
-}

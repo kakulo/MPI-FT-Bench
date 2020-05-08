@@ -23,11 +23,12 @@ DO_CP = OFF
 ### (such as -lm for the math library) put them in C_LIB.
 CC = mpicc
 CFLAGS = -std=c11 -D_GNU_SOURCE
-OPTFLAGS = -g -O3
+OPTFLAGS = -g -O0
 INCLUDES =
 C_LIB = -lm
 
-
+FTI_LIB = -L/g/g90/guo7/mylibs/FTI/lib64/ -lfti
+FTI_INC = -I/g/g90/guo7/mylibs/FTI/include/
 
 
 ### If you need to specify include paths, library paths, or link flags
@@ -84,12 +85,13 @@ CoMD_VARIANT = CoMD-mpi
 INCLUDES += ${MPI_INCLUDE}
 CFLAGS += -DDO_MPI
 LDFLAGS += ${MPI_LIB}
+LDFLAGS += ${FTI_LIB}
 endif
 CoMD_EXE = ${BIN_DIR}/${CoMD_VARIANT}
 
 LDFLAGS += ${C_LIB} ${OTHER_LIB}
 CFLAGS  += ${OPTFLAGS} ${INCLUDES} ${OTHER_INCLUDE}
-
+CFLAGS += ${FTI_INC}
 
 SOURCES=$(wildcard *.c)
 OBJECTS=$(SOURCES:.c=.o) ../libcheckpoint/checkpoint.o
@@ -110,7 +112,7 @@ ${BIN_DIR}:
 	@if [ ! -d ${BIN_DIR} ]; then mkdir -p ${BIN_DIR} ; fi
 
 clean:
-	rm -f *.o CoMD_info.h *yaml .depend
+	rm -f *.o CoMD_info.h *yaml .depend *core
 
 cl:
 	rm -f *yaml check*
