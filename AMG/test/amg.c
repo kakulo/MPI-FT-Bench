@@ -624,15 +624,12 @@ if (enable_fti) {
   hypre_GMRESFunctions *gmres_functions = gmres_data->functions;
  
    double b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-	printf("test1: BNORM is %f \n", b_norm);
          HYPRE_BoomerAMGGetCumNnzAP(pcg_precond, &nnz_AP);
          cum_nnz_AP += nnz_AP;
 
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-	printf("test2: BNORM is %f \n", b_norm);
          HYPRE_GMRESSolve (pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x, state);
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-	printf("test3: BNORM is %f \n", b_norm);
  
          HYPRE_GMRESGetNumIterations(pcg_solver, &num_iterations);
          HYPRE_GMRESGetFinalRelativeResidualNorm(pcg_solver,&final_res_norm);
@@ -650,24 +647,18 @@ if (enable_fti) {
          {
 	printf("In %d iteration of the main loop ...\n", i);
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-	printf("test3: BNORM is %f \n", b_norm);
             HYPRE_Int gmres_iter = 6-i;
             eps = 0.01;
             AddOrRestoreAIJ(ij_A, eps, 1);
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-	printf("test4: BNORM is %f \n", b_norm);
             HYPRE_ParVectorAxpy(eps,x,b);
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-	printf("test5: BNORM is %f \n", b_norm);
             HYPRE_GMRESSetMaxIter(pcg_solver, gmres_iter);
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-	printf("test6: BNORM is %f \n", b_norm);
             HYPRE_GMRESSetTol(pcg_solver, 0.0);
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-	printf("test7: BNORM is %f \n", b_norm);
             HYPRE_GMRESSolve(pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x, state);
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-	printf("test8: BNORM is %f \n", b_norm);
             HYPRE_GMRESGetNumIterations(pcg_solver, &num_iterations);
             HYPRE_GMRESGetFinalRelativeResidualNorm(pcg_solver,&final_res_norm);
             if (myid == 0 && print_stats)

@@ -460,11 +460,7 @@ hypre_GMRESSolve(void  *gmres_vdata,
           };
    }
 
-
-   /* once the rel. change check has passed, we do not want to check it again */
-   rel_change_passed = 0;
-
-// FTI CPR code
+ // FTI CPR code
     if (enable_fti) {
 	recovered = 0;
 	printf("Add FTI protection to data objects ... \n");
@@ -590,15 +586,13 @@ for (int i=1;i<k_dim;i++) {
 
 }
  
-printf("n: %d... \n", n);
-
 	printf("Done: Add FTI protection to data objects ... \n");
 
     }
 // FTI CPR code
 
-
-	printf("b_norm is %f \n", b_norm);
+  /* once the rel. change check has passed, we do not want to check it again */
+   rel_change_passed = 0;
 
    /* outer iteration cycle */
    while (iter < max_iter)
@@ -649,7 +643,6 @@ printf("n: %d... \n", n);
 	(*(gmres_functions->ScaleVector))(t,p[0]);
 	i = 0;
 
-	printf("b_norm is %f \n", b_norm);
         /***RESTART CYCLE (right-preconditioning) ***/
         while (i < k_dim && iter < max_iter)
 	{
@@ -667,50 +660,18 @@ hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
 	}
 	//}
 
-	//if (cp_stride>0) {
-          // if ((iter%cp_stride)==0) {
-
-/* timer on */
-    //struct timeval start, end;
-    //gettimeofday( &start, NULL );
-/* timer on */
-
-	AMGCheckpointWrite(iter,rs,c,s,hh,epsilon,max_iter,epsmac,p,precond_data,b_norm,norms,r_norm_0,A,x,w,b,rank,k_dim);
-    //char filename[64];
-
-    //sprintf( filename, "check_%d_%d", rank, iter);
-    //FILE *fp = fopen( filename, "wb" );
-    //fwrite( &size, sizeof(int), 1, fp );
-    //fwrite( data, size, 1, fp );
-    //fclose( fp );
-
-    //sprintf( filename, "tmp_%d", rank );
-    //FILE *fp = fopen( filename, "wb" );
-    //fwrite( (char *)&iter, sizeof(int), 1, fp);
-    //printf("Write tmp_%d: the iter value is: %d \n", rank, iter);
-    //fclose( fp );
-
-/* timer off */
-    //gettimeofday( &end, NULL );
-    //double dtime = ( end.tv_sec - start.tv_sec ) + ( end.tv_usec - start.tv_usec ) / 1000000.0;
-    //printf("Write CPs - %lf s with rank %d ...\n", dtime, rank);
-/* timer off */
+    	sleep(1);
 	      
-	   //}
-	//}
-
-	printf("b_norm is %f \n", b_norm);
-	    if (enable_fti) {
-	      if ( FTI_Status() != 0){ 
-	    	printf("Do FTI Recover to data objects from failure ... \n");
-	    	FTI_Recover();
-	    	printf("Done: FTI Recover data objects from failure ... \n");
-	    	recovered = 1;
-        	procfi = 0;
-        	nodefi = 0;
-	      }
-	    }
-	printf("after recovery b_norm is %f \n", b_norm);
+	if (enable_fti) {
+	   if ( FTI_Status() != 0){ 
+	   	printf("Do FTI Recover to data objects from failure ... \n");
+	   	FTI_Recover();
+	   	printf("Done: FTI Recover data objects from failure ... \n");
+	   	recovered = 1;
+           	procfi = 0;
+           	nodefi = 0;
+	   }
+	}
 
 	// do FTI CPR
 	if (enable_fti){
@@ -1612,7 +1573,6 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   /// owns_data
   /// owns_partitioning
   /// assumed_partition
- 
 
   // checkpoint x
   // too complicated, not checkpoint for now
