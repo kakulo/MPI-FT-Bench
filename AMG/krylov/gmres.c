@@ -44,8 +44,8 @@ extern int worldi;
 
 using namespace std;
 
-static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE_Real *s,HYPRE_Real **hh,HYPRE_Real epsilon,HYPRE_Int max_iter,HYPRE_Real epsmac,void *p,HYPRE_Int *precond_data,HYPRE_Real b_norm,HYPRE_Real *norms, HYPRE_Real r_norm_0, void *A, void *x, void *w, void *b, HYPRE_Int rank,HYPRE_Int k_dim);
-static void AMGCheckpointRead(HYPRE_Int &iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE_Real *s,HYPRE_Real **hh,HYPRE_Real &epsilon,HYPRE_Int &max_iter,HYPRE_Real &epsmac,void *p,HYPRE_Int *precond_data,HYPRE_Real &b_norm,HYPRE_Real *norms, HYPRE_Real &r_norm_0, void *A, void *x, void *w, void *b, HYPRE_Int rank, HYPRE_Int survivor,HYPRE_Int &k_dim); 
+//static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE_Real *s,HYPRE_Real **hh,HYPRE_Real epsilon,HYPRE_Int max_iter,HYPRE_Real epsmac,void *p,HYPRE_Int *precond_data,HYPRE_Real b_norm,HYPRE_Real *norms, HYPRE_Real r_norm_0, void *A, void *x, void *w, void *b, HYPRE_Int rank,HYPRE_Int k_dim);
+//static void AMGCheckpointRead(HYPRE_Int &iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE_Real *s,HYPRE_Real **hh,HYPRE_Real &epsilon,HYPRE_Int &max_iter,HYPRE_Real &epsmac,void *p,HYPRE_Int *precond_data,HYPRE_Real &b_norm,HYPRE_Real *norms, HYPRE_Real &r_norm_0, void *A, void *x, void *w, void *b, HYPRE_Int rank, HYPRE_Int survivor,HYPRE_Int &k_dim); 
 
 /*--------------------------------------------------------------------------
  * hypre_GMRESFunctionsCreate
@@ -664,22 +664,18 @@ hypre_MPI_Comm_size(world,&procsize);
 	   nodefi = 0;
 	}
 
-//	if (cp_stride>0) {
-//         if ((iter%cp_stride)==0) {
-	      AMGCheckpointWrite(iter,rs,c,s,hh,epsilon,max_iter,epsmac,p,precond_data,b_norm,norms,r_norm_0,A,x,w,b,rank,k_dim);
-//	   }
-//	}
-
-	    if (enable_fti) {
-	      if ( FTI_Status() != 0){ 
-	    	printf("Do FTI Recover to data objects from failure ... \n");
+	sleep(1);
+	
+	if (enable_fti) {
+	   if ( FTI_Status() != 0){ 
+	      	printf("Do FTI Recover to data objects from failure ... \n");
 	    	FTI_Recover();
 	    	printf("Done: FTI Recover data objects from failure ... \n");
 	    	recovered = 1;
         	procfi = 0;
         	nodefi = 0;
-	      }
-	    }
+	   }
+	}
 
 	// do FTI CPR
 	if (enable_fti){
@@ -887,12 +883,12 @@ hypre_MPI_Comm_size(world,&procsize);
          }
 
 
-    	 if (procfi == 1 && rank == (procsize-1) && iter==5){
+    	 if (procfi == 1 && rank == (procsize-1) && iter==12){
       	   printf("KILL rank %d\n", rank);
       	   raise(SIGKILL);
     	 }
 
-    	 if (nodefi == 1 && rank == (procsize-1) && iter==5){
+    	 if (nodefi == 1 && rank == (procsize-1) && iter==12){
       	   char hostname[64];
       	   gethostname(hostname, 64);
       	   printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), rank);
@@ -1565,12 +1561,12 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   /// actual_local_size
   /// data size
   //size = (*(*(hypre_ParVector *) w).local_vector).size;
-  int size = (*(hypre_Vector *)(*(hypre_ParVector *)w).local_vector).size;
-  oss.write(reinterpret_cast<char *>(&size), sizeof(HYPRE_Int));
+  /////int size = (*(hypre_Vector *)(*(hypre_ParVector *)w).local_vector).size;
+  ////oss.write(reinterpret_cast<char *>(&size), sizeof(HYPRE_Int));
   /// data/local_vector
-  for (int i=0;i<size;i++) {
-     oss.write(reinterpret_cast<char *>(&(*(hypre_Vector *)(*(hypre_ParVector *)w).local_vector).data[i]), sizeof(HYPRE_Int));
-  }
+  ////for (int i=0;i<size;i++) {
+     ///oss.write(reinterpret_cast<char *>(&(*(hypre_Vector *)(*(hypre_ParVector *)w).local_vector).data[i]), sizeof(HYPRE_Int));
+  /////}
   /// owns_data
   /// owns_partitioning
   /// assumed_partition
@@ -1581,9 +1577,9 @@ static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE
   // too complicated, not checkpoint for now
   //
   
-  size = oss.str().size();
+  /////size = oss.str().size();
 
-  write_cp(cp2f, cp2m, cp2a, rank, iter, const_cast<char *>( oss.str().c_str() ), size, world);
+  //////write_cp(cp2f, cp2m, cp2a, rank, iter, const_cast<char *>( oss.str().c_str() ), size, world);
 
 } // AMGCheckpointWrite
 
