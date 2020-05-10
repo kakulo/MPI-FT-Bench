@@ -22,8 +22,8 @@ SOURCES2.0 = \
 OBJECTS2.0 = $(SOURCES2.0:.cc=.o)
 
 #Default build suggestions with OpenMP for g++
-CXXFLAGS = -g -std=c++11 -O0 -I. -I/g/g90/guo7/mylibs/FTI/include/ -Wall
-LDFLAGS = -g -std=c++11 -L/g/g90/guo7/mylibs/FTI/lib64/ -lfti -O0
+CXXFLAGS = -std=c++11 -O3 -I. -I/g/g90/guo7/mylibs/FTI/include/ -Wall
+LDFLAGS = -std=c++11 -L/g/g90/guo7/mylibs/FTI/lib64/ -lfti -O3
 
 ifeq ($(USE_CP), 1)
 CXXFLAGS += -DUSE_CP
