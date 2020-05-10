@@ -81,7 +81,7 @@ FTI_INC = -I/g/g90/guo7/mylibs/FTI/include/
 #IA32 with GCC: 
 #CPP_OPT_FLAGS = -O3 -funroll-all-loops -malign-double
 #CPP_OPT_FLAGS = -O3 -ftree-vectorize -ftree-vectorizer-verbose=2
-CPP_OPT_FLAGS = -O0 -g
+CPP_OPT_FLAGS = -O3
 #
 # 4) MPI library:
 #    If you:

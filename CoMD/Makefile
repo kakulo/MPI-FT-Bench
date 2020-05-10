@@ -23,7 +23,7 @@ DO_CP = OFF
 ### (such as -lm for the math library) put them in C_LIB.
 CC = mpicc
 CFLAGS = -std=c11 -D_GNU_SOURCE
-OPTFLAGS = -g -O0
+OPTFLAGS = -O3
 INCLUDES =
 C_LIB = -lm
 
