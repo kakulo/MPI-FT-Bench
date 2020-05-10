@@ -38,8 +38,8 @@
 
 using namespace std;
 
-static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE_Real *s,HYPRE_Real **hh,HYPRE_Real epsilon,HYPRE_Int max_iter,HYPRE_Real epsmac,void *p,HYPRE_Int *precond_data,HYPRE_Real b_norm,HYPRE_Real *norms, HYPRE_Real r_norm_0, void *A, void *x, void *w, void *b, HYPRE_Int rank,HYPRE_Int k_dim);
-static void AMGCheckpointRead(HYPRE_Int &iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE_Real *s,HYPRE_Real **hh,HYPRE_Real &epsilon,HYPRE_Int &max_iter,HYPRE_Real &epsmac,void *p,HYPRE_Int *precond_data,HYPRE_Real &b_norm,HYPRE_Real *norms, HYPRE_Real &r_norm_0, void *A, void *x, void *w, void *b, HYPRE_Int rank, HYPRE_Int survivor,HYPRE_Int &k_dim); 
+//static void AMGCheckpointWrite(HYPRE_Int iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE_Real *s,HYPRE_Real **hh,HYPRE_Real epsilon,HYPRE_Int max_iter,HYPRE_Real epsmac,void *p,HYPRE_Int *precond_data,HYPRE_Real b_norm,HYPRE_Real *norms, HYPRE_Real r_norm_0, void *A, void *x, void *w, void *b, HYPRE_Int rank,HYPRE_Int k_dim);
+//static void AMGCheckpointRead(HYPRE_Int &iter,HYPRE_Real *rs,HYPRE_Real *c,HYPRE_Real *s,HYPRE_Real **hh,HYPRE_Real &epsilon,HYPRE_Int &max_iter,HYPRE_Real &epsmac,void *p,HYPRE_Int *precond_data,HYPRE_Real &b_norm,HYPRE_Real *norms, HYPRE_Real &r_norm_0, void *A, void *x, void *w, void *b, HYPRE_Int rank, HYPRE_Int survivor,HYPRE_Int &k_dim); 
 
 /*--------------------------------------------------------------------------
  * hypre_GMRESFunctionsCreate
@@ -355,7 +355,6 @@ hypre_GMRESSolve(void  *gmres_vdata,
    (*(gmres_functions->Matvec))(matvec_data,-1.0, A, x, 1.0, p[0]);
 
    b_norm = sqrt((*(gmres_functions->InnerProd))(b,b));
-	printf("b_norm is %f \n", b_norm);
    real_r_norm_old = b_norm;
 
    /* Since it is does not diminish performance, attempt to return an error flag
@@ -368,7 +367,6 @@ hypre_GMRESSolve(void  *gmres_vdata,
          machines, c.f. page 8 of "Lecture Notes on the Status of IEEE 754"
          by W. Kahan, May 31, 1996.  Currently (July 2002) this paper may be
          found at http://HTTP.CS.Berkeley.EDU/~wkahan/ieee754status/IEEE754.PDF */
-	printf("b_norm is %f \n", b_norm);
       if (logging > 0 || print_level > 0)
       {
         hypre_printf("\n\nERROR detected by Hypre ... BEGIN\n");
@@ -1457,6 +1455,7 @@ hypre_GMRESGetFinalRelativeResidualNorm( void   *gmres_vdata,
    
    return hypre_error_flag;
 } 
+
 
 // write checkpoints for the computation iterations
 // variables: iter, rs[],  c, s, hh[], epsilon, max_iter,epsmac,p[10],precond_data[10], b_norm, norms[], r_norm_0
