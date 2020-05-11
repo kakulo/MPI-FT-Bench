@@ -1,0 +1,1898 @@
+salloc: Granted job allocation 5135810
+
+libgomp: None of the places contain usable logical CPUs
+
+libgomp: Invalid value for environment variable OMP_PLACES
+
+libgomp: None of the places contain usable logical CPUs
+
+libgomp: Invalid value for environment variable OMP_PLACES
+
+libgomp: None of the places contain usable logical CPUs
+
+libgomp: Invalid value for environment variable OMP_PLACES
+
+libgomp: None of the places contain usable logical CPUs
+
+libgomp: Invalid value for environment variable OMP_PLACES
+ERROR: Unknown command line argument: config.L1.fti
+ERROR: Unknown command line argument: -problem
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: -n
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: -P
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: config.L1.fti
+ERROR: Unknown command line argument: -problem
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: -n
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: -P
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: config.L1.fti
+ERROR: Unknown command line argument: -problem
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: -n
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: -P
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: config.L1.fti
+ERROR: Unknown command line argument: -problem
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: -n
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: -P
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+TIMESTAMP START: 1589219207.533829 (s) node quartz36 daemon 68485
+ERROR: Unknown command line argument: config.L1.fti
+ERROR: Unknown command line argument: -problem
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: -n
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: -P
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: config.L1.fti
+ERROR: Unknown command line argument: -problem
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: -n
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: -P
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+TIMESTAMP START: 1589219207.533855 (s) node quartz34 daemon 12458
+ERROR: Unknown command line argument: config.L1.fti
+ERROR: Unknown command line argument: -problem
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: -n
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: -P
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+TIMESTAMP START: 1589219207.533784 (s) node quartz35 daemon 21556
+TIMESTAMP START: 1589219207.533845 (s) node quartz36 daemon 68484
+ERROR: Unknown command line argument: config.L1.fti
+ERROR: Unknown command line argument: -problem
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: -n
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: -P
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+TIMESTAMP START: 1589219207.533843 (s) node quartz37 daemon 58721
+Running with these driver parameters:
+  solver ID    = 3
+
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+TIMESTAMP START: 1589219207.533851 (s) node quartz37 daemon 58720
+TIMESTAMP START: 1589219207.533881 (s) node quartz34 daemon 12456
+TIMESTAMP START: 1589219207.533816 (s) node quartz35 daemon 21554
+[ [32mFTI  Information[0m ] : Reading FTI configuration file (config.L1.fti)... 
+[ [32mFTI  Information[0m ] : The execution ID is: 2020-05-11_10-46-47 
+[ [32mFTI  Information[0m ] : Selected Ckpt I/O is MPI-I/O 
+quartz36 daemon 68485 rank 5
+quartz37 daemon 58721 rank 7
+quartz34 daemon 12458 rank 1
+quartz35 daemon 21556 rank 3
+quartz36 daemon 68484 rank 4
+quartz37 daemon 58720 rank 6
+[ [32mFTI  Information[0m ] : FTI has been initialized. 
+quartz35 daemon 21554 rank 2
+quartz34 daemon 12456 rank 0
+  Laplacian_27pt:
+    (Nx, Ny, Nz) = (80, 80, 80)
+    (Px, Py, Pz) = (2, 2, 2)
+
+  RHS vector has unit components
+  Initial guess is 0
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 1 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 2 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 3 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 4 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 26 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 27 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 28 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 29 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 30 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 31 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 32 to protect (Stored in CPU). Current ckpt. size per rank is 0.25MB. 
+[ [32mFTI  Information[0m ] : Variable ID 33 to protect (Stored in CPU). Current ckpt. size per rank is 0.49MB. 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 34 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 74 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 75 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 76 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 77 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 78 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 79 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 80 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 81 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 82 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 83 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 84 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 85 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 86 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 87 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 88 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 89 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 90 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 91 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 92 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 93 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 94 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 95 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 96 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 97 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 98 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 99 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 100 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 101 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 102 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 103 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 104 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 105 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 106 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 107 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 108 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 109 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 110 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 111 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 112 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 113 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 114 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 115 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 116 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 117 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 118 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 119 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 120 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 121 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 122 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 123 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 124 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 125 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 126 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 127 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 128 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 129 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 130 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 131 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 132 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 133 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 134 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 135 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 136 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 137 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 138 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 139 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 140 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 141 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 142 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 143 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 144 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 145 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 146 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 147 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 148 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 149 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 150 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 151 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 152 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 153 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 154 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 155 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 156 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 157 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 158 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 159 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 160 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 161 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 162 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 163 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 164 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 165 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 166 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 167 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 168 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 169 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 170 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 171 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 172 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 173 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 174 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 175 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 176 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 177 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 178 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 179 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 180 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 181 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 182 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 183 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 184 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 185 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 186 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 187 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 188 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 189 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 190 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 191 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 192 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 193 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 194 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 195 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 196 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 197 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 198 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 199 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 200 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 201 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 202 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 203 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 204 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 205 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 206 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 207 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 208 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 209 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 210 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 211 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 212 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 213 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 214 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 215 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 216 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 217 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 218 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 219 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 220 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 221 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 222 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 223 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 224 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 225 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 226 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 227 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 228 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 229 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 230 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 231 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 232 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 233 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 234 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 235 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 236 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 237 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 238 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 239 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 240 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 241 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 242 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 243 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 244 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 245 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 246 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 247 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 248 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 249 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 250 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 251 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 252 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 253 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 254 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 255 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 256 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 257 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 258 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 259 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 260 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 261 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 262 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 263 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.01s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.74 MB/proc) taken in 0.37 sec. (Wt:0.00s, Wr:0.35s, Ps:0.03s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 6
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 6 (L1) (0.74 MB/proc) taken in 0.79 sec. (Wt:0.00s, Wr:0.77s, Ps:0.02s) 
+GMRES Iterations = 7
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 7 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 8
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 8 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 9
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 9 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 10
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 10 (L1) (0.74 MB/proc) taken in 0.37 sec. (Wt:0.00s, Wr:0.35s, Ps:0.02s) 
+GMRES Iterations = 11
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 11 (L1) (0.74 MB/proc) taken in 0.38 sec. (Wt:0.00s, Wr:0.36s, Ps:0.02s) 
+WRITE CP TIME: 2.818563 (s) Rank 5 
+WRITE CP TIME: 2.818584 (s) Rank 7 
+TIMESTAMP KILL: 1589219223.042157 (s) node quartz37 daemon 58721
+KILL rank 7
+WRITE CP TIME: 2.818847 (s) Rank 1 
+WRITE CP TIME: 2.818522 (s) Rank 2 
+WRITE CP TIME: 2.818541 (s) Rank 4 
+WRITE CP TIME: 2.818533 (s) Rank 6 
+GMRES Iterations = 12
+WRITE CP TIME: 2.817666 (s) Rank 0 
+WRITE CP TIME: 2.818495 (s) Rank 3 
+0006: errhandler invoked with error MPI_ERR_PROC_FAILED: Process Failure
+TIMESTAMP DETECT 1589219224.381012 s rank 6
+0005: errhandler invoked with error MPI_ERR_PROC_FAILED: Process Failure
+0000: errhandler invoked with error MPI_ERR_PROC_FAILED: Process Failure
+0002: errhandler invoked with error MPI_ERR_PROC_FAILED: Process Failure
+0004: errhandler invoked with error MPI_ERR_PROC_FAILED: Process Failure
+TIMESTAMP DETECT 1589219224.381161 s rank 0
+TIMESTAMP DETECT 1589219224.381103 s rank 2
+TIMESTAMP DETECT 1589219224.381108 s rank 5
+0001: errhandler invoked with error MPI_ERR_PROC_FAILED: Process Failure
+0003: errhandler invoked with error MPI_ERR_PROC_FAILED: Process Failure
+TIMESTAMP DETECT 1589219224.381108 s rank 4
+TIMESTAMP DETECT 1589219224.381216 s rank 1
+TIMESTAMP DETECT 1589219224.381162 s rank 3
+
+libgomp: Number of places reduced from 18 to 1 because some places didn't contain any usable logical CPUs
+Spawnee 0: crank=7
+Done with the recovery (rank 5)
+TIME RECOVER app 0.445774 s 5
+TIMESTAMP RESTART: 1589219224.826936 (s) node quartz36 daemon 68485
+Done with the recovery (rank 6)
+TIME RECOVER app 0.445872 s 6
+TIMESTAMP RESTART: 1589219224.826966 (s) node quartz37 daemon 58720
+Done with the recovery (rank 0)
+TIME RECOVER app 0.445736 s 0
+TIMESTAMP RESTART: 1589219224.826976 (s) node quartz34 daemon 12456
+Done with the recovery (rank 2)
+TIME RECOVER app 0.445754 s 2
+TIMESTAMP RESTART: 1589219224.826935 (s) node quartz35 daemon 21554
+Done with the recovery (rank 4)
+TIME RECOVER app 0.445767 s 4
+TIMESTAMP RESTART: 1589219224.826953 (s) node quartz36 daemon 68484
+Done with the recovery (rank 7)
+ERROR: Unknown command line argument: config.L1.fti
+ERROR: Unknown command line argument: -problem
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: -n
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: 40
+ERROR: Unknown command line argument: -P
+ERROR: Unknown command line argument: 2
+Done with the recovery (rank 1)
+TIME RECOVER app 0.445686 s 1
+TIMESTAMP RESTART: 1589219224.826960 (s) node quartz34 daemon 12458
+Done with the recovery (rank 3)
+TIME RECOVER app 0.445701 s 3
+TIMESTAMP RESTART: 1589219224.826916 (s) node quartz35 daemon 21556
+ERROR: Unknown command line argument: 2
+ERROR: Unknown command line argument: 2
+[ [32mFTI  Information[0m ] : Reading FTI configuration file (config.L1.fti)... 
+TIMESTAMP RESTART: 1589219224.827000 (s) node quartz37 daemon 58753
+[ [32mFTI  Information[0m ] : This is a restart. The execution ID is: 2020-05-11_10-46-47 
+[ [32mFTI  Information[0m ] : Selected Ckpt I/O is MPI-I/O 
+[ [32mFTI  Information[0m ] : Recovering successfully from level 1 with Ckpt. 11. 
+quartz34 daemon 12458 rank 1
+[ [32mFTI  Information[0m ] : FTI has been initialized. 
+quartz34 daemon 12456 rank 0
+  Laplacian_27pt:
+    (Nx, Ny, Nz) = (80, 80, 80)
+    (Px, Py, Pz) = (2, 2, 2)
+
+quartz35 daemon 21556 rank 3
+quartz36 daemon 68485 rank 5
+quartz36 daemon 68484 rank 4
+quartz35 daemon 21554 rank 2
+quartz37 daemon 58753 rank 7
+quartz37 daemon 58720 rank 6
+  RHS vector has unit components
+  Initial guess is 0
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 1 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 2 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 3 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 4 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 26 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 27 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 28 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 29 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 30 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 31 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 32 to protect (Stored in CPU). Current ckpt. size per rank is 0.25MB. 
+[ [32mFTI  Information[0m ] : Variable ID 33 to protect (Stored in CPU). Current ckpt. size per rank is 0.49MB. 
+[ [32mFTI  Information[0m ] : Variable ID 34 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 74 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 75 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 76 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 77 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 78 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 79 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 80 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 81 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 82 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 83 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 84 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 85 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 86 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 87 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 88 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 89 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 90 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 91 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 92 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 93 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 94 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 95 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 96 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 97 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 98 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 99 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 100 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 101 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 102 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 103 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 104 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 105 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 106 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 107 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 108 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 109 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 110 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 111 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 112 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 113 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 114 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 115 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 116 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 117 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 118 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 119 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 120 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 121 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 122 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 123 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 124 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 125 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 126 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 127 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 128 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 129 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 130 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 131 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 132 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 133 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 134 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 135 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 136 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 137 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 138 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 139 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 140 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 141 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 142 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 143 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 144 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 145 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 146 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 147 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 148 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 149 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 150 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 151 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 152 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 153 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 154 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 155 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 156 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 157 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 158 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 159 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 160 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 161 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 162 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 163 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 164 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 165 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 166 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 167 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 168 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 169 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 170 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 171 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 172 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 173 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 174 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 175 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 176 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 177 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 178 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 179 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 180 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 181 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 182 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 183 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 184 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 185 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 186 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 187 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 188 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 189 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 190 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 191 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 192 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 193 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 194 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 195 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 196 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 197 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 198 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 199 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 200 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 201 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 202 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 203 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 204 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 205 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 206 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 207 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 208 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 209 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 210 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 211 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 212 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 213 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 214 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 215 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 216 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 217 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 218 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 219 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 220 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 221 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 222 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 223 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 224 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 225 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 226 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 227 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 228 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 229 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 230 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 231 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 232 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 233 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 234 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 235 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 236 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 237 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 238 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 239 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 240 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 241 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 242 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 243 to protect (Stored in CPU). Current ckpt. size per rank is 0.73MB. 
+[ [32mFTI  Information[0m ] : Variable ID 244 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 245 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 246 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 247 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 248 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 249 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 250 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 251 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 252 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 253 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 254 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 255 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 256 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 257 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 258 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 259 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 260 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 261 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 262 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+[ [32mFTI  Information[0m ] : Variable ID 263 to protect (Stored in CPU). Current ckpt. size per rank is 0.74MB. 
+Done: Add FTI protection to data objects ... 
+Do FTI Recover to data objects from failure ... 
+Do FTI Recover to data objects from failure ... 
+Do FTI Recover to data objects from failure ... 
+Do FTI Recover to data objects from failure ... 
+Do FTI Recover to data objects from failure ... 
+Do FTI Recover to data objects from failure ... 
+Do FTI Recover to data objects from failure ... 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.001133 (s) Rank 3 
+Do FTI Recover to data objects from failure ... 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.001338 (s) Rank 2 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.001541 (s) Rank 1 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.001526 (s) Rank 5 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.001453 (s) Rank 4 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.001616 (s) Rank 7 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.001618 (s) Rank 6 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.001511 (s) Rank 0 
+GMRES Iterations = 12
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 12 (L1) (0.74 MB/proc) taken in 0.81 sec. (Wt:0.00s, Wr:0.79s, Ps:0.02s) 
+GMRES Iterations = 13
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 13 (L1) (0.74 MB/proc) taken in 0.79 sec. (Wt:0.00s, Wr:0.77s, Ps:0.02s) 
+GMRES Iterations = 14
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 14 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 15
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 15 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 16
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 16 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 17
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 17 (L1) (0.74 MB/proc) taken in 0.28 sec. (Wt:0.00s, Wr:0.26s, Ps:0.02s) 
+GMRES Iterations = 18
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 18 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 19
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 19 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 20
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 20 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 21
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 21 (L1) (0.74 MB/proc) taken in 0.37 sec. (Wt:0.00s, Wr:0.35s, Ps:0.01s) 
+GMRES Iterations = 22
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 22 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 23
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 23 (L1) (0.74 MB/proc) taken in 0.13 sec. (Wt:0.00s, Wr:0.11s, Ps:0.02s) 
+GMRES Iterations = 24
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 24 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 25
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 25 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 26
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 26 (L1) (0.74 MB/proc) taken in 0.30 sec. (Wt:0.00s, Wr:0.28s, Ps:0.02s) 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 27 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 28
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 28 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 29
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 29 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 30
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 30 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 31
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 31 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 32
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 32 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 33
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 33 (L1) (0.74 MB/proc) taken in 0.14 sec. (Wt:0.00s, Wr:0.11s, Ps:0.02s) 
+GMRES Iterations = 34
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 34 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 35
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 35 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 36
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 36 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 37
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 37 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 38
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 38 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.11s, Ps:0.01s) 
+GMRES Iterations = 39
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 39 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 40
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 40 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.13 sec. (Wt:0.00s, Wr:0.11s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 6
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.01s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.37 sec. (Wt:0.00s, Wr:0.35s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 5
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.30 sec. (Wt:0.00s, Wr:0.27s, Ps:0.03s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.31 sec. (Wt:0.00s, Wr:0.29s, Ps:0.02s) 
+GMRES Iterations = 4
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 3
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.74 MB/proc) taken in 0.53 sec. (Wt:0.00s, Wr:0.51s, Ps:0.01s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.74 MB/proc) taken in 0.31 sec. (Wt:0.00s, Wr:0.29s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 6
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 6 (L1) (0.74 MB/proc) taken in 1.02 sec. (Wt:0.00s, Wr:1.01s, Ps:0.01s) 
+GMRES Iterations = 7
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 7 (L1) (0.74 MB/proc) taken in 0.37 sec. (Wt:0.00s, Wr:0.35s, Ps:0.02s) 
+GMRES Iterations = 8
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 8 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 9
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 9 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 10
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 10 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 11
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.01s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 11 (L1) (0.74 MB/proc) taken in 0.21 sec. (Wt:0.00s, Wr:0.18s, Ps:0.03s) 
+GMRES Iterations = 12
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 12 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 13
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 13 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 14
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 14 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.01s) 
+GMRES Iterations = 15
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 15 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 16
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 16 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.14 sec. (Wt:0.00s, Wr:0.11s, Ps:0.03s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.14 sec. (Wt:0.00s, Wr:0.11s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 6
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 0.34 sec. (Wt:0.00s, Wr:0.32s, Ps:0.02s) 
+GMRES Iterations = 5
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.11s, Ps:0.02s) 
+GMRES Iterations = 4
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.01s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.74 MB/proc) taken in 1.03 sec. (Wt:0.00s, Wr:1.02s, Ps:0.01s) 
+GMRES Iterations = 6
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 6 (L1) (0.74 MB/proc) taken in 0.38 sec. (Wt:0.00s, Wr:0.36s, Ps:0.02s) 
+GMRES Iterations = 7
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 7 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 8
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 8 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 9
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 9 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 10
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 10 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 11
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 11 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 12
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 12 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 13
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 13 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.03s) 
+GMRES Iterations = 14
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 14 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 15
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 15 (L1) (0.74 MB/proc) taken in 0.13 sec. (Wt:0.00s, Wr:0.11s, Ps:0.02s) 
+GMRES Iterations = 16
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 16 (L1) (0.74 MB/proc) taken in 0.13 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.30 sec. (Wt:0.00s, Wr:0.28s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.73 MB/proc) taken in 0.38 sec. (Wt:0.00s, Wr:0.36s, Ps:0.02s) 
+GMRES Iterations = 6
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.37 sec. (Wt:0.00s, Wr:0.35s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.39 sec. (Wt:0.00s, Wr:0.37s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 5
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.01s) 
+GMRES Iterations = 4
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.38 sec. (Wt:0.00s, Wr:0.36s, Ps:0.03s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.11s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.74 MB/proc) taken in 0.68 sec. (Wt:0.00s, Wr:0.66s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.74 MB/proc) taken in 0.28 sec. (Wt:0.00s, Wr:0.26s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.74 MB/proc) taken in 0.37 sec. (Wt:0.00s, Wr:0.36s, Ps:0.01s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.74 MB/proc) taken in 0.39 sec. (Wt:0.00s, Wr:0.37s, Ps:0.03s) 
+GMRES Iterations = 6
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 6 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 7
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 7 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 8
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 8 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 9
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 9 (L1) (0.74 MB/proc) taken in 0.10 sec. (Wt:0.00s, Wr:0.09s, Ps:0.01s) 
+GMRES Iterations = 10
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 10 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 11
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 11 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 12
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.05 sec. (Pt:0.01s, Cl:0.04s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 12 (L1) (0.74 MB/proc) taken in 0.85 sec. (Wt:0.00s, Wr:0.81s, Ps:0.05s) 
+GMRES Iterations = 13
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 13 (L1) (0.74 MB/proc) taken in 0.81 sec. (Wt:0.00s, Wr:0.79s, Ps:0.03s) 
+GMRES Iterations = 14
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 14 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 15
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 15 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 16
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 16 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 17
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 17 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.29 sec. (Wt:0.00s, Wr:0.27s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 1.06 sec. (Wt:0.00s, Wr:1.04s, Ps:0.02s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 6
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 1.07 sec. (Wt:0.00s, Wr:1.04s, Ps:0.03s) 
+GMRES Iterations = 5
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 1.07 sec. (Wt:0.00s, Wr:1.05s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.05 sec. (Pt:0.00s, Cl:0.05s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.14 sec. (Wt:0.00s, Wr:0.09s, Ps:0.05s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.30 sec. (Wt:0.00s, Wr:0.28s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.78 sec. (Wt:0.00s, Wr:0.77s, Ps:0.02s) 
+GMRES Iterations = 3
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.74 MB/proc) taken in 0.30 sec. (Wt:0.00s, Wr:0.27s, Ps:0.03s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.74 MB/proc) taken in 0.10 sec. (Wt:0.00s, Wr:0.09s, Ps:0.01s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.01s) 
+GMRES Iterations = 6
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 6 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 7
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 7 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 8
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 8 (L1) (0.74 MB/proc) taken in 1.05 sec. (Wt:0.00s, Wr:1.03s, Ps:0.02s) 
+GMRES Iterations = 9
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 9 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 10
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 10 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 11
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 11 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 12
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 12 (L1) (0.74 MB/proc) taken in 1.05 sec. (Wt:0.00s, Wr:1.03s, Ps:0.01s) 
+GMRES Iterations = 13
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 13 (L1) (0.74 MB/proc) taken in 0.28 sec. (Wt:0.00s, Wr:0.26s, Ps:0.02s) 
+GMRES Iterations = 14
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 14 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 15
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 15 (L1) (0.74 MB/proc) taken in 0.56 sec. (Wt:0.00s, Wr:0.54s, Ps:0.02s) 
+GMRES Iterations = 16
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 16 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 17
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 17 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.01s) 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.38 sec. (Wt:0.00s, Wr:0.36s, Ps:0.01s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.79 sec. (Wt:0.00s, Wr:0.77s, Ps:0.01s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 0.39 sec. (Wt:0.00s, Wr:0.37s, Ps:0.02s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.06 sec. (Pt:0.00s, Cl:0.06s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.73 MB/proc) taken in 0.17 sec. (Wt:0.00s, Wr:0.11s, Ps:0.06s) 
+GMRES Iterations = 6
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.29 sec. (Wt:0.00s, Wr:0.27s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.31 sec. (Wt:0.00s, Wr:0.27s, Ps:0.03s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 0.30 sec. (Wt:0.00s, Wr:0.27s, Ps:0.03s) 
+GMRES Iterations = 5
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.80 sec. (Wt:0.00s, Wr:0.78s, Ps:0.02s) 
+GMRES Iterations = 3
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.74 MB/proc) taken in 0.37 sec. (Wt:0.00s, Wr:0.36s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.74 MB/proc) taken in 0.13 sec. (Wt:0.00s, Wr:0.11s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.03s) 
+GMRES Iterations = 6
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 6 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 7
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 7 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 8
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 8 (L1) (0.74 MB/proc) taken in 0.14 sec. (Wt:0.00s, Wr:0.10s, Ps:0.03s) 
+GMRES Iterations = 9
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.04 sec. (Pt:0.00s, Cl:0.04s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 9 (L1) (0.74 MB/proc) taken in 0.13 sec. (Wt:0.00s, Wr:0.09s, Ps:0.04s) 
+GMRES Iterations = 10
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 10 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 11
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 11 (L1) (0.74 MB/proc) taken in 0.10 sec. (Wt:0.00s, Wr:0.09s, Ps:0.01s) 
+GMRES Iterations = 12
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 12 (L1) (0.74 MB/proc) taken in 0.29 sec. (Wt:0.00s, Wr:0.27s, Ps:0.02s) 
+GMRES Iterations = 13
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 13 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 14
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 14 (L1) (0.74 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 15
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 15 (L1) (0.74 MB/proc) taken in 0.79 sec. (Wt:0.00s, Wr:0.77s, Ps:0.02s) 
+GMRES Iterations = 16
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.04 sec. (Pt:0.00s, Cl:0.04s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 16 (L1) (0.74 MB/proc) taken in 0.13 sec. (Wt:0.00s, Wr:0.09s, Ps:0.04s) 
+GMRES Iterations = 17
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 17 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 18
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 18 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 19
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 19 (L1) (0.74 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.01s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.09s, Ps:0.03s) 
+GMRES Iterations = 5
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 5 (L1) (0.73 MB/proc) taken in 0.29 sec. (Wt:0.00s, Wr:0.28s, Ps:0.02s) 
+GMRES Iterations = 6
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.67 sec. (Wt:0.00s, Wr:0.64s, Ps:0.03s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.01s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.12 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 4
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.73 MB/proc) taken in 0.13 sec. (Wt:0.00s, Wr:0.10s, Ps:0.03s) 
+GMRES Iterations = 5
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.03 sec. (Pt:0.00s, Cl:0.03s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.30 sec. (Wt:0.00s, Wr:0.28s, Ps:0.03s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.79 sec. (Wt:0.00s, Wr:0.77s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.10s, Ps:0.02s) 
+GMRES Iterations = 3
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 3 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 4
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 0 (L1) (0.73 MB/proc) taken in 0.13 sec. (Wt:0.00s, Wr:0.11s, Ps:0.02s) 
+GMRES Iterations = 1
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 1 (L1) (0.73 MB/proc) taken in 0.11 sec. (Wt:0.00s, Wr:0.09s, Ps:0.02s) 
+GMRES Iterations = 2
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 2 (L1) (0.73 MB/proc) taken in 0.68 sec. (Wt:0.00s, Wr:0.66s, Ps:0.02s) 
+GMRES Iterations = 3
+
+No. of Time Steps = 6
+Cum. No. of Iterations = 239
+Final Relative Residual Norm = 4.731988e-15
+
+
+nnz AP * (Iterations + time_steps) / Total Time: 
+
+Figure of Merit (FOM_2): inf
+
+
+APP EXE TIME: 302.490092 (s) node quartz36 daemon 68485 
+WRITE CP TIME: 50.827402 (s) node quartz36 daemon 68485 
+APP EXE TIME: 302.490110 (s) node quartz34 daemon 12458 
+WRITE CP TIME: 50.831935 (s) node quartz34 daemon 12458 
+APP EXE TIME: 302.489930 (s) node quartz35 daemon 21556 
+WRITE CP TIME: 50.827458 (s) node quartz35 daemon 21556 
+APP EXE TIME: 302.489952 (s) node quartz36 daemon 68484 
+WRITE CP TIME: 50.826531 (s) node quartz36 daemon 68484 
+APP EXE TIME: 284.686486 (s) node quartz37 daemon 58753 
+WRITE CP TIME: 48.008734 (s) node quartz37 daemon 58753 
+[ [32mFTI  Information[0m ] : FTI has been finalized. 
+APP EXE TIME: 302.489917 (s) node quartz34 daemon 12456 
+WRITE CP TIME: 50.833568 (s) node quartz34 daemon 12456 
+APP EXE TIME: 302.489742 (s) node quartz35 daemon 21554 
+WRITE CP TIME: 50.828127 (s) node quartz35 daemon 21554 
+APP EXE TIME: 302.489950 (s) node quartz37 daemon 58720 
+WRITE CP TIME: 50.826801 (s) node quartz37 daemon 58720 
+[quartz37:58753] *** Process received signal ***
+[quartz37:58753] Signal: Segmentation fault (11)
+[quartz37:58753] Signal code: Address not mapped (1)
+[quartz37:58753] Failing at address: 0x10
+[quartz37:58753] [ 0] /lib64/libpthread.so.0(+0xf630)[0x2aaaabcb5630]
+[quartz37:58753] [ 1] /g/g90/guo7/mylibs/ULFM2.1/lib/libopen-pal.so.40(+0x2a8d5)[0x2aaaace618d5]
+[quartz37:58753] [ 2] /g/g90/guo7/mylibs/ULFM2.1/lib/openmpi/mca_rcache_grdma.so(+0x1f5f)[0x2aaabd840f5f]
+[quartz37:58753] [ 3] /g/g90/guo7/mylibs/ULFM2.1/lib/libopen-pal.so.40(mca_rcache_base_module_destroy+0x8f)[0x2aaaacf0368f]
+[quartz37:58753] [ 4] /g/g90/guo7/mylibs/ULFM2.1/lib/openmpi/mca_btl_openib.so(+0xef7f)[0x2aaabe061f7f]
+[quartz37:58753] [ 5] /g/g90/guo7/mylibs/ULFM2.1/lib/openmpi/mca_btl_openib.so(mca_btl_openib_finalize+0x530)[0x2aaabe05d210]
+[quartz37:58753] [ 6] /g/g90/guo7/mylibs/ULFM2.1/lib/libopen-pal.so.40(+0x79de0)[0x2aaaaceb0de0]
+[quartz37:58753] [ 7] /g/g90/guo7/mylibs/ULFM2.1/lib/libopen-pal.so.40(mca_base_framework_close+0x79)[0x2aaaace99659]
+[quartz37:58753] [ 8] /g/g90/guo7/mylibs/ULFM2.1/lib/libopen-pal.so.40(mca_base_framework_close+0x79)[0x2aaaace99659]
+[quartz37:58753] [ 9] /g/g90/guo7/mylibs/ULFM2.1/lib/libmpi.so.40(ompi_mpi_finalize+0x945)[0x2aaaaaf9b465]
+[quartz37:58753] [10] ./amg[0x4036c7]
+[quartz37:58753] [11] /lib64/libc.so.6(__libc_start_main+0xf5)[0x2aaaabee4545]
+[quartz37:58753] [12] ./amg[0x4049ae]
+[quartz37:58753] *** End of error message ***
+salloc: Relinquishing job allocation 5135810

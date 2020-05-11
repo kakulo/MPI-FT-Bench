@@ -14,4 +14,8 @@ extern int myrank;
 extern int survivor;
 extern int level;
 
+#ifdef TIMER
+extern double acc_write_time;
+#endif
+
 #endif

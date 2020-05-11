@@ -42,12 +42,17 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/time.h>
 
 #include <time.h>
 
 /* ULFM */
 #include <setjmp.h>
 #include "ulfm-util.hpp"
+
+#ifdef TIMER
+double acc_write_time=0;
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -186,9 +191,18 @@ main( hypre_int argc,
    /*-----------------------------------------------------------
     * Initialize some stuff
     *-----------------------------------------------------------*/
+#ifdef TIMER
+    double elapsed_time;
+    struct timeval start;
+    struct timeval end;
+#endif
 
    /* Initialize MPI */
    hypre_MPI_Init(&argc, &argv);
+
+#ifdef TIMER
+    gettimeofday(&start, NULL) ;
+#endif
 
 /* ULFM */
   InitULFM(argv);
@@ -375,14 +389,28 @@ restart:
   // Read checkpointing either because of recovery being a survivor
   int survivor = IsSurvivor();
 
+#ifdef TIMER
+   struct timeval tv;
+   gettimeofday( &tv, NULL );
+    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+    char hostname[64];
+    gethostname(hostname, 64);
+    if (do_recover || !survivor) {
+    printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+    } else {
+    printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+    }
+    fflush(stdout);
+#endif
+
 if (enable_fti) {
    FTI_Init(argv[1], world);
 }
 
-   char hostname[65];
+   //char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myid);
-   sleep(5);
+   //sleep(5);
 
    /*-----------------------------------------------------------
     * Set up matrix
@@ -718,6 +746,19 @@ if (enable_fti) {
 if (enable_fti) {
     FTI_Finalize();
 }
+
+#ifdef TIMER
+    gettimeofday(&end, NULL) ;
+    elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+    //char hostname[64];
+    gethostname(hostname, 64);
+    printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+    fflush(stdout);
+#endif
+
+    printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+    fflush(stdout);
+
    hypre_MPI_Finalize();
 
    return (0);

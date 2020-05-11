@@ -30,6 +30,7 @@
 
 //#include "par_vector.h"
 #include <sstream>
+#include <sys/time.h>
 #include <fstream>
 #include <signal.h>
 #include <unistd.h>
@@ -668,9 +669,21 @@ hypre_MPI_Comm_size(world,&procsize);
 	
 	if (enable_fti) {
 	   if ( FTI_Status() != 0){ 
+#ifdef TIMER
+    double elapsed_time;
+    timeval start;
+    timeval end;
+    gettimeofday(&start, NULL) ;
+#endif
 	      	printf("Do FTI Recover to data objects from failure ... \n");
 	    	FTI_Recover();
 	    	printf("Done: FTI Recover data objects from failure ... \n");
+#ifdef TIMER
+    gettimeofday(&end, NULL) ;
+    elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+    printf("READ CP TIME: %lf (s) Rank %d \n", elapsed_time, rank);
+    fflush(stdout);
+#endif
 	    	recovered = 1;
         	procfi = 0;
         	nodefi = 0;
@@ -679,10 +692,22 @@ hypre_MPI_Comm_size(world,&procsize);
 
 	// do FTI CPR
 	if (enable_fti){
+#ifdef TIMER
+    double elapsed_time;
+    timeval start;
+    timeval end;
+    gettimeofday(&start, NULL) ;
+#endif
 	    if ( (!recovered) && cp_stride > 0 && (iter%cp_stride +1) == cp_stride ){ 
 		FTI_Checkpoint(iter, level);
 	    }
 	    recovered = 0;
+#ifdef TIMER
+    gettimeofday(&end, NULL) ;
+    elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+    acc_write_time+=elapsed_time;
+
+#endif
 	}
 	// do FTI CPR
 
@@ -882,18 +907,46 @@ hypre_MPI_Comm_size(world,&procsize);
             hypre_printf("GMRES Iterations = %d\n", iter);
          }
 
-
-    	 if (procfi == 1 && rank == (procsize-1) && iter==12){
+    	 if (procfi == 1 && iter==12){
+#ifdef TIMER
+   	      printf("WRITE CP TIME: %lf (s) Rank %d \n", acc_write_time, rank);
+		fflush(stdout);
+#endif
+              if(rank==(procsize-1)){
+#ifdef TIMER
+   	   struct timeval tv;
+   	   gettimeofday( &tv, NULL );
+   	   double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+     	   char hostname[64];
+   	   gethostname(hostname, 64);
+   	   printf("TIMESTAMP KILL: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+   	   fflush(stdout);
+#endif
       	   printf("KILL rank %d\n", rank);
-      	   raise(SIGKILL);
-    	 }
+      	   kill(getpid(), SIGTERM);
+    	      }
+	 }
 
-    	 if (nodefi == 1 && rank == (procsize-1) && iter==12){
-      	   char hostname[64];
+    	 if (nodefi == 1 && iter==12){
+#ifdef TIMER
+   	      printf("WRITE CP TIME: %lf (s) Rank %d \n", acc_write_time, rank);
+		fflush(stdout);
+#endif
+              if(rank==(procsize-1)){
+#ifdef TIMER
+   	   struct timeval tv;
+   	   gettimeofday( &tv, NULL );
+   	   double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+     	   char hostname[64];
+   	   gethostname(hostname, 64);
+   	   printf("TIMESTAMP KILL: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+   	   fflush(stdout);
+#endif
       	   gethostname(hostname, 64);
       	   printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), rank);
-      	   kill(getppid(), SIGKILL);
-    	 }
+      	   kill(getppid(), SIGTERM);
+    	      }
+	 }
 
 	 // new code for C/R implementation
 
