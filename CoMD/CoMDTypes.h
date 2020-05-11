@@ -11,6 +11,10 @@
 #include "decomposition.h"
 #include "initAtoms.h"
 
+#ifdef TIMER
+extern double acc_write_time;
+#endif
+
 struct SimFlatSt;
 
 /// The base struct from which all potentials derive.  Think of this as an

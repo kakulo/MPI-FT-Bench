@@ -63,6 +63,10 @@
 
 #include "../libcheckpoint/checkpoint.h"
 
+#ifdef TIMER
+extern double acc_write_time;
+#endif
+
 using namespace std;
 
 #define enable_fti 1
@@ -1367,6 +1371,12 @@ if (enable_fti) {
   // do FTI Recover
   if (enable_fti) {
     if ( FTI_Status() != 0){ 
+#ifdef TIMER
+   double elapsed_time;
+   struct timeval start;
+   struct timeval end;
+   gettimeofday(&start, NULL) ;
+#endif
 /*
        printf("FTI: Before recovery g_edge_list_sz - %d with rank %d \n", g_edge_list_sz, myrank);
 	int res = FTI_RecoverVarInit();
@@ -1385,6 +1395,12 @@ if (enable_fti) {
        printf("Do FTI Recover to Louvain data objects ... \n");
        FTI_Recover();
        printf("Done: FTI Recover data objects from failure ... \n");
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   printf("READ CP TIME: %lf (s) Rank %d \n", elapsed_time, myrank);
+   fflush(stdout);
+#endif
        recovered = 1;
        procfi = 0;
        nodefi = 0;
@@ -1393,14 +1409,72 @@ if (enable_fti) {
 
   // do FTI CPR
   if (enable_fti){  
+#ifdef TIMER
+   double elapsed_time;
+   struct timeval start;
+   struct timeval end;
+   gettimeofday(&start, NULL) ;
+#endif
     if ( (!recovered) && (numIters%cp_stride +1) == cp_stride ){ 
       printf("Do FTI checkpointing ... \n"); 
       FTI_Checkpoint(numIters, level);
     }
     recovered = 0;
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   acc_write_time+=elapsed_time;
+
+#endif
   }
+  // do FTI CPR
 
   // simulation of proc/node failures
+    if (procfi == 1 && numIters==4){
+#ifdef TIMER
+   	      printf("WRITE CP TIME: %lf (s) Rank %d \n", acc_write_time, myrank);
+		fflush(stdout);
+#endif
+    	if (myrank == (procsize-1)){
+#ifdef TIMER
+           struct timeval tv;
+           gettimeofday( &tv, NULL );
+           double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+     	   char hostname[64];
+   	   gethostname(hostname, 64);
+   	   printf("TIMESTAMP KILL: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+           fflush(stdout);
+#endif
+      	   printf("KILL rank %d\n", myrank);
+      	   kill(getpid(), SIGTERM);
+    	}
+    }
+
+    if (nodefi == 1 && numIters==4){
+#ifdef TIMER
+   	      printf("WRITE CP TIME: %lf (s) Rank %d \n", acc_write_time,myrank);
+		fflush(stdout);
+#endif
+    	if (myrank == (procsize-1)){
+#ifdef TIMER
+           char hostname[64];
+           gethostname(hostname, 64);
+           struct timeval tv;
+           gettimeofday( &tv, NULL );
+           double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+     	   //char hostname[64];
+   	   gethostname(hostname, 64);
+   	   printf("TIMESTAMP KILL: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+           fflush(stdout);
+#endif
+      	   gethostname(hostname, 64);
+      	   printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(),myrank);
+           kill(getppid(), SIGTERM );
+    	}
+    }
+
+
+  //
   if (procfi == 1 && myrank == (procsize-1) && numIters==4){
      printf("KILL rank %d\n", myrank);
      raise(SIGKILL);

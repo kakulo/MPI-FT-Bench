@@ -664,8 +664,8 @@ hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
 	   if ( FTI_Status() != 0){ 
 #ifdef TIMER
    double elapsed_time;
-   timeval start;
-   timeval end;
+   struct timeval start;
+   struct timeval end;
    gettimeofday(&start, NULL) ;
 #endif
 	   	printf("Do FTI Recover to data objects from failure ... \n");
@@ -687,8 +687,8 @@ hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
 	if (enable_fti){
 #ifdef TIMER
    double elapsed_time;
-   timeval start;
-   timeval end;
+   struct timeval start;
+   struct timeval end;
    gettimeofday(&start, NULL) ;
 #endif
 	    if ( (!recovered) && cp_stride > 0 && (iter%cp_stride +1) == cp_stride ){ 

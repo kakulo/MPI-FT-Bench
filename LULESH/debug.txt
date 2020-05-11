@@ -1,0 +1,842 @@
+salloc: Granted job allocation 5134016
+--------------------------------------------------------------------------
+By default, for Open MPI 4.0 and later, infiniband ports on a device
+are not used by default.  The intent is to use UCX for these devices.
+You can override this policy by setting the btl_openib_allow_ib MCA parameter
+to true.
+
+  Local host:              quartz7
+  Local adapter:           hfi1_0
+  Local port:              1
+
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+WARNING: There was an error initializing an OpenFabrics device.
+
+  Local host:   quartz7
+  Local device: hfi1_0
+--------------------------------------------------------------------------
+DBG_REINIT: INSTALLED SIGHANDLER!
+DBG_REINIT: STATE: NEW
+TIMESTAMP START: 1589190076.673385 (s) node quartz7 daemon 26256
+TIMESTAMP START: 1589190076.673437 (s) node quartz8 daemon 11288
+DBG_REINIT: INSTALLED SIGHANDLER!
+DBG_REINIT: STATE: NEW
+DBG_REINIT: INSTALLED SIGHANDLER!
+DBG_REINIT: STATE: NEW
+DBG_REINIT: INSTALLED SIGHANDLER!
+DBG_REINIT: STATE: NEW
+DBG_REINIT: INSTALLED SIGHANDLER!
+DBG_REINIT: STATE: NEW
+TIMESTAMP START: 1589190076.673489 (s) node quartz7 daemon 26255
+TIMESTAMP START: 1589190076.673560 (s) node quartz8 daemon 11289
+TIMESTAMP START: 1589190076.673481 (s) node quartz6 daemon 17946
+TIMESTAMP START: 1589190076.673519 (s) node quartz9 daemon 2351
+DBG_REINIT: INSTALLED SIGHANDLER!
+DBG_REINIT: STATE: NEW
+DBG_REINIT: INSTALLED SIGHANDLER!
+DBG_REINIT: INSTALLED SIGHANDLER!
+DBG_REINIT: STATE: NEW
+DBG_REINIT: STATE: NEW
+TIMESTAMP START: 1589190076.673553 (s) node quartz9 daemon 2352
+TIMESTAMP START: 1589190076.673612 (s) node quartz6 daemon 17945
+[ [32mFTI  Information[0m ] : Reading FTI configuration file (config.L1.fti)... 
+=======> btl_tcp_endpoint.c:692 proc 1295712257:2 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:3 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 19
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 19
+[ [32mFTI  Information[0m ] : The execution ID is: 2020-05-11_02-41-16 
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 19
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 19
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 19
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 19
+[ [32mFTI  Information[0m ] : Selected Ckpt I/O is MPI-I/O 
+quartz6 daemon 17946 rank 1
+quartz8 daemon 11288 rank 4
+quartz8 daemon 11289 rank 5
+quartz7 daemon 26256 rank 3
+quartz7 daemon 26255 rank 2
+[ [32mFTI  Information[0m ] : FTI has been initialized. 
+quartz6 daemon 17945 rank 0
+quartz9 daemon 2352 rank 7
+quartz9 daemon 2351 rank 6
+[quartz2306:49072] 7 more processes have sent help message help-mpi-btl-openib.txt / ib port not selected
+[quartz2306:49072] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[quartz2306:49072] 7 more processes have sent help message help-mpi-btl-openib.txt / error in device init
+Running problem size 3^3 per domain until completion
+Num processors: 8
+Total number of elements: 216
+
+To run other sizes, use -s <integer>.
+To run a fixed number of iterations, use -i <integer>.
+To run a more or less balanced region set, use -b <integer>.
+To change the relative costs of regions, use -c <integer>.
+To print out progress, use -p
+To write an output file for VisIt, use -v
+See help (-h) for more options
+
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:1 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:0 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:2 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:2 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:2 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:0 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:1 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:3 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:3 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:0 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:3 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:0 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:2 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:1 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:3 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:1 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 23
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 0 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 1 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 2 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 3 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 4 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 5 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 6 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 7 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 8 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 9 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 10 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 11 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 12 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 13 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 14 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 15 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 16 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 17 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 18 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+Done: Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 19 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 20 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 21 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 22 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 23 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 24 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 25 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 26 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 27 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 28 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 29 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 30 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 31 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 32 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 33 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 34 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 35 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 36 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 37 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 38 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 39 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 40 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 41 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 42 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 43 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 44 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 45 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 46 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 47 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 48 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 49 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 50 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 51 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 52 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 53 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 54 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 55 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 56 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 57 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 58 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 59 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 60 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 61 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 62 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 63 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 64 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 65 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 66 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 67 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 68 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 69 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 70 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 71 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 72 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 75 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 76 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 77 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 78 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 79 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 80 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 81 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 82 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 83 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 84 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 85 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 86 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 87 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 88 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 89 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 90 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 91 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 92 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 93 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 94 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 95 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+Done: Add FTI protection to data objects ... 
+cycle = 1, time = 2.166799e-04, dt=2.166799e-04
+cycle = 2, time = 4.766957e-04, dt=2.600158e-04
+cycle = 3, time = 5.658192e-04, dt=8.912352e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+cycle = 4, time = 6.402443e-04, dt=7.442505e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.01 sec. (Pt:0.00s, Cl:0.01s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 4 (L1) (0.02 MB/proc) taken in 0.04 sec. (Wt:0.00s, Wr:0.03s, Ps:0.01s) 
+cycle = 5, time = 7.065914e-04, dt=6.634707e-05
+cycle = 6, time = 7.681976e-04, dt=6.160627e-05
+cycle = 7, time = 8.267693e-04, dt=5.857168e-05
+cycle = 8, time = 8.833432e-04, dt=5.657389e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+cycle = 9, time = 9.386213e-04, dt=5.527812e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 9 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 10, time = 9.931199e-04, dt=5.449859e-05
+cycle = 11, time = 1.058518e-03, dt=6.539831e-05
+cycle = 12, time = 1.132356e-03, dt=7.383807e-05
+cycle = 13, time = 1.202157e-03, dt=6.980070e-05
+Do FTI checkpointing ... 
+cycle = 14, time = 1.267937e-03, dt=6.577992e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 14 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 15, time = 1.329692e-03, dt=6.175523e-05
+cycle = 16, time = 1.388649e-03, dt=5.895707e-05
+cycle = 17, time = 1.445849e-03, dt=5.720002e-05
+cycle = 18, time = 1.502186e-03, dt=5.633708e-05
+Do FTI checkpointing ... 
+cycle = 19, time = 1.558515e-03, dt=5.632822e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 19 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 20, time = 1.614843e-03, dt=5.632822e-05
+cycle = 21, time = 1.671171e-03, dt=5.632822e-05
+cycle = 22, time = 1.727499e-03, dt=5.632822e-05
+cycle = 23, time = 1.783827e-03, dt=5.632822e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+cycle = 24, time = 1.846174e-03, dt=6.234668e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 24 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 25, time = 1.908521e-03, dt=6.234668e-05
+cycle = 26, time = 1.970867e-03, dt=6.234668e-05
+cycle = 27, time = 2.041932e-03, dt=7.106433e-05
+cycle = 28, time = 2.112996e-03, dt=7.106433e-05
+cycle = 29, time = 2.197860e-03, dt=8.486396e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 29 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 30, time = 2.294162e-03, dt=9.630157e-05
+cycle = 31, time = 2.386611e-03, dt=9.244938e-05
+cycle = 32, time = 2.475938e-03, dt=8.932708e-05
+cycle = 33, time = 2.563120e-03, dt=8.718194e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+cycle = 34, time = 2.648911e-03, dt=8.579045e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 34 (L1) (0.02 MB/proc) taken in 0.04 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 35, time = 2.734073e-03, dt=8.516297e-05
+cycle = 36, time = 2.819236e-03, dt=8.516297e-05
+cycle = 37, time = 2.904399e-03, dt=8.516297e-05
+cycle = 38, time = 2.989562e-03, dt=8.516297e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+cycle = 39, time = 3.074725e-03, dt=8.516297e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 39 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 40, time = 3.170157e-03, dt=9.543156e-05
+cycle = 41, time = 3.265588e-03, dt=9.543156e-05
+cycle = 42, time = 3.361020e-03, dt=9.543156e-05
+cycle = 43, time = 3.456452e-03, dt=9.543156e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+cycle = 44, time = 3.551883e-03, dt=9.543156e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 44 (L1) (0.02 MB/proc) taken in 0.04 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 45, time = 3.646551e-03, dt=9.466835e-05
+cycle = 46, time = 3.739207e-03, dt=9.265557e-05
+cycle = 47, time = 3.830142e-03, dt=9.093521e-05
+cycle = 48, time = 3.919667e-03, dt=8.952474e-05
+Do FTI checkpointing ... 
+cycle = 49, time = 4.008078e-03, dt=8.841141e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 49 (L1) (0.02 MB/proc) taken in 0.04 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 50, time = 4.095700e-03, dt=8.762199e-05
+WRITE CP TIME: 0.458424 (s) Rank 1 
+WRITE CP TIME: 0.458457 (s) Rank 3 
+WRITE CP TIME: 0.458441 (s) Rank 5 
+cycle = 51, time = 4.182850e-03, dt=8.714930e-05
+WRITE CP TIME: 0.458572 (s) Rank 0 
+WRITE CP TIME: 0.458624 (s) Rank 7 
+TIMESTAMP KILL: 1589190082.246841 (s) node quartz9 daemon 2352
+KILL rank 7
+WRITE CP TIME: 0.458380 (s) Rank 2 
+WRITE CP TIME: 0.458502 (s) Rank 4 
+WRITE CP TIME: 0.458809 (s) Rank 6 
+DBG_REINIT: LONGMP!
+DBG_REINIT: LONGMP!
+DBG_REINIT: LONGMP!
+DBG_REINIT: LONGMP!
+--------------------------------------------------------------------------
+An MPI communication peer process has unexpectedly disconnected.  This
+usually indicates a failure in the peer process (e.g., a crash or
+otherwise exiting without calling MPI_FINALIZE first).
+
+Although this local MPI process will likely now behave unpredictably
+(it may even hang or crash), the root cause of this problem is the
+failure of the peer -- that is what you need to investigate.  For
+example, there may be a core file that you can examine.  More
+generally: such peer hangups are frequently caused by application bugs
+or other external events.
+
+  Local host: quartz7
+  Local PID:  26256
+  Peer host:  quartz9
+--------------------------------------------------------------------------
+DBG_REINIT: LONGMP!
+DBG_REINIT: LONGMP!
+DBG_REINIT: LONGMP!
+btl_vader_module.c:250 remove fbox_in_endpoints ep 1
+btl_vader_module.c:250 remove fbox_in_endpoints ep 1
+btl_vader_module.c:250 remove fbox_in_endpoints ep 0
+btl_vader_module.c:250 remove fbox_in_endpoints ep 1
+btl_vader_module.c:250 remove fbox_in_endpoints ep 0
+btl_vader_module.c:250 remove fbox_in_endpoints ep 1
+btl_vader_module.c:250 remove fbox_in_endpoints ep 0
+DBG_REINIT: STATE: REINITED
+DBG_REINIT: STATE: REINITED
+TIMESTAMP RESTART: 1589190083.104932 (s) node quartz9 daemon 2351
+TIMESTAMP RESTART: 1589190083.104996 (s) node quartz6 daemon 17945
+[ [32mFTI  Information[0m ] : Reading FTI configuration file (config.L1.fti)... 
+DBG_REINIT: STATE: REINITED
+TIMESTAMP RESTART: 1589190083.105078 (s) node quartz6 daemon 17946
+DBG_REINIT: STATE: REINITED
+TIMESTAMP RESTART: 1589190083.105098 (s) node quartz8 daemon 11289
+DBG_REINIT: STATE: REINITED
+TIMESTAMP RESTART: 1589190083.105105 (s) node quartz8 daemon 11288
+DBG_REINIT: STATE: REINITED
+TIMESTAMP RESTART: 1589190083.105137 (s) node quartz7 daemon 26255
+DBG_REINIT: STATE: REINITED
+TIMESTAMP RESTART: 1589190083.105242 (s) node quartz7 daemon 26256
+DBG_REINIT: INSTALLED SIGHANDLER!
+DBG_REINIT: STATE: RESTARTED
+TIMESTAMP RESTART: 1589190083.105544 (s) node quartz9 daemon 2366
+[ [32mFTI  Information[0m ] : This is a restart. The execution ID is: 2020-05-11_02-41-16 
+=======> btl_tcp_endpoint.c:692 proc 1295712257:2 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:3 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:0 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:1 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 19
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 18
+[ [32mFTI  Information[0m ] : Selected Ckpt I/O is MPI-I/O 
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 19
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 18
+[ [32mFTI  Information[0m ] : Recovering successfully from level 1 with Ckpt. 49. 
+quartz6 daemon 17946 rank 1
+quartz7 daemon 26255 rank 2
+quartz7 daemon 26256 rank 3
+[ [32mFTI  Information[0m ] : FTI has been initialized. 
+quartz6 daemon 17945 rank 0
+quartz8 daemon 11289 rank 5
+quartz9 daemon 2366 rank 7
+quartz9 daemon 2351 rank 6
+quartz8 daemon 11288 rank 4
+mpiext_reinit.c:130 PROC ERR CB source jobid 1295712257 vpid 7 status OPAL_ERR_UNREACH
+[quartz2306:49072] 1 more process has sent help message help-mpi-btl-openib.txt / ib port not selected
+[quartz2306:49072] 1 more process has sent help message help-mpi-btl-openib.txt / error in device init
+[quartz2306:49072] 1 more process has sent help message help-mpi-btl-tcp.txt / peer hung up
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:2 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:0 TCP sd 20
+Running problem size 3^3 per domain until completion
+Num processors: 8
+Total number of elements: 216
+
+To run other sizes, use -s <integer>.
+To run a fixed number of iterations, use -i <integer>.
+To run a more or less balanced region set, use -b <integer>.
+To change the relative costs of regions, use -c <integer>.
+To print out progress, use -p
+To write an output file for VisIt, use -v
+See help (-h) for more options
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 21
+
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:0 TCP sd 19
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:3 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:1 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:3 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:2 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:6 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:7 TCP sd 20
+=======> btl_tcp_endpoint.c:692 proc 1295712257:2 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:1 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:0 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:3 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:5 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:3 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:1 TCP sd 23
+=======> btl_tcp_endpoint.c:692 proc 1295712257:4 TCP sd 18
+=======> btl_tcp_endpoint.c:692 proc 1295712257:1 TCP sd 21
+=======> btl_tcp_endpoint.c:692 proc 1295712257:2 TCP sd 22
+=======> btl_tcp_endpoint.c:692 proc 1295712257:0 TCP sd 23
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Add FTI protection to data objects ... 
+Done: Add FTI protection to data objects ... 
+Do FTI Recover to data objects from failure ... 
+Add FTI protection to data objects ... 
+[ [32mFTI  Information[0m ] : Variable ID 0 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 1 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 2 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 3 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 4 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 5 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 6 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 7 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 8 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+[ [32mFTI  Information[0m ] : Variable ID 9 to protect (Stored in CPU). Current ckpt. size per rank is 0.00MB. 
+Done: Add FTI protection to data objects ... 
+Do FTI Recover to data objects from failure ... 
+Done: Add FTI protection to data objects ... 
+Do FTI Recover to data objects from failure ... 
+Done: Add FTI protection to data objects ... 
+Do FTI Recover to data objects from failure ... 
+Done: Add FTI protection to data objects ... 
+Do FTI Recover to data objects from failure ... 
+Done: Add FTI protection to data objects ... 
+Do FTI Recover to data objects from failure ... 
+Done: Add FTI protection to data objects ... 
+Do FTI Recover to data objects from failure ... 
+[ [32mFTI  Information[0m ] : Variable ID 10 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 11 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 12 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 13 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 14 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 15 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 16 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 17 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 18 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 19 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 20 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 21 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 22 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 23 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 24 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 25 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 26 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 27 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 28 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 29 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 30 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 31 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 32 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 33 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 34 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 35 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 36 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 37 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 38 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 39 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 40 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 41 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 42 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 43 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 44 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 45 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 46 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 47 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 48 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 49 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 50 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 51 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 52 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 53 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 54 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 55 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 56 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 57 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 58 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 59 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+Done: FTI Recover data objects from failure ... 
+[ [32mFTI  Information[0m ] : Variable ID 60 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 61 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+READ CP TIME: 0.000528 (s) Rank 4 
+[ [32mFTI  Information[0m ] : Variable ID 62 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 63 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 64 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 65 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 66 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 67 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.000638 (s) Rank 5 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.000692 (s) Rank 3 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.000561 (s) Rank 2 
+[ [32mFTI  Information[0m ] : Variable ID 68 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 69 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.000721 (s) Rank 6 
+[ [32mFTI  Information[0m ] : Variable ID 70 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.000715 (s) Rank 7 
+[ [32mFTI  Information[0m ] : Variable ID 71 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 72 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 75 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 76 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 77 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 78 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 79 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 80 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 81 to protect (Stored in CPU). Current ckpt. size per rank is 0.01MB. 
+[ [32mFTI  Information[0m ] : Variable ID 82 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 83 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 84 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 85 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 86 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 87 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 88 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 89 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 90 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 91 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 92 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 93 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 94 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+[ [32mFTI  Information[0m ] : Variable ID 95 to protect (Stored in CPU). Current ckpt. size per rank is 0.02MB. 
+Done: Add FTI protection to data objects ... 
+Do FTI Recover to data objects from failure ... 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.001018 (s) Rank 1 
+Done: FTI Recover data objects from failure ... 
+READ CP TIME: 0.000706 (s) Rank 0 
+cycle = 50, time = 4.095700e-03, dt=8.762199e-05
+cycle = 51, time = 4.182850e-03, dt=8.714930e-05
+cycle = 52, time = 4.269927e-03, dt=8.707727e-05
+cycle = 53, time = 4.357004e-03, dt=8.707727e-05
+cycle = 54, time = 4.444081e-03, dt=8.707727e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 54 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 55, time = 4.531159e-03, dt=8.707727e-05
+cycle = 56, time = 4.618236e-03, dt=8.707727e-05
+cycle = 57, time = 4.705313e-03, dt=8.707727e-05
+cycle = 58, time = 4.801763e-03, dt=9.644928e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+cycle = 59, time = 4.898212e-03, dt=9.644928e-05
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 59 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 60, time = 5.004966e-03, dt=1.067543e-04
+cycle = 61, time = 5.111720e-03, dt=1.067543e-04
+cycle = 62, time = 5.230899e-03, dt=1.191784e-04
+cycle = 63, time = 5.350077e-03, dt=1.191784e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+cycle = 64, time = 5.469256e-03, dt=1.191784e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 64 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 65, time = 5.588434e-03, dt=1.191784e-04
+cycle = 66, time = 5.707612e-03, dt=1.191784e-04
+cycle = 67, time = 5.826791e-03, dt=1.191784e-04
+cycle = 68, time = 5.945969e-03, dt=1.191784e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+cycle = 69, time = 6.065147e-03, dt=1.191784e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 69 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 70, time = 6.184326e-03, dt=1.191784e-04
+cycle = 71, time = 6.303504e-03, dt=1.191784e-04
+cycle = 72, time = 6.422683e-03, dt=1.191784e-04
+cycle = 73, time = 6.541861e-03, dt=1.191784e-04
+Do FTI checkpointing ... 
+cycle = 74, time = 6.661039e-03, dt=1.191784e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 74 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 75, time = 6.780218e-03, dt=1.191784e-04
+cycle = 76, time = 6.899396e-03, dt=1.191784e-04
+cycle = 77, time = 7.018574e-03, dt=1.191784e-04
+cycle = 78, time = 7.137753e-03, dt=1.191784e-04
+Do FTI checkpointing ... 
+cycle = 79, time = 7.256931e-03, dt=1.191784e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 79 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 80, time = 7.375925e-03, dt=1.189939e-04
+cycle = 81, time = 7.492559e-03, dt=1.166335e-04
+cycle = 82, time = 7.607169e-03, dt=1.146101e-04
+cycle = 83, time = 7.720124e-03, dt=1.129551e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+cycle = 84, time = 7.831781e-03, dt=1.116576e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 84 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 85, time = 7.942497e-03, dt=1.107162e-04
+cycle = 86, time = 8.052610e-03, dt=1.101121e-04
+cycle = 87, time = 8.162440e-03, dt=1.098303e-04
+cycle = 88, time = 8.272270e-03, dt=1.098303e-04
+Do FTI checkpointing ... 
+cycle = 89, time = 8.382100e-03, dt=1.098303e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 89 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 90, time = 8.491931e-03, dt=1.098303e-04
+cycle = 91, time = 8.601761e-03, dt=1.098303e-04
+cycle = 92, time = 8.711591e-03, dt=1.098303e-04
+cycle = 93, time = 8.821421e-03, dt=1.098303e-04
+Do FTI checkpointing ... 
+cycle = 94, time = 8.931252e-03, dt=1.098303e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 94 (L1) (0.02 MB/proc) taken in 0.05 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 95, time = 9.055526e-03, dt=1.242740e-04
+cycle = 96, time = 9.179800e-03, dt=1.242740e-04
+cycle = 97, time = 9.318573e-03, dt=1.387730e-04
+cycle = 98, time = 9.457346e-03, dt=1.387730e-04
+cycle = 99, time = 9.596118e-03, dt=1.387730e-04
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+Do FTI checkpointing ... 
+[ [32mFTI  Information[0m ] : Post-checkpoint took 0.02 sec. (Pt:0.00s, Cl:0.02s) 
+[ [32mFTI  Information[0m ] : Ckpt. ID 99 (L1) (0.02 MB/proc) taken in 0.04 sec. (Wt:0.00s, Wr:0.03s, Ps:0.02s) 
+cycle = 100, time = 9.750688e-03, dt=1.545691e-04
+cycle = 101, time = 9.905257e-03, dt=1.545691e-04
+cycle = 102, time = 1.000000e-02, dt=9.474325e-05
+Run completed:  
+   Problem size        =  3 
+   MPI tasks           =  8 
+   Iteration count     =  102 
+   Final Origin Energy = 1.045418e+04 
+   Testing Plane 0 of Energy Array on rank 0:
+        MaxAbsDiff   = 7.958079e-13
+        TotalAbsDiff = 1.250555e-12
+        MaxRelDiff   = 9.097803e-16
+
+
+Elapsed time         =       0.51 (s)
+Grind time (us/z/c)  =    185.138 (per dom)  (  23.14225 overall)
+FOM                  =   43.21101 (z/s)
+
+APP EXE TIME: 12.058766 (s) node quartz7 daemon 26255 
+WRITE CP TIME: 0.925140 (s) node quartz7 daemon 26255 
+APP EXE TIME: 12.058648 (s) node quartz8 daemon 11288 
+WRITE CP TIME: 0.925485 (s) node quartz8 daemon 11288 
+APP EXE TIME: 12.058560 (s) node quartz6 daemon 17946 
+WRITE CP TIME: 0.925288 (s) node quartz6 daemon 17946 
+APP EXE TIME: 12.058769 (s) node quartz7 daemon 26256 
+WRITE CP TIME: 0.925541 (s) node quartz7 daemon 26256 
+APP EXE TIME: 12.058543 (s) node quartz8 daemon 11289 
+WRITE CP TIME: 0.925369 (s) node quartz8 daemon 11289 
+[ [32mFTI  Information[0m ] : FTI has been finalized. 
+APP EXE TIME: 12.058488 (s) node quartz6 daemon 17945 
+WRITE CP TIME: 0.925928 (s) node quartz6 daemon 17945 
+APP EXE TIME: 12.058619 (s) node quartz9 daemon 2351 
+WRITE CP TIME: 0.925625 (s) node quartz9 daemon 2351 
+APP EXE TIME: 5.626830 (s) node quartz9 daemon 2366 
+WRITE CP TIME: 0.467540 (s) node quartz9 daemon 2366 
+btl_vader_module.c:250 remove fbox_in_endpoints ep 1
+*********************************
+CALLED proc_errors (hnp) [[19771,0],0] errmgr:default_hnp: for proc [[19771,1],7] state ABORTED BY SIGNAL
+*********************************
+proc [[19771,1],7] exited with signal 15
+SENDING num_procs 1 processes to restart
+SENDING proc [[19771,1],7] to restart on daemon 4
+ (PROC FAILURE) FAILED_PROC_LIST to restart 1 processes
+RECEIVING num_procs 1 to restart (local 0)
+RECEIVING restart proc [[19771,1],7] on daemon 4 (local 0)
+*********************************
+CALLED proc_errors (hnp) [[19771,0],0] errmgr:default_hnp: for proc [[19771,0],4] state COMMUNICATION FAILURE
+*********************************
+*********************************
+CALLED proc_errors (hnp) [[19771,0],0] errmgr:default_hnp: for proc [[19771,0],3] state COMMUNICATION FAILURE
+*********************************
+*********************************
+CALLED proc_errors (hnp) [[19771,0],0] errmgr:default_hnp: for proc [[19771,0],2] state COMMUNICATION FAILURE
+*********************************
+*********************************
+CALLED proc_errors (hnp) [[19771,0],0] errmgr:default_hnp: for proc [[19771,0],1] state COMMUNICATION FAILURE
+*********************************
+salloc: Relinquishing job allocation 5134016

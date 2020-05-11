@@ -15,6 +15,7 @@ DO_MPI = ON
 DO_CP = OFF
 # Read Checkpoint (ON/OFF).
 # Compile with DO_RESTART ON will load the last checkpoint
+DO_TIMER = ON
 
 ### Set your desired C compiler and any necessary flags.  Note that CoMD
 ### uses some c99 features.  You can also set flags for optimization and
@@ -67,6 +68,10 @@ endif
 # Check for checkpoint write
 ifeq ($(DO_CP), ON)
 CFLAGS += -DDO_CP
+endif
+# Check for TIMER
+ifeq ($(DO_TIMER), ON)
+CFLAGS += -DTIMER
 endif
 # Check for checkpoint read
 ifeq ($(DO_RESTART), ON)

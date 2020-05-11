@@ -92,6 +92,8 @@ using std::endl;
 #include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <time.h>
+#include <sys/time.h>
 
 #include "YAML_Element.hpp"
 #include "YAML_Doc.hpp"
@@ -116,16 +118,40 @@ double normr = 0.0;
 int max_iter = 150;
 double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter iterations
 
+#ifdef TIMER
+double acc_write_time=0;
+#endif
+
 int resilient_main(int argc, char **argv, OMPI_reinit_state_t state);
 
 int main(int argc, char *argv[])
 {
+#ifdef TIMER
+   double elapsed_time;
+   struct timeval start;
+   struct timeval end;
+#endif
 
 #ifdef USING_MPI
   MPI_Init(&argc, &argv);
 #endif 
+#ifdef TIMER
+   gettimeofday(&start, NULL) ;
+#endif
 
   OMPI_Reinit(argc, argv, resilient_main);
+
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   char hostname[64];
+   gethostname(hostname, 64);
+   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+   fflush(stdout);
+#endif
+
+   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+   fflush(stdout);
 
 #if USE_MPI
   MPI_Finalize() ;
@@ -137,6 +163,19 @@ int main(int argc, char *argv[])
 
 int resilient_main(int argc, char **argv, OMPI_reinit_state_t state)
 {
+#ifdef TIMER
+   struct timeval tv;
+   gettimeofday( &tv, NULL );
+   double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+   char hostname[64];
+   gethostname(hostname, 64);
+   if (state == OMPI_REINIT_NEW) {
+   printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+   } else {
+   printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+   }
+   fflush(stdout);
+#endif
 
 if (enable_fti) {
     FTI_Init(argv[1], MPI_COMM_WORLD);
@@ -159,7 +198,7 @@ if (enable_fti) {
   MPI_Barrier(MPI_COMM_WORLD);
 #endif
 
-   char hostname[65];
+   //char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), rank);
    sleep(5);

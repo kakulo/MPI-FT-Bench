@@ -60,6 +60,11 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <time.h>
+
+#ifdef TIMER
+double acc_write_time=0;
+#endif
 
 static std::string inputFileName;
 static int me, nprocs;
@@ -83,6 +88,12 @@ int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) ;
 
 int main(int argc, char *argv[])
 {
+#ifdef TIMER
+   double elapsed_time;
+   struct timeval start;
+   struct timeval end;
+#endif
+
   int max_threads=0;
 
   //max_threads = omp_get_max_threads();
@@ -97,15 +108,44 @@ int main(int argc, char *argv[])
   } else {
       MPI_Init(&argc, &argv);
   }
-  
+#ifdef TIMER
+   gettimeofday(&start, NULL) ;
+#endif
+
   OMPI_Reinit(argc, argv, resilient_main);
 
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   char hostname[64];
+   gethostname(hostname, 64);
+   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+   fflush(stdout);
+#endif
+
+   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+   fflush(stdout);
+
+// close MPI
   MPI_Finalize();
 
   return 0;
 }
 
 int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
+#ifdef TIMER
+   struct timeval tv;
+   gettimeofday( &tv, NULL );
+   double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+   char hostname[64];
+   gethostname(hostname, 64);
+   if (state == OMPI_REINIT_NEW) {
+   printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+   } else {
+   printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+   }
+   fflush(stdout);
+#endif
 
   double t0, t1, t2, t3, ti = 0.0;
 
@@ -118,7 +158,7 @@ if (enable_fti) {
 
   parseCommandLine(argc, argv);
 
-   char hostname[65];
+   //char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), me);
    //sleep(45);
@@ -148,26 +188,6 @@ if (enable_fti) {
 
   int recovered = 0;
 
-/*
-  // code for FTI CPR
-  if (enable_fti) {
-      printf("Add FTI protection to Graph g ... \n");
-      FTI_Protect_Graph(*g); 
-
-      if ( FTI_Status() != 0){
-	  printf("FTI recovery triggered for Graph g ... \n");
-	  FTI_Recover();
-	  recovered = 1;
-      }
-  }
-
-  if (enable_fti) {
-      if (!recovered) {
-	  FTI_Checkpoint(0,level);
-      }
-  }
-*/
- 
   assert(g != nullptr);
 #ifdef PRINT_DIST_STATS 
   g->print_dist_stats();

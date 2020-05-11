@@ -101,8 +101,8 @@ main( hypre_int argc,
 {
 #ifdef TIMER
    double elapsed_time;
-   timeval start;
-   timeval end;
+   struct timeval start;
+   struct timeval end;
 #endif
    /* Initialize MPI */
    hypre_MPI_Init(&argc, &argv);
@@ -121,6 +121,8 @@ main( hypre_int argc,
 
    printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
    fflush(stdout);
+
+// Close MPI
    hypre_MPI_Finalize();
    return (0);
 }
@@ -133,7 +135,11 @@ int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
    char hostname[64];
    gethostname(hostname, 64);
+   if (state == OMPI_REINIT_NEW) {
+   printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+   } else {
    printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+   }
    fflush(stdout);
 #endif
    HYPRE_Int           arg_index;

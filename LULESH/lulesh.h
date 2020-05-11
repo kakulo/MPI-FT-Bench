@@ -35,6 +35,9 @@
 
 #define MAX(a, b) ( ((a) > (b)) ? (a) : (b))
 
+#ifdef TIMER
+extern double acc_write_time;
+#endif
 
 // Precision specification
 typedef float        real4 ;

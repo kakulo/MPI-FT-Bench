@@ -26,6 +26,7 @@ CFLAGS += -DDEBUG
 endif
 
 CFLAGS += -std=c++11
+CFLAGS += -DTIMER
 
 # BG/Q
 # CFLAGS = -DIBM_HPM -qlist -qsource  -g -O3 -qsmp=omp
