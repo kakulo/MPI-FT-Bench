@@ -56,7 +56,6 @@
  * The {\tt hypre\_GMRESFunctions} object ...
  **/
 
-
 typedef struct
 {
    char *       (*CAlloc)        ( size_t count, size_t elt_size );

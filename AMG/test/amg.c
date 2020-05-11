@@ -45,8 +45,13 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/time.h>
 
 #include <time.h>
+
+#ifdef TIMER
+double acc_write_time=0;
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -94,16 +99,43 @@ hypre_int
 main( hypre_int argc,
       char *argv[] )
 {
+#ifdef TIMER
+   double elapsed_time;
+   timeval start;
+   timeval end;
+#endif
    /* Initialize MPI */
    hypre_MPI_Init(&argc, &argv);
+#ifdef TIMER
+   gettimeofday(&start, NULL) ;
+#endif
    OMPI_Reinit(argc, argv, resilient_main);
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   char hostname[64];
+   gethostname(hostname, 64);
+   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+   fflush(stdout);
+#endif
+
+   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+   fflush(stdout);
    hypre_MPI_Finalize();
    return (0);
 }
 
 
 int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
-
+#ifdef TIMER
+   struct timeval tv;
+   gettimeofday( &tv, NULL );
+   double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+   char hostname[64];
+   gethostname(hostname, 64);
+   printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+   fflush(stdout);
+#endif
    HYPRE_Int           arg_index;
    HYPRE_Int           print_usage;
    HYPRE_Int           build_rhs_type;
@@ -196,7 +228,6 @@ if (enable_fti) {
    hypre_MPI_Comm_rank(hypre_MPI_COMM_WORLD, &myid );
    hypre_MPI_Comm_size(comm, &nprocs);
 
-   char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myid);
    //sleep(55);
