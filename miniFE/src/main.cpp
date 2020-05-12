@@ -51,7 +51,6 @@
 
 #ifdef HAVE_MPI
 #include <mpi.h>
-#include <mpi-ext.h>
 #endif
 
 #include <Box.hpp>
@@ -89,7 +88,6 @@ double acc_write_time=0;
 void add_params_to_yaml(YAML_Doc& doc, miniFE::Parameters& params);
 void add_configuration_to_yaml(YAML_Doc& doc, int numprocs, int numthreads);
 void add_timestring_to_yaml(YAML_Doc& doc);
-int resilient_main(int argc, char** argv, OMPI_reinit_state_t state); 
 
 //
 //We will create a 'box' of size nx X ny X nz, partition it among processors,
@@ -110,37 +108,13 @@ int main(int argc, char** argv) {
    gettimeofday(&start, NULL) ;
 #endif
 
-  OMPI_Reinit(argc, argv, resilient_main);
-
-#ifdef TIMER
-   gettimeofday(&end, NULL) ;
-   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
-   char hostname[64];
-   gethostname(hostname, 64);
-   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
-   fflush(stdout);
-#endif
-
-   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
-   fflush(stdout);
-
-// close MPI
-  miniFE::finalize_mpi();
-  return 0;
-}
-
-int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
 #ifdef TIMER
    struct timeval tv;
    gettimeofday( &tv, NULL );
    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
    char hostname[64];
    gethostname(hostname, 64);
-   if (state == OMPI_REINIT_NEW) {
-   printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   } else {
-   printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   }
+   printf("TIMESTAMP START/RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
    fflush(stdout);
 #endif
 
@@ -247,7 +221,7 @@ if (enable_fti) {
   //
   printf("Enter into the driver() function ...\n");
   int return_code =
-     miniFE::driver< MINIFE_SCALAR, MINIFE_LOCAL_ORDINAL, MINIFE_GLOBAL_ORDINAL>(global_box, my_box, params, doc, state);
+     miniFE::driver< MINIFE_SCALAR, MINIFE_LOCAL_ORDINAL, MINIFE_GLOBAL_ORDINAL>(global_box, my_box, params, doc);
   printf("Exit the driver() function ...\n");
 
   miniFE::timer_type total_time = miniFE::mytimer() - start_time;
@@ -284,9 +258,21 @@ if (enable_fti) {
     FTI_Finalize();
 }
 
-  //miniFE::finalize_mpi();
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   //char hostname[64];
+   gethostname(hostname, 64);
+   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+   fflush(stdout);
+#endif
 
-  return return_code;
+   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+   fflush(stdout);
+
+// close MPI
+  miniFE::finalize_mpi();
+  return 0;
 }
 
 void add_params_to_yaml(YAML_Doc& doc, miniFE::Parameters& params)

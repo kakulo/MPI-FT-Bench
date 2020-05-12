@@ -391,7 +391,7 @@ void *hypre_GMRESCreate ( hypre_GMRESFunctions *gmres_functions );
 HYPRE_Int hypre_GMRESDestroy ( void *gmres_vdata );
 HYPRE_Int hypre_GMRESGetResidual ( void *gmres_vdata , void **residual );
 HYPRE_Int hypre_GMRESSetup ( void *gmres_vdata , void *A , void *b , void *x );
-HYPRE_Int hypre_GMRESSolve ( void *gmres_vdata , void *A , void *b , void *x , OMPI_reinit_state_t state);
+HYPRE_Int hypre_GMRESSolve ( void *gmres_vdata , void *A , void *b , void *x );
 HYPRE_Int hypre_GMRESSetKDim ( void *gmres_vdata , HYPRE_Int k_dim );
 HYPRE_Int hypre_GMRESGetKDim ( void *gmres_vdata , HYPRE_Int *k_dim );
 HYPRE_Int hypre_GMRESSetTol ( void *gmres_vdata , HYPRE_Real tol );
@@ -422,7 +422,7 @@ HYPRE_Int hypre_GMRESGetFinalRelativeResidualNorm ( void *gmres_vdata , HYPRE_Re
 
 /* HYPRE_gmres.c */
 HYPRE_Int HYPRE_GMRESSetup ( HYPRE_Solver solver , HYPRE_Matrix A , HYPRE_Vector b , HYPRE_Vector x );
-HYPRE_Int HYPRE_GMRESSolve ( HYPRE_Solver solver , HYPRE_Matrix A , HYPRE_Vector b , HYPRE_Vector x, OMPI_reinit_state_t state);
+HYPRE_Int HYPRE_GMRESSolve ( HYPRE_Solver solver , HYPRE_Matrix A , HYPRE_Vector b , HYPRE_Vector x );
 HYPRE_Int HYPRE_GMRESSetKDim ( HYPRE_Solver solver , HYPRE_Int k_dim );
 HYPRE_Int HYPRE_GMRESGetKDim ( HYPRE_Solver solver , HYPRE_Int *k_dim );
 HYPRE_Int HYPRE_GMRESSetTol ( HYPRE_Solver solver , HYPRE_Real tol );

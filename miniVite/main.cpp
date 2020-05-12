@@ -52,7 +52,6 @@
 
 //#include <omp.h>
 #include <mpi.h>
-#include <mpi-ext.h>
 
 #include "dspl.hpp"
 
@@ -83,7 +82,6 @@ static void parseCommandLine(const int argc, char * const argv[]);
 // FTI Protect for Graph
 //static void FTI_Protect_Graph(Graph &g);
 
-int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) ;
 
 
 int main(int argc, char *argv[])
@@ -112,38 +110,13 @@ int main(int argc, char *argv[])
    gettimeofday(&start, NULL) ;
 #endif
 
-  OMPI_Reinit(argc, argv, resilient_main);
-
-#ifdef TIMER
-   gettimeofday(&end, NULL) ;
-   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
-   char hostname[64];
-   gethostname(hostname, 64);
-   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
-   fflush(stdout);
-#endif
-
-   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
-   fflush(stdout);
-
-// close MPI
-  MPI_Finalize();
-
-  return 0;
-}
-
-int resilient_main(int argc, char** argv, OMPI_reinit_state_t state) {
 #ifdef TIMER
    struct timeval tv;
    gettimeofday( &tv, NULL );
    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
    char hostname[64];
    gethostname(hostname, 64);
-   if (state == OMPI_REINIT_NEW) {
-   printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   } else {
-   printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   }
+   printf("TIMESTAMP START/RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
    fflush(stdout);
 #endif
 
@@ -228,10 +201,10 @@ if (enable_fti) {
 
 #if defined(USE_MPI_RMA)
   currMod = distLouvainMethod(me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
-                svdata, rvdata, currMod, threshold, iters, commwin, state, level);
+                svdata, rvdata, currMod, threshold, iters, commwin, level);
 #else
   currMod = distLouvainMethod(me, nprocs, *g, ssz, rsz, ssizes, rsizes, 
-                svdata, rvdata, currMod, threshold, iters, state, level);
+                svdata, rvdata, currMod, threshold, iters, level);
 #endif
   MPI_Barrier(MPI_COMM_WORLD);
   t0 = MPI_Wtime();
@@ -255,8 +228,23 @@ if (enable_fti) {
     FTI_Finalize();
 }
 
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   //char hostname[64];
+   gethostname(hostname, 64);
+   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+   fflush(stdout);
+#endif
+
+   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+   fflush(stdout);
+
+// close MPI
+  MPI_Finalize();
+
   return 0;
-} // main
+}
 
 void parseCommandLine(const int argc, char * const argv[])
 {

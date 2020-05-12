@@ -27,7 +27,6 @@
 #include <math.h>
 
 #include <mpi.h>
-#include <mpi-ext.h>
 
 #include "_hypre_utilities.h"
 #include "HYPRE.h"
@@ -62,7 +61,6 @@ HYPRE_Int AddOrRestoreAIJ( HYPRE_IJMatrix  ij_A, HYPRE_Real eps, HYPRE_Int actio
 HYPRE_Int hypre_map27( HYPRE_Int  ix, HYPRE_Int  iy, HYPRE_Int  iz,
       HYPRE_Int  px, HYPRE_Int  py, HYPRE_Int  pz,
       HYPRE_Int  Cx, HYPRE_Int  Cy, HYPRE_Int  Cz, HYPRE_Int nx, HYPRE_Int nxy);
-int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state);
 
 #ifdef __cplusplus
 }
@@ -109,39 +107,17 @@ main( hypre_int argc,
 #ifdef TIMER
    gettimeofday(&start, NULL) ;
 #endif
-   OMPI_Reinit(argc, argv, resilient_main);
-#ifdef TIMER
-   gettimeofday(&end, NULL) ;
-   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
-   char hostname[64];
-   gethostname(hostname, 64);
-   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
-   fflush(stdout);
-#endif
 
-   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
-   fflush(stdout);
-
-// Close MPI
-   hypre_MPI_Finalize();
-   return (0);
-}
-
-
-int resilient_main(hypre_int argc, char** argv, OMPI_reinit_state_t state) {
 #ifdef TIMER
    struct timeval tv;
    gettimeofday( &tv, NULL );
    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
    char hostname[64];
    gethostname(hostname, 64);
-   if (state == OMPI_REINIT_NEW) {
-   printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   } else {
-   printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   }
+   printf("TIMESTAMP START/RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
    fflush(stdout);
 #endif
+
    HYPRE_Int           arg_index;
    HYPRE_Int           print_usage;
    HYPRE_Int           build_rhs_type;
@@ -665,7 +641,7 @@ if (enable_fti) {
          cum_nnz_AP += nnz_AP;
 
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-         HYPRE_GMRESSolve (pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x, state);
+         HYPRE_GMRESSolve (pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x);
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
  
          HYPRE_GMRESGetNumIterations(pcg_solver, &num_iterations);
@@ -694,7 +670,7 @@ if (enable_fti) {
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
             HYPRE_GMRESSetTol(pcg_solver, 0.0);
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
-            HYPRE_GMRESSolve(pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x, state);
+            HYPRE_GMRESSolve(pcg_solver, (HYPRE_Matrix)parcsr_A, (HYPRE_Vector)b, (HYPRE_Vector)x);
    b_norm = sqrt((*(gmres_functions->InnerProd))(x,x));
             HYPRE_GMRESGetNumIterations(pcg_solver, &num_iterations);
             HYPRE_GMRESGetFinalRelativeResidualNorm(pcg_solver,&final_res_norm);
@@ -770,8 +746,23 @@ if (enable_fti) {
     FTI_Finalize();
 }
 
-  return 0;
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   //char hostname[64];
+   gethostname(hostname, 64);
+   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+   fflush(stdout);
+#endif
+
+   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+   fflush(stdout);
+
+// Close MPI
+   hypre_MPI_Finalize();
+   return (0);
 }
+
 
 /*----------------------------------------------------------------------
  * Build 27-point laplacian in 3D,

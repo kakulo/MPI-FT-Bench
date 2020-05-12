@@ -459,8 +459,7 @@ cg_solve(OperatorType& A,
          typename OperatorType::LocalOrdinalType& num_iters,
          typename TypeTraits<typename OperatorType::ScalarType>::magnitude_type& normr,
          timer_type* my_cg_times,
-	 Parameters& params,
-	 OMPI_reinit_state_t state)
+	 Parameters& params)
 {
   typedef typename OperatorType::ScalarType ScalarType;
   typedef typename OperatorType::GlobalOrdinalType GlobalOrdinalType;
@@ -536,14 +535,6 @@ cg_solve(OperatorType& A,
   printf("Enter into the cg iterations ...\n");
 
   LocalOrdinalType k=1;
-
-  // read checkpoints
-  // when restart
-  if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
-    // XXX: Disable FI, assumes 1 failure
-    params.procfi = 0;
-    params.nodefi = 0;
-  }
 
 // FTI CPR code   
 int recovered = 0;

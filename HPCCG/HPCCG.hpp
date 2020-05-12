@@ -63,7 +63,7 @@ extern double acc_write_time;
 int HPCCG(HPC_Sparse_Matrix * A,
 	  const double * const b, double * const x,
 	  const int max_iter, const double tolerance, int & niters, double & normr, double * times,
-	  OMPI_reinit_state_t state, int cp_iters, bool procfi, bool nodefi, int level);
+	  int cp_iters, bool procfi, bool nodefi, int level);
 
 // this function will compute the Conjugate Gradient...
 // A <=> Matrix

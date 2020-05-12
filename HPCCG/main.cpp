@@ -75,7 +75,6 @@ using std::endl;
 #ifdef USING_MPI
 #include <mpi.h> // If this routine is compiled with -DUSING_MPI
                  // then include mpi.h
-#include <mpi-ext.h>
 #include "make_local_matrix.hpp" // Also include this function
 #endif
 #ifdef USING_OMP
@@ -122,8 +121,6 @@ double tolerance = 0.0; // Set tolerance to zero to make all runs do max_iter it
 double acc_write_time=0;
 #endif
 
-int resilient_main(int argc, char **argv, OMPI_reinit_state_t state);
-
 int main(int argc, char *argv[])
 {
 #ifdef TIMER
@@ -139,41 +136,13 @@ int main(int argc, char *argv[])
    gettimeofday(&start, NULL) ;
 #endif
 
-  OMPI_Reinit(argc, argv, resilient_main);
-
-#ifdef TIMER
-   gettimeofday(&end, NULL) ;
-   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
-   char hostname[64];
-   gethostname(hostname, 64);
-   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
-   fflush(stdout);
-#endif
-
-   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
-   fflush(stdout);
-
-#if USE_MPI
-  MPI_Finalize() ;
-#endif
-
-  return 0 ;
-
-}
-
-int resilient_main(int argc, char **argv, OMPI_reinit_state_t state)
-{
 #ifdef TIMER
    struct timeval tv;
    gettimeofday( &tv, NULL );
    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
    char hostname[64];
    gethostname(hostname, 64);
-   if (state == OMPI_REINIT_NEW) {
-   printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   } else {
-   printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   }
+   printf("TIMESTAMP START/RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
    fflush(stdout);
 #endif
 
@@ -264,7 +233,7 @@ if (enable_fti) {
   double t1 = mytimer();   // Initialize it (if needed)
 
   ierr = HPCCG( A, b, x, max_iter, tolerance, niters, normr, times,
-          state, cp_iters, procfi, nodefi, level );
+         cp_iters, procfi, nodefi, level );
 
   if (ierr) cerr << "Error in call to CG: " << ierr << ".\n" << endl;
 
@@ -378,5 +347,23 @@ if (enable_fti) {
     FTI_Finalize();
 }
 
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   //char hostname[64];
+   gethostname(hostname, 64);
+   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+   fflush(stdout);
+#endif
+
+   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+   fflush(stdout);
+
+#if USE_MPI
+  MPI_Finalize() ;
+#endif
+
   return 0 ;
+
 }
+

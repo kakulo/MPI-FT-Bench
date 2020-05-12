@@ -118,7 +118,7 @@ template<typename Scalar,
          typename GlobalOrdinal>
 int
 driver(const Box& global_box, Box& my_box,
-       Parameters& params, YAML_Doc& ydoc, OMPI_reinit_state_t state)
+       Parameters& params, YAML_Doc& ydoc)
 {
   int global_nx = global_box[0][1];
   int global_ny = global_box[1][1];
@@ -276,7 +276,7 @@ driver(const Box& global_box, Box& my_box,
     rearrange_matrix_local_external(A);
     printf("Enter into the 1st cg_solve() function ...\n");
     cg_solve(A, b, x, matvec_overlap<MatrixType,VectorType>(), max_iters, tol,
-           num_iters, rnorm, cg_times,params, state);
+           num_iters, rnorm, cg_times,params);
     printf("Exit into the 1st cg_solve() function ...\n");
 #else
     std::cout << "ERROR, matvec with overlapping comm/comp only works with CSR matrix."<<std::endl;
@@ -285,7 +285,7 @@ driver(const Box& global_box, Box& my_box,
   else {
     printf("Enter into the 2nd cg_solve() function ...\n");
     cg_solve(A, b, x, matvec_std<MatrixType,VectorType>(), max_iters, tol,
-           num_iters, rnorm, cg_times,params, state);
+           num_iters, rnorm, cg_times,params);
     printf("Exit the 2nd cg_solve() function ...\n");
     if (myproc == 0) {
       std::cout << "Final Resid Norm: " << rnorm << std::endl;

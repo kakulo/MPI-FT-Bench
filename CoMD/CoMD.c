@@ -65,7 +65,6 @@
 #include "../libcheckpoint/checkpoint.h"
 
 #include <mpi.h>
-#include <mpi-ext.h>
 #include <fti.h>
 #include <signal.h>
 #include <unistd.h>
@@ -107,19 +106,26 @@ SimFlat* sim;
 Validate* validate;
 Command cmd;
 
-int resilient_main(int argc, char *argv[], OMPI_reinit_state_t state)
+
+int main(int argc, char** argv)
 {
+#ifdef TIMER
+   double elapsed_time;
+   struct timeval start;
+   struct timeval end;
+#endif
+   initParallel(&argc, &argv);
+#ifdef TIMER
+   gettimeofday(&start, NULL) ;
+#endif
+
 #ifdef TIMER
    struct timeval tv;
    gettimeofday( &tv, NULL );
    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
    char hostname[64];
    gethostname(hostname, 64);
-   if (state == OMPI_REINIT_NEW) {
-   printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   } else {
-   printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   }
+   printf("TIMESTAMP START/RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
    fflush(stdout);
 #endif
 
@@ -159,15 +165,6 @@ int resilient_main(int argc, char *argv[], OMPI_reinit_state_t state)
         isEam = cmd.doeam;
         profileStart(loopTimer);
 
-  	if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
-     		// disable fault injection here
-     		cmd.procfi = 0;
-     		cmd.nodefi = 0;
-       		timestampBarrier("Restarting Initialization\n");
-  	}
-       //nSteps = sim->nSteps;
-       //printRate = sim->printRate;
-    
     // FTI CPR code   
     int recovered = 0;
     if (enable_fti) {
@@ -309,27 +306,10 @@ if (enable_fti) {
     FTI_Finalize();
 }
 
-    return 0;
-}
-
-int main(int argc, char** argv)
-{
-#ifdef TIMER
-   double elapsed_time;
-   struct timeval start;
-   struct timeval end;
-#endif
-   initParallel(&argc, &argv);
-#ifdef TIMER
-   gettimeofday(&start, NULL) ;
-#endif
-
-   OMPI_Reinit(argc, argv, resilient_main);
-
 #ifdef TIMER
    gettimeofday(&end, NULL) ;
    elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
-   char hostname[64];
+   //char hostname[64];
    gethostname(hostname, 64);
    printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
    fflush(stdout);

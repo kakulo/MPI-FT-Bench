@@ -1271,12 +1271,12 @@ void exchangeVertexReqs(const Graph &dg, size_t &ssz, size_t &rsz,
 GraphWeight distLouvainMethod(const int me, const int nprocs, Graph &dg,
         size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, 
         vector<GraphElem> &svdata, vector<GraphElem> &rvdata, const GraphWeight lower, 
-        const GraphWeight thresh, int &iters, MPI_Win &commwin, OMPI_reinit_state_t state, int level)
+        const GraphWeight thresh, int &iters, MPI_Win &commwin, int level)
 #else
 GraphWeight distLouvainMethod(const int me, const int nprocs, Graph &dg,
         size_t &ssz, size_t &rsz, vector<GraphElem> &ssizes, vector<GraphElem> &rsizes, 
         vector<GraphElem> &svdata, vector<GraphElem> &rvdata, const GraphWeight lower, 
-        const GraphWeight thresh, int &iters, OMPI_reinit_state_t state, int level)
+        const GraphWeight thresh, int &iters, int level)
 #endif
 {
   vector<GraphElem> pastComm, currComm, targetComm;
@@ -1333,12 +1333,6 @@ GraphWeight distLouvainMethod(const int me, const int nprocs, Graph &dg,
   MPI_Comm comm=MPI_COMM_WORLD;
   MPI_Comm_rank(comm, &myrank);
   MPI_Comm_size(comm, &procsize);
-
-  if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
-     // disable fault injection here
-     procfi = 0;
-     nodefi = 0;
-  }
 
   int g_edge_list_sz = dg.edge_list_.size();
   printf("Normal: g_edge_list_sz - %d \n", g_edge_list_sz);

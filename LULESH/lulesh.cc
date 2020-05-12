@@ -2695,19 +2695,40 @@ void LagrangeLeapFrog(Domain& domain)
 #endif   
 }
 
-int resilient_main(int argc, char *argv[], OMPI_reinit_state_t state)
+
+/******************************************/
+int main(int argc, char *argv[])
 {
+#ifdef TIMER
+   double elapsed_time;
+   struct timeval startt;
+   struct timeval endd;
+#endif
+#ifdef _OPENMP
+   int thread_support;
+
+   MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &thread_support);
+   if (thread_support==MPI_THREAD_SINGLE)
+    {
+        fprintf(stderr,"The MPI implementation has no support for threading\n");
+        MPI_Finalize();
+        exit(1);
+    }
+#else
+   MPI_Init(&argc, &argv);
+#endif
+#ifdef TIMER
+   gettimeofday(&startt, NULL) ;
+#endif
+
+
 #ifdef TIMER
    struct timeval tv;
    gettimeofday( &tv, NULL );
    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
    char hostname[64];
    gethostname(hostname, 64);
-   if (state == OMPI_REINIT_NEW) {
-   printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   } else {
-   printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
-   }
+   printf("TIMESTAMP START/RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
    fflush(stdout);
 #endif
 
@@ -2758,7 +2779,7 @@ if (enable_fti) {
    //char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), myRank);
-   sleep(5);
+   //sleep(5);
 
     ParseCommandLineOptions(argc, argv, myRank, &opts);
 
@@ -2836,12 +2857,6 @@ if (enable_fti) {
 #endif
 
 	int recovered = 0;
-
-    if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) { 
-	opts.procfi = 0;
-        opts.nodefi = 0;	
-    }
-
 
 // FTI CPR code
     if (enable_fti) {
@@ -2960,7 +2975,7 @@ if (enable_fti) {
     }
 
     // Use reduced max elapsed time
-    double elapsed_time;
+    //double elapsed_time;
 #if USE_MPI   
     elapsed_time = MPI_Wtime() - start;
 #else
@@ -2989,40 +3004,10 @@ if (enable_fti) {
     FTI_Finalize();
 }
 
-    return 0;
-}
-/******************************************/
-
-int main(int argc, char *argv[])
-{
 #ifdef TIMER
-   double elapsed_time;
-   struct timeval start;
-   struct timeval end;
-#endif
-#ifdef _OPENMP
-   int thread_support;
-
-   MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &thread_support);
-   if (thread_support==MPI_THREAD_SINGLE)
-    {
-        fprintf(stderr,"The MPI implementation has no support for threading\n");
-        MPI_Finalize();
-        exit(1);
-    }
-#else
-   MPI_Init(&argc, &argv);
-#endif
-#ifdef TIMER
-   gettimeofday(&start, NULL) ;
-#endif
-
-   OMPI_Reinit(argc, argv, resilient_main);
-
-#ifdef TIMER
-   gettimeofday(&end, NULL) ;
-   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
-   char hostname[64];
+   gettimeofday(&endd, NULL) ;
+   elapsed_time = (double)(endd.tv_sec - startt.tv_sec) + ((double)(endd.tv_usec - startt.tv_usec))/1000000 ;
+   //char hostname[64];
    gethostname(hostname, 64);
    printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
    fflush(stdout);

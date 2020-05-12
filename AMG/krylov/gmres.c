@@ -264,8 +264,7 @@ HYPRE_Int
 hypre_GMRESSolve(void  *gmres_vdata,
                  void  *A,
                  void  *b,
-		 void  *x,
-		 OMPI_reinit_state_t state)
+		 void  *x)
 {
   printf("Enter the hypre_GMRESSolve function ... \n");
    hypre_GMRESData  *gmres_data   = (hypre_GMRESData *)gmres_vdata;
@@ -648,15 +647,6 @@ HYPRE_Int rank;
 HYPRE_Int procsize;
 hypre_MPI_Comm_rank(hypre_MPI_COMM_WORLD,&rank);
 hypre_MPI_Comm_size(hypre_MPI_COMM_WORLD,&procsize);
-
-/* code for C/R implementation */
-// write and read checkpoints
-	//if (procfi == 1 || nodefi == 1) {
-	if (state == OMPI_REINIT_RESTARTED || state == OMPI_REINIT_REINITED) {
-	   procfi = 0;
-	   nodefi = 0; 
-	}
-	//}
 
     	sleep(1);
 	      

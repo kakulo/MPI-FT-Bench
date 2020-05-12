@@ -111,13 +111,10 @@ int HPCCG(HPC_Sparse_Matrix * A,
     const double * const b, double * const x,
     const int max_iter, const double tolerance, int &niters, double & normr,
     double * times,
-    OMPI_reinit_state_t state, int cp_iters, bool procfi, bool nodefi, int level)
+    int cp_iters, bool procfi, bool nodefi, int level)
 
 {
-  int survivor = ( OMPI_REINIT_REINITED == state ) ? 1 : 0;
-
   // Initialize data when new or restarted
-  if( OMPI_REINIT_NEW == state || OMPI_REINIT_RESTARTED == state ) { //|| OMPI_REINIT_REINITED == state ) {
     t_begin = mytimer();  // Start timing right away
 
     t0 = 0.0, t1 = 0.0, t2 = 0.0, t3 = 0.0, t4 = 0.0;
@@ -150,10 +147,8 @@ int HPCCG(HPC_Sparse_Matrix * A,
     print_freq = max_iter/20;
     if (print_freq>50) print_freq=50;
     if (print_freq<1)  print_freq=1;
-  }
 
   // Initialize data ONLY when new 
-  if( OMPI_REINIT_NEW == state ) {
     if( procfi || nodefi ) {
       int nranks;
       MPI_Comm_size( MPI_COMM_WORLD, &nranks );
@@ -173,16 +168,8 @@ int HPCCG(HPC_Sparse_Matrix * A,
     normr = sqrt(rtrans);
 
     if (rank==0) cout << "Initial Residual = "<< normr << endl;
-  }
   
   int recovered = 0;
- 
-  // Read CP ONLY if reinited or restarted
-  if( OMPI_REINIT_REINITED == state || OMPI_REINIT_RESTARTED == state ) {
-    // XXX: Disable FI (single failure)
-    procfi = false;
-    nodefi = false;
-  }
 
 // FTI CPR code
     if (enable_fti) {

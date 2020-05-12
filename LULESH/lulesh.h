@@ -10,7 +10,6 @@
 
 #if USE_MPI
 #include <mpi.h>
-#include <mpi-ext.h>
 #include <fti.h>
 
 /*
