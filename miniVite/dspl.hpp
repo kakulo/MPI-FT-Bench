@@ -1472,20 +1472,6 @@ if (enable_fti) {
            kill(getppid(), SIGTERM );
     	}
     }
-
-
-  //
-  if (procfi == 1 && myrank == (procsize-1) && numIters==4){
-     printf("KILL rank %d\n", myrank);
-     raise(SIGKILL);
-  }
-
-  if (nodefi == 1 && myrank == (procsize-1) && numIters==4){
-     char hostname[64];
-     gethostname(hostname, 64);
-     printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), myrank);
-     kill(getppid(), SIGKILL);
-  }
   // simuation of proc/node failures
 
 #ifdef DEBUG_PRINTF  
