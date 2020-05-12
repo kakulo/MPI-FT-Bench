@@ -42,7 +42,7 @@ verify:all
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
 
 clean:
-	rm -f *.o *.a *.x *.linkinfo miniFE_info.hpp check* tmp* *yaml
+	rm -f *.o *.a *.x *yaml *core *.linkinfo miniFE_info.hpp check* tmp* *yaml
 
 cl:
 	rm check* tmp* *yaml

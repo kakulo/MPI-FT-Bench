@@ -175,9 +175,21 @@ int HPCCG(HPC_Sparse_Matrix * A,
 
 if (enable_fti) {
 		if ( FTI_Status() != 0){ 
+#ifdef TIMER
+    double elapsed_time;
+    struct timeval start;
+    struct timeval end;
+    gettimeofday(&start, NULL) ;
+ #endif
 	    		printf("Do FTI Recover to data objects from failure ... \n");
 	    		FTI_Recover();
 	    		printf("Done: FTI Recover data objects from failure ... \n");
+#ifdef TIMER
+    gettimeofday(&end, NULL) ;
+    elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+    printf("READ CP TIME: %lf (s) Rank %d \n", elapsed_time, rank);
+    fflush(stdout);
+#endif
 	    		recovered = 1;
         		procfi = false;
         		nodefi = false;
@@ -190,10 +202,22 @@ if (enable_fti) {
         /* Checkpoint the state of the application */
 	// do FTI CPR
 	if (enable_fti){
+#ifdef TIMER
+    double elapsed_time;
+    struct timeval start;
+    struct timeval end;
+    gettimeofday(&start, NULL) ;
+#endif
 	    if ( (!recovered) && cp_iters > 0 && (k%cp_iters +1) == cp_iters ){ 
 		FTI_Checkpoint(k, level);
 	    }
 	    recovered = 0;
+#ifdef TIMER
+    gettimeofday(&end, NULL) ;
+    elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+    acc_write_time+=elapsed_time;
+
+#endif
 	}
 	// do FTI CPR
 
@@ -223,23 +247,46 @@ if (enable_fti) {
     }
 */
 
-    if( procfi && k == 50 && fi_rank == rank ) {
-      struct timeval tv;
-      gettimeofday( &tv, NULL );
-      double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
-      printf("TIMESTAMP PROCFI %lf s rank %d iter %d\n", ts, rank, fi_iter);
-      fflush(stdout);
-      kill( getpid(), SIGTERM);
+    if( procfi && k == 50 ) {
+#ifdef TIMER
+   	      printf("WRITE CP TIME: %lf (s) Rank %d \n", acc_write_time, rank);
+		fflush(stdout);
+#endif
+	if (fi_rank == rank) {
+#ifdef TIMER
+           struct timeval tv;
+           gettimeofday( &tv, NULL );
+           double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+     	   char hostname[64];
+   	   gethostname(hostname, 64);
+   	   printf("TIMESTAMP KILL: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+           fflush(stdout);
+#endif
+      	   printf("KILL rank %d\n", rank);
+      	   kill(getpid(), SIGTERM);
+	}
     }
-    if( nodefi && k == 50 && fi_rank == rank ) {
-      char hostname[64];
-      gethostname(hostname, 64);
-      struct timeval tv;
-      gettimeofday( &tv, NULL );
-      double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
-      printf("TIMESTAMP NODEFI %lf s node %s daemon %d rank %d iter %d\n", ts, hostname, getppid(), rank, fi_iter);
-      fflush(stdout);
-      kill( getppid(), SIGTERM );
+
+    if( nodefi && k == 50 ) {
+#ifdef TIMER
+   	      printf("WRITE CP TIME: %lf (s) Rank %d \n", acc_write_time,rank);
+		fflush(stdout);
+#endif
+	if (fi_rank == rank) {
+#ifdef TIMER
+           char hostname[64];
+           gethostname(hostname, 64);
+           struct timeval tv;
+           gettimeofday( &tv, NULL );
+           double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+   	   gethostname(hostname, 64);
+   	   printf("TIMESTAMP KILL: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+           fflush(stdout);
+#endif
+      	   gethostname(hostname, 64);
+      	   printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(),rank);
+           kill(getppid(), SIGTERM );
+	}
     }
 
       if (k == 1)

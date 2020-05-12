@@ -21,8 +21,8 @@ transfer_size                  = 16
 
 
 [restart]
-failure                        = 1
-exec_id                        = 2020-05-07_22-23-54
+failure                        = 0
+exec_id                        = 2020-05-11_11-42-36
 
 
 [injection]

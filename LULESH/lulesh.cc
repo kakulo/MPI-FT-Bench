@@ -156,6 +156,7 @@ Additional BSD Notice
 #include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/time.h>
 
 #include <iostream>
 #include <unistd.h>
@@ -166,6 +167,10 @@ Additional BSD Notice
 
 #include <setjmp.h>
 #include "ulfm-util.h"
+
+#ifdef TIMER
+double acc_write_time=0;
+#endif
 
 /* world will swap between worldc[0] and worldc[1] after each respawn */
 extern MPI_Comm worldc[2];
@@ -2706,6 +2711,11 @@ extern jmp_buf stack_jmp_buf;
 /* ULFM */
 int main(int argc, char *argv[])
 {
+#ifdef TIMER
+   double elapsed_time;
+   struct timeval startt;
+   struct timeval endd;
+#endif
   Domain *locDom ;
   Int_t numRanks ;
   Int_t myRank ;
@@ -2733,6 +2743,11 @@ int main(int argc, char *argv[])
 #else
   MPI_Init(&argc, &argv);
 #endif
+
+#ifdef TIMER
+   gettimeofday(&startt, NULL) ;
+#endif
+
   InitULFM(argv);
 
 #if USE_MPI 
@@ -2748,6 +2763,20 @@ int main(int argc, char *argv[])
   /* We set an errhandler on world, so that a failure is not fatal anymore. */
   SetCommErrhandler();
   int survivor = IsSurvivor();
+
+#ifdef TIMER
+   struct timeval tv;
+   gettimeofday( &tv, NULL );
+    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+    char hostname[64];
+    gethostname(hostname, 64);
+    if (do_recover || !survivor) {
+    printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+    } else {
+    printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+    }
+    fflush(stdout);
+#endif
 
 if (enable_fti) {
     FTI_Init(argv[1], world);
@@ -2877,9 +2906,21 @@ if (enable_fti) {
 #if USE_MPI
 	if (enable_fti) {
 		if ( FTI_Status() != 0){ 
+#ifdef TIMER
+   double elapsed_time;
+   struct timeval start;
+   struct timeval end;
+   gettimeofday(&start, NULL) ;
+#endif
 	    		printf("Do FTI Recover to data objects from failure ... \n");
 	    		FTI_Recover();
 	    		printf("Done: FTI Recover data objects from failure ... \n");
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   printf("READ CP TIME: %lf (s) Rank %d \n", elapsed_time, myRank);
+   fflush(stdout);
+#endif
 	    		recovered = 1;
         		opts.procfi = 0;
         		opts.nodefi = 0;
@@ -2888,12 +2929,24 @@ if (enable_fti) {
         /* Checkpoint the state of the application */
 	// do FTI CPR
 	if (enable_fti){
+#ifdef TIMER
+   double elapsed_time;
+   struct timeval start;
+   struct timeval end;
+   gettimeofday(&start, NULL) ;
+#endif
 	    if ( (!recovered) && ((locDom->cycle())%opts.cpInterval +1) == opts.cpInterval ){ 
 		printf("Do FTI checkpointing ... \n");
 		int cyc = locDom->cycle();
 		FTI_Checkpoint(cyc, opts.level);
 	    }
 	    recovered = 0;
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   acc_write_time+=elapsed_time;
+
+#endif
 	}
 	// do FTI CPR
 #endif
@@ -2909,28 +2962,51 @@ if (enable_fti) {
     MPI_Barrier(world);
 #endif
 
-    if (opts.procfi == 1 && myRank == (numRanks-1) && locDom->cycle()==51){
-      struct timeval tv;
-      gettimeofday( &tv, NULL );
-      double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
-      printf("TIMESTAMP PROCFI %lf s rank %d\n", ts, myRank);
-      raise(SIGTERM);
-    }
+        if (opts.procfi == 1 && locDom->cycle()==51){
+#ifdef TIMER
+   	      printf("WRITE CP TIME: %lf (s) Rank %d \n", acc_write_time, myRank);
+		fflush(stdout);
+#endif
+        	if (myRank == (numRanks-1)){
+#ifdef TIMER
+           struct timeval tv;
+           gettimeofday( &tv, NULL );
+           double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+     	   char hostname[64];
+   	   gethostname(hostname, 64);
+   	   printf("TIMESTAMP KILL: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+           fflush(stdout);
+#endif
+      	   printf("KILL rank %d\n", myRank);
+      	   kill(getpid(), SIGTERM);
+		}
+        }
 
-    if (opts.nodefi == 1 && myRank == (numRanks-1) && locDom->cycle()==51){
-      char hostname[64];
-      gethostname(hostname, 64);
-      struct timeval tv;
-      gettimeofday( &tv, NULL );
-      double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
-      printf("TIMESTAMP NODEFI %lf s node %s daemon %d rank %d\n", ts, hostname, (int) getppid(), myRank);
-      fflush(stdout);
-      kill(getppid(), SIGTERM);
-    }
+        if (opts.nodefi == 1 && locDom->cycle()==51){
+#ifdef TIMER
+   	      printf("WRITE CP TIME: %lf (s) Rank %d \n", acc_write_time, myRank);
+		fflush(stdout);
+#endif
+        	if (myRank == (numRanks-1)){
+#ifdef TIMER
+           char hostname[HOST_NAME_MAX + 1];
+           gethostname(hostname, HOST_NAME_MAX + 1);
+           struct timeval tv;
+           gettimeofday( &tv, NULL );
+           double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+	   gethostname(hostname, 64);
+   	   printf("TIMESTAMP KILL: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+           fflush(stdout);
+#endif
+      	   gethostname(hostname, 64);
+      	   printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), myRank);
+           kill(getppid(), SIGTERM );
+		}
+        }
   }
 
   // Use reduced max elapsed time
-  double elapsed_time;
+  //double elapsed_time;
 #if USE_MPI   
   elapsed_time = MPI_Wtime() - start;
 #else
@@ -2958,6 +3034,18 @@ if (enable_fti) {
 if (enable_fti) {
     FTI_Finalize();
 }
+
+#ifdef TIMER
+   gettimeofday(&endd, NULL) ;
+   elapsed_time = (double)(endd.tv_sec - startt.tv_sec) + ((double)(endd.tv_usec - startt.tv_usec))/1000000 ;
+   //char hostname[64];
+   gethostname(hostname, 64);
+   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+   fflush(stdout);
+#endif
+
+   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+   fflush(stdout);
 
 #if USE_MPI
   MPI_Finalize() ;

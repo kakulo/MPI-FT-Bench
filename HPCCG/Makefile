@@ -121,6 +121,7 @@ TARGET = test_HPCCG
 ################### Derived Quantities (no modification required) ##############
 
 CXXFLAGS= $(CPP_OPT_FLAGS) $(OMP_FLAGS) $(USE_OMP) $(USE_MPI) $(MPI_INC) $(FTI_INC)
+CXXFLAGS += -DTIMER
 
 LIB_PATHS= $(SYS_LIB)
 

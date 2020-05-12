@@ -97,6 +97,12 @@ using std::endl;
 #include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <time.h>
+#include <sys/time.h>
+
+#ifdef TIMER
+ double acc_write_time=0;
+#endif
 
 extern jmp_buf stack_jmp_buf;
 
@@ -109,6 +115,12 @@ extern int worldi;
 
 int main(int argc, char *argv[])
 {
+#ifdef TIMER
+    double elapsed_time;
+    struct timeval start;
+    struct timeval end;
+#endif
+
   HPC_Sparse_Matrix *A;
   double *x, *b, *xexact;
   double norm, d;
@@ -125,12 +137,32 @@ int main(int argc, char *argv[])
 #ifdef USING_MPI
 
   MPI_Init(&argc, &argv);
+
+#ifdef TIMER
+    gettimeofday(&start, NULL) ;
+#endif
+
   InitULFM(argv);
 
 restart:
   int do_recover = _setjmp(stack_jmp_buf);
   /* We set an errhandler on world, so that a failure is not fatal anymore. */
   SetCommErrhandler();
+  int survivor = IsSurvivor();
+
+#ifdef TIMER
+   struct timeval tv;
+   gettimeofday( &tv, NULL );
+    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+    char hostname[64];
+    gethostname(hostname, 64);
+    if (do_recover || !survivor) {
+    printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+    } else {
+    printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+    }
+    fflush(stdout);
+#endif
 
   int size, rank; // Number of MPI processes, My process ID
   MPI_Comm_size(world, &size);
@@ -340,9 +372,22 @@ if (enable_fti) {
     FTI_Finalize();
 }
 
-  // Finish up
 #ifdef USING_MPI
+#ifdef TIMER
+    gettimeofday(&end, NULL) ;
+    elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+    //char hostname[64];
+    gethostname(hostname, 64);
+    printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+    fflush(stdout);
+#endif
+
+    printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+    fflush(stdout);
+
+  // Finish up
   MPI_Finalize();
 #endif
+
   return 0 ;
 }

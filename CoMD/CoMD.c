@@ -71,12 +71,17 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <time.h>
 #include <setjmp.h>
 
 #define REDIRECT_OUTPUT 0
 #define   MIN(A,B) ((A) < (B) ? (A) : (B))
 
 #define HOST_NAME_MAX 64
+
+#ifdef TIMER
+double acc_write_time=0;
+#endif
 
 static SimFlat* initSimulation(Command cmd);
 static void destroySimulation(SimFlat** ps);
@@ -146,6 +151,12 @@ extern jmp_buf stack_jmp_buf;
 
 int main(int argc, char** argv)
 {
+#ifdef TIMER
+    double elapsed_time;
+    struct timeval start;
+    struct timeval end;
+#endif
+
    // Prolog
    int nSteps, iStep, printRate, isEam;
    SimFlat* sim;
@@ -154,7 +165,9 @@ int main(int argc, char** argv)
    int do_recover;
 
    initParallel(&argc, &argv);
-
+#ifdef TIMER
+    gettimeofday(&start, NULL) ;
+#endif
 //restart:
 
       do_recover = _setjmp(stack_jmp_buf);
@@ -162,12 +175,26 @@ int main(int argc, char** argv)
    setCommErrhandler();
    int survivor = isSurvivor();
 
+#ifdef TIMER
+   struct timeval tv;
+   gettimeofday( &tv, NULL );
+    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+    char hostname[64];
+    gethostname(hostname, 64);
+    if (do_recover || !survivor) {
+    printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+    } else {
+    printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+    }
+    fflush(stdout);
+#endif
+
    initSubsystems();
 
    // Recovering, survivor process MUST NOT re-parse command line arguments
    // data get corrupted
 
-   char hostname[65];
+   //char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), getMyRank());
    //sleep(15);
@@ -224,9 +251,21 @@ int main(int argc, char** argv)
 
     if (enable_fti) {
 	if ( FTI_Status() != 0){ 
+#ifdef TIMER
+    double elapsed_time;
+    struct timeval start;
+    struct timeval end;
+    gettimeofday(&start, NULL) ;
+#endif
 	    printf("Do FTI Recover to data objects from failure ... \n");
 	    FTI_Recover();
 	    printf("Done: FTI Recover data objects from failure ... \n");
+#ifdef TIMER
+    gettimeofday(&end, NULL) ;
+    elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+    printf("READ CP TIME: %lf (s) Rank %d \n", elapsed_time, getMyRank());
+    fflush(stdout);
+#endif
 	    recovered = 1;
             cmd.procfi = 0;
             cmd.nodefi = 0;
@@ -238,13 +277,24 @@ int main(int argc, char** argv)
    {
 	// do FTI CPR
 	if (enable_fti){
-	
+#ifdef TIMER
+    double elapsed_time;
+    struct timeval start;
+    struct timeval end;
+    gettimeofday(&start, NULL) ;
+#endif	
 	    //if ( (!recovered) && cmd.cp_stride > 0 && (iStep%cmd.cp_stride +1) == cmd.cp_stride ){ 
 	    if ( (!recovered) && cmd.cp_stride > 0 && (iStep%cmd.cp_stride == 0 )){ 
 		FTI_Checkpoint(iStep, cmd.level);
 		printf("Doing checkpinting ... \n");
 	    }
 	    recovered = 0;
+#ifdef TIMER
+    gettimeofday(&end, NULL) ;
+    elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+    acc_write_time+=elapsed_time;
+
+#endif
 	}
 	// do FTI CPR
 	
@@ -262,26 +312,47 @@ int main(int argc, char** argv)
 
       timestampBarrier("End of Iteration\n");
 
-      if (cmd.procfi && getMyRank() == (getNRanks()-1) && iStep==21){
-         struct timeval tv;
-         gettimeofday( &tv, NULL );
-         double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
-         printf("TIMESTAMP PROCFI %lf s rank %d\n", ts, getMyRank());
-         fflush(stdout);
-         raise(SIGTERM);
-      }
+        if (cmd.procfi && iStep==15){
+#ifdef TIMER
+   	      printf("WRITE CP TIME: %lf (s) Rank %d \n", acc_write_time, getMyRank());
+		fflush(stdout);
+#endif
+		if (getMyRank() == (getNRanks()-1)) {
+#ifdef TIMER
+           struct timeval tv;
+           gettimeofday( &tv, NULL );
+           double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+     	   char hostname[64];
+   	   gethostname(hostname, 64);
+   	   printf("TIMESTAMP KILL: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+           fflush(stdout);
+#endif
+      	   printf("KILL rank %d\n", getMyRank());
+      	   kill(getpid(), SIGTERM);
+		}
+        }
 
-      if (cmd.nodefi && getMyRank() == (getNRanks()-1) && iStep==21){
-         char hostname[HOST_NAME_MAX + 1];
-         gethostname(hostname, HOST_NAME_MAX + 1);
-         struct timeval tv;
-         gettimeofday( &tv, NULL );
-         double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
-         printf("TIMESTAMP NODEFI %lf s node %s daemon %d rank %d\n", ts, hostname, (int) getppid(), getMyRank());
-         fflush(stdout);
-         kill(getppid(), SIGTERM);
-      }
-
+        if (cmd.nodefi && iStep==15){
+#ifdef TIMER
+   	      printf("WRITE CP TIME: %lf (s) Rank %d \n", acc_write_time, getMyRank());
+		fflush(stdout);
+#endif
+		if (getMyRank() == (getNRanks()-1) ) {
+#ifdef TIMER
+           char hostname[HOST_NAME_MAX + 1];
+           gethostname(hostname, HOST_NAME_MAX + 1);
+           struct timeval tv;
+           gettimeofday( &tv, NULL );
+           double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+   	   gethostname(hostname, 64);
+   	   printf("TIMESTAMP KILL: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+           fflush(stdout);
+#endif
+      	   gethostname(hostname, 64);
+      	   printf("KILL %s daemon %d rank %d\n", hostname, (int) getppid(), getMyRank());
+           kill(getppid(), SIGTERM );
+		}
+	}
    }
    profileStop(loopTimer);
 
@@ -303,11 +374,24 @@ int main(int argc, char** argv)
 
    finalizeSubsystems();
 
-   destroyParallel();
-
 if (enable_fti) {
    ftifinalizeParallel();
 }
+
+#ifdef TIMER
+    gettimeofday(&end, NULL) ;
+    elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+    //char hostname[64];
+    gethostname(hostname, 64);
+    printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+    fflush(stdout);
+#endif
+
+    printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+    fflush(stdout);
+
+// close MPI
+   destroyParallel();
 
    return 0;
 }

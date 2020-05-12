@@ -59,10 +59,15 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <time.h>
 
 /* ULFM */
 #include <setjmp.h>
 #include "ulfm-util.hpp"
+
+#ifdef TIMER
+double acc_write_time=0;
+#endif
 
 static std::string inputFileName;
 static int me, nprocs;
@@ -95,6 +100,12 @@ extern jmp_buf stack_jmp_buf;
 
 int main(int argc, char *argv[])
 {
+#ifdef TIMER
+   double elapsed_time;
+   struct timeval start;
+   struct timeval end;
+#endif
+
   double t0, t1, t2, t3, ti = 0.0;
   int max_threads=0;
 
@@ -111,6 +122,10 @@ int main(int argc, char *argv[])
       MPI_Init(&argc, &argv);
   }
 
+#ifdef TIMER
+   gettimeofday(&start, NULL) ;
+#endif
+
 /* ULFM */
   InitULFM(argv);
   
@@ -121,6 +136,21 @@ int main(int argc, char *argv[])
   int do_recover = _setjmp(stack_jmp_buf);
   /* We set an errhandler on world, so that a failure is not fatal anymore. */
   SetCommErrhandler();
+  int survivor = IsSurvivor();
+
+#ifdef TIMER
+   struct timeval tv;
+   gettimeofday( &tv, NULL );
+    double ts = tv.tv_sec + tv.tv_usec / 1000000.0;
+    char hostname[64];
+    gethostname(hostname, 64);
+    if (do_recover || !survivor) {
+    printf("TIMESTAMP RESTART: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+    } else {
+    printf("TIMESTAMP START: %lf (s) node %s daemon %d\n", ts, hostname, getpid());
+    }
+    fflush(stdout);
+#endif
 
 if (enable_fti) {
     FTI_Init(argv[1], world);
@@ -128,7 +158,7 @@ if (enable_fti) {
 
   parseCommandLine(argc, argv);
 
-   char hostname[65];
+   //char hostname[65];
    gethostname(hostname, 65);
    printf("%s daemon %d rank %d\n", hostname, (int) getpid(), me);
    //sleep(45);
@@ -156,7 +186,7 @@ if (enable_fti) {
       //g->print();
   }
 
-  int survivor = IsSurvivor();
+  //int survivor = IsSurvivor();
   int recovered = 0;
   
   assert(g != nullptr);
@@ -226,6 +256,19 @@ if (enable_fti) {
     FTI_Finalize();
 }
 
+#ifdef TIMER
+   gettimeofday(&end, NULL) ;
+   elapsed_time = (double)(end.tv_sec - start.tv_sec) + ((double)(end.tv_usec - start.tv_usec))/1000000 ;
+   //char hostname[64];
+   gethostname(hostname, 64);
+   printf("APP EXE TIME: %lf (s) node %s daemon %d \n", elapsed_time, hostname, getpid());
+   fflush(stdout);
+#endif
+
+   printf("WRITE CP TIME: %lf (s) node %s daemon %d \n", acc_write_time, hostname, getpid());
+   fflush(stdout);
+
+// close MPI
   MPI_Finalize();
 
   return 0;
