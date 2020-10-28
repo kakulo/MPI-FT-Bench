@@ -20,7 +20,7 @@ In the current version of MATCH, we support three MPI fault tolerance techniques
 
 - Download the Git repo: git clone git@github.com:kakulo/MPI-FT-Bench.git
 
-- There are multiple Git branches within our Git repo. You cannot find the up-to-date code in the main branch. The main branch is an early version of MATCH, which implements ULFM, Reinit++, and a self-developed checkpointing library to three HPC proxy applications (AMG, miniFE, and miniVite). The other three branches are restart-fti, reinit-fti, and ulfm-fti. The restart-fti branch implements FTI checkpointing and uses Restart for MPI recovery. Distinctively, reinit-fti and ulfm-fti branches use Reinit++ and ULFM for MPI recovery respectively. FTI requests users to pass a configuration file to the executable for checkpointing. Please refer to the FTI library guide for further instructions.
+- There are multiple Git branches within our Git repo. *You cannot find the up-to-date code in the main branch*. The main branch is an early version of MATCH, which implements ULFM, Reinit++, and a self-developed checkpointing library to three HPC proxy applications (AMG, miniFE, and miniVite). The other three branches are restart-fti, reinit-fti, and ulfm-fti. The restart-fti branch implements FTI checkpointing and uses Restart for MPI recovery. Distinctively, reinit-fti and ulfm-fti branches use Reinit++ and ULFM for MPI recovery respectively. FTI requests users to pass a configuration file to the executable for checkpointing. Please refer to the FTI library guide for further instructions.
 
 - Please note that you must add /bin/, /lib/, and /include/ directories to the environmental path of specific library when it is in use. For example, when ULFM and FTI are in use, you must remove Reinit++ from the environment path and enable ULFM and FTI to the environmental path. Last but not least, we provide a collection of SLURM job submission scripts in every example directory. Please refer to those scripts to develop your own execution script.  
 
@@ -32,7 +32,7 @@ If you use MPI-FT-Bench in your research, please cite our work.
 Luanzheng Guo, Giorgis Georgakoudis, Konstantinos Parasyris, Ignacio Laguna, Dong Li. MATCH: An MPI Fault Tolerance Benchmark Suite. IEEE International Symposium on Workload Characterization (IISWC'20), Oct 2020
 
 
-'''
+```
 @inproceedings{guo2019match,
   title={MATCH: An MPI Fault Tolerance Benchmark Suite},
   author={Guo, Luanzheng and Georgakoudis, Giorgis and Parasyris, Konstantinos and Laguna, Ignacio and Li, Dong},
@@ -40,7 +40,7 @@ Luanzheng Guo, Giorgis Georgakoudis, Konstantinos Parasyris, Ignacio Laguna, Don
   year={2020},
   organization={IEEE Press}
 }
-'''
+```
 
 - Please reach out to Luanzheng Guo at azguolu@gmail.com for any questions!
 
